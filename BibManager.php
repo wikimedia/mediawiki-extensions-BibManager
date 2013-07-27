@@ -117,3 +117,4 @@ $wgBibManagerScholarLink = 'http://scholar.google.com/scholar?q=%title%';
 $wgGroupPermissions['sysop']['bibmanageredit']   = true;
 $wgGroupPermissions['sysop']['bibmanagerdelete'] = true;
 $wgGroupPermissions['sysop']['bibmanagercreate'] = true;
+unset( $dir );
