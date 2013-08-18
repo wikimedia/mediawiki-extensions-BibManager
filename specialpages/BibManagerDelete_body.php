@@ -46,6 +46,11 @@ class BibManagerDelete extends UnlistedSpecialPage {
 
 			$table = array ( );
 			$table[] = '<table id="bm_delete" class="wikitable" style="width:100%">';
+			// Give grep a chance to find the usages:
+			// bm_address, bm_annote, bm_author, bm_booktitle, bm_chapter, bm_crossref, bm_edition,
+			// bm_editor, bm_eprint, bm_howpublished, bm_institution, bm_journal, bm_key, bm_month,
+			// bm_note, bm_number, bm_organization, bm_pages, bm_publisher, bm_school, bm_series,
+			// bm_title, bm_type, bm_url, bm_volume, bm_year
 			foreach ( $entryFields as $fieldName ) {
 				$table[] = '  <tr><th style="width:150px">' . wfMsg( 'bm_' . $fieldName ) . '</th><td>' . $entry['bm_' . $fieldName] . '</td></tr>';
 			}

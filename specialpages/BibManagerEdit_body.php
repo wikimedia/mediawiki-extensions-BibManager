@@ -44,6 +44,11 @@ class BibManagerEdit extends UnlistedSpecialPage {
 			return;
 		}
 
+		// Give grep a chance to find the usages: bm_entry_type_article, bm_entry_type_book,
+		// bm_entry_type_booklet, bm_entry_type_conference, bm_entry_type_inbook,
+		// bm_entry_type_incollection, bm_entry_type_inproceedings, bm_entry_type_manual,
+		// bm_entry_type_mastersthesis, bm_entry_type_misc, bm_entry_type_phdthesis,
+		// bm_entry_type_proceedings, bm_entry_type_techreport, bm_entry_type_unpublished
 		$wgOut->setPageTitle( wfMsg( 'heading_edit', wfMsg( 'bm_entry_type_' . $entryType ) ) );
 
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
