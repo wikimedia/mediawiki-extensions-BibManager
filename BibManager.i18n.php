@@ -310,7 +310,7 @@ $messages['en'] = array (
     'bibmanager-desc' => 'Allows you to administrate blibliographyentries. Developed for "[http://www.hornemann-institut.de Hornemann Institut] der HAWK Hochschule für Angewandte Wissenschaft und Kunst Hildesheim/Holzminden/Göttingen, gefördert von der Deutschen Forschungsgemeinschaft (DFG )" by [http://www.hallowelt.biz Hallo Welt! Medienwerkstatt GmbH].',
     /* SpecialPage Headings */
     'heading_create' => 'BibManager: Add new entry',
-    'heading_create_type' => 'BibManager: Add entry  "$1"',
+    'heading_create_type' => 'BibManager: Add entry "$1"',
     'heading_import' => 'BibManager: Import BibTeX',
     'heading_delete' => 'BibManager: Delete entry',
     'heading_edit' => 'BibManager: Edit entry (type: $1)',
