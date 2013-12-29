@@ -22,11 +22,11 @@ class BibManagerList extends SpecialPage {
 
 		$createLink = $wgUser->getSkin()->link(
 		    SpecialPage::getTitleFor( 'BibManagerCreate' ),
-			SpecialPage::getPage('BibManagerCreate')->getDescription()
+			SpecialPageFactory::getPage('BibManagerCreate')->getDescription()
 		);
 		$importLink = $wgUser->getSkin()->link(
 		    SpecialPage::getTitleFor( 'BibManagerImport' ),
-			SpecialPage::getPage('BibManagerImport')->getDescription()
+			SpecialPageFactory::getPage('BibManagerImport')->getDescription()
 		);
 		$wgOut->addHtml( wfMsg( 'bm_list_welcome', $createLink, $importLink ) );
 		$fieldDefs = BibManagerFieldsList::getFieldDefinitions();
