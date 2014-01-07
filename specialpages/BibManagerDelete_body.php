@@ -68,9 +68,8 @@ class BibManagerDelete extends UnlistedSpecialPage {
 		    )
 		);
 
-		$htmlForm = new HTMLForm( $formDescriptor, 'bm_delete' );
+		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_delete' );
 		$htmlForm->setSubmitText( wfMsg( 'bm_delete_submit' ) );
-		$htmlForm->setTitle( $this->getTitle() );
 		$htmlForm->setSubmitCallback( array ( $this, 'formSubmit' ) );
 		//TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
 
@@ -94,9 +93,9 @@ class BibManagerDelete extends UnlistedSpecialPage {
 
 		if ( $result === true ) {
 			$wgOut->addHtml( wfMsg( 'bm_success_save-complete' ) );
-			$wgOut->addHtml( 
-				wfMsg( 
-					'bm_success_link-to-list', 
+			$wgOut->addHtml(
+				wfMsg(
+					'bm_success_link-to-list',
 					SpecialPage::getTitleFor( "BibManagerList" )->getLocalURL()
 				)
 			);

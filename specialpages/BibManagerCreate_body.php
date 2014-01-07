@@ -50,7 +50,7 @@ class BibManagerCreate extends IncludableSpecialPage {
 
 		wfRunHooks( 'BibManagerCreateBeforeTypeSelectFormCreate', array ( $this, &$formDescriptor ) );
 
-		$entryTypeSelectionForm = new HTMLForm( $formDescriptor );
+		$entryTypeSelectionForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$entryTypeSelectionForm->setSubmitText( wfMsg( 'bm_select_entry_type_submit' ) );
 		$entryTypeSelectionForm->setSubmitId( 'bm_select_entry_type_submit' );
 		$entryTypeSelectionForm->setSubmitCallback( array ( $this, 'onSubmit' ) );
@@ -62,10 +62,9 @@ class BibManagerCreate extends IncludableSpecialPage {
 			$importParams['bm_bibtexCitation'] = $citation;
 		}
 
-		$entryTypeSelectionForm->setTitle( $this->getTitle() );
 		$entryTypeSelectionForm->addPostText(
 		    wfMsg(
-				'bm_bibtex_string_import_link', 
+				'bm_bibtex_string_import_link',
 				SpecialPage::getTitleFor( 'BibManagerImport' )->getLocalURL( $importParams )
 		    )
 		);
@@ -85,7 +84,7 @@ class BibManagerCreate extends IncludableSpecialPage {
 		global $wgOut, $wgRequest;
 		$citation = $wgRequest->getVal( 'bm_bibtexCitation' );
 		if ( !isset( $formData['bm_bibtexCitation'] ) && !empty( $citation ) ) {
-			//This should not be necessary, but it seems the hidden field from 
+			//This should not be necessary, but it seems the hidden field from
 			//the type selection form is not properly included in $formData
 			$formData['bm_bibtexCitation'] = $citation;
 		}

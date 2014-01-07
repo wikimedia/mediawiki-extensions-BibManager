@@ -101,9 +101,8 @@ class BibManagerEdit extends UnlistedSpecialPage {
 
 		wfRunHooks( 'BibManagerEditBeforeFormCreate', array ( $this, &$formDescriptor ) );
 
-		$htmlForm = new HTMLForm( $formDescriptor, 'bm_edit' );
+		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_edit' );
 		$htmlForm->setSubmitText( wfMsg( 'bm_edit_submit' ) );
-		$htmlForm->setTitle( $this->getTitle() );
 		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
 		//TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
 
@@ -117,11 +116,11 @@ class BibManagerEdit extends UnlistedSpecialPage {
 	 * @global OutputPage $wgOut
 	 * @global WebRequest $wgRequest
 	 * @param array $formData
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function submitForm ( $formData ) {
 		global $wgOut, $wgRequest;
-		
+
 		$repo = BibManagerRepository::singleton();
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$entryType = $wgRequest->getVal( 'bm_select_type', '' ); //Hidden fields are not included in $formData???

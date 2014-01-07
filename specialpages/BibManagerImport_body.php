@@ -32,9 +32,8 @@ class BibManagerImport extends SpecialPage {
 		    'rows' => 25
 		);
 
-		$htmlForm = new HTMLForm( $formDescriptor, 'bm_edit' );
+		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_edit' );
 		$htmlForm->setSubmitText( wfMsg( 'bm_edit_submit' ) );
-		$htmlForm->setTitle( $this->getTitle() );
 		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
 
 		$wgOut->addHTML( '<div id="bm_form">' );
@@ -46,7 +45,7 @@ class BibManagerImport extends SpecialPage {
 	 * Submit callback for import form
 	 * @global OutputPage $wgOut
 	 * @param array $formData
-	 * @return mixed true on success, array of error messages on failure 
+	 * @return mixed true on success, array of error messages on failure
 	 */
 	public function submitForm ( $formData ) {
 		global $wgOut;
@@ -55,7 +54,7 @@ class BibManagerImport extends SpecialPage {
 		$bibtex->setOption("extractAuthors", false);
 		$bibtex->content = $formData['bm_bibtex'];
 		$bibtex->parse();
-		
+
 		$errors = array ( );
 		$repo = BibManagerRepository::singleton();
 		$cleanedEntries = array ( );
@@ -71,7 +70,7 @@ class BibManagerImport extends SpecialPage {
 			);
 
 			$submittedFields = array ( );
-			
+
 			foreach ( $entry as $key => $value ) {
 				if ( in_array( $key, $entryFields ) ) {
 					$submittedFields['bm_' . $key] = $value;
