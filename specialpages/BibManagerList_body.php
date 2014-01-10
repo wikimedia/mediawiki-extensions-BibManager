@@ -20,11 +20,11 @@ class BibManagerList extends SpecialPage {
 		$wgOut->setPageTitle( wfMsg( 'heading_list' ) );
 		$wgOut->addHTML( '<div id="bm_form">' );
 
-		$createLink = $wgUser->getSkin()->link(
+		$createLink = Linker::link(
 		    SpecialPage::getTitleFor( 'BibManagerCreate' ),
 			SpecialPageFactory::getPage('BibManagerCreate')->getDescription()
 		);
-		$importLink = $wgUser->getSkin()->link(
+		$importLink = Linker::link(
 		    SpecialPage::getTitleFor( 'BibManagerImport' ),
 			SpecialPageFactory::getPage('BibManagerImport')->getDescription()
 		);

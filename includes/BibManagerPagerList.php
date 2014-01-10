@@ -25,10 +25,10 @@ class BibManagerPagerList extends AlphabeticPager {
 	function getIndexField () {
 		return 'bm_bibtexCitation';
 	}
-	
+
 	/**
 	 * Override from base class to add query string parameters
-	 * @return array 
+	 * @return array
 	 */
 	function getPagingQueries() {
 		$queries = parent::getPagingQueries();
@@ -44,11 +44,11 @@ class BibManagerPagerList extends AlphabeticPager {
 		}
 		return $queries;
 	}
-	
+
 	/**
 	 * Override from base class to add query string parameters
 	 * @global Language $wgLang
-	 * @return array 
+	 * @return array
 	 */
 	function getLimitLinks() {
 		global $wgLang;
@@ -59,11 +59,11 @@ class BibManagerPagerList extends AlphabeticPager {
 			$offset = $this->mOffset;
 		}
 		$query = array( 'offset' => $offset );
-		if( !empty($this->searchType ) ) 
+		if( !empty($this->searchType ) )
 			$query['wpbm_list_search_select'] = $this->searchType;
-		if( !empty($this->searchTerm ) ) 
+		if( !empty($this->searchTerm ) )
 			$query['wpbm_list_search_text'] = $this->searchTerm;
-		
+
 		foreach ( $this->mLimitsShown as $limit ) {
 			$links[] = $this->makeLink(
 				$wgLang->formatNum( $limit ),
@@ -78,30 +78,30 @@ class BibManagerPagerList extends AlphabeticPager {
 	 *
 	 * @global User $wgUser
 	 * @param mixed $row
-	 * @return string 
+	 * @return string
 	 */
 	function formatRow ( $row ) {
 		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
-		
+
 		$citationTitle = Title::newFromText( $row->bm_bibtexCitation, $wgBibManagerCitationArticleNamespace );
-		
-		$citationLink = $wgUser->getSkin()->link( $citationTitle, $citationTitle->getText() );
+
+		$citationLink = Linker::link( $citationTitle, $citationTitle->getText() );
 		$editLink     = '';
 		$deleteLink   = '';
-		$exportLink   = Xml::check( 
-			'cit[]', 
-			false, 
+		$exportLink   = Xml::check(
+			'cit[]',
+			false,
 			array('value' => str_replace( '.', '__dot__', $row->bm_bibtexCitation ) )
 		);
-		
+
 		$specialPageQuery = array ( 'bm_bibtexCitation' => $row->bm_bibtexCitation );
 
 		if ($wgUser->isAllowed('bibmanageredit')){
-			$editLink = $wgUser->getSkin()->link(
-				SpecialPage::getTitleFor( 'BibManagerEdit' ), 
-				wfMsg( 'bm_list_table_edit' ), 
-				array ( 
+			$editLink = Linker::link(
+				SpecialPage::getTitleFor( 'BibManagerEdit' ),
+				wfMsg( 'bm_list_table_edit' ),
+				array (
 					'class' => 'icon edit',
 					'title' => wfMsg( 'bm_list_table_edit' )
 				),
@@ -110,7 +110,7 @@ class BibManagerPagerList extends AlphabeticPager {
 		}
 
 		if ($wgUser->isAllowed('bibmanagerdelete')){
-			$deleteLink = $wgUser->getSkin()->link(
+			$deleteLink = Linker::link(
 				SpecialPage::getTitleFor( 'BibManagerDelete' ),
 				wfMsg( 'bm_list_table_delete' ),
 				array (

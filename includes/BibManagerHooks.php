@@ -33,7 +33,7 @@ class BibManagerHooks {
 	 *
 	 * @param OutputPage $out
 	 * @param Skin $skin
-	 * @return bool Always true to keep hook running 
+	 * @return bool Always true to keep hook running
 	 */
 	public static function onBeforePageDisplay ( &$out, &$skin ) {
 		global $wgBibManagerUseJS, $wgScriptPath;
@@ -67,7 +67,7 @@ class BibManagerHooks {
 	/**
 	 * Init-method for the BibManager-Hooks
 	 * @param Parser $parser
-	 * @return bool Always true to keep hooks running 
+	 * @return bool Always true to keep hooks running
 	 */
 	public static function onParserFirstCallInit ( &$parser ) {
 		$parser->setHook( 'bib', 'BibManagerHooks::onBibTag' );
@@ -82,10 +82,10 @@ class BibManagerHooks {
 	 * @param array $args
 	 * @param Parser $parser
 	 * @param PPFrame $frame
-	 * @return String the link to the Bib-Cit entered by id 
+	 * @return String the link to the Bib-Cit entered by id
 	 */
 	public static function onBibTag ( $input, $args, $parser, $frame ) {
-		global $wgScript, $wgUser;
+		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
 		$parser->disableCache();
 		if ( !isset( $args['id'] ) )
@@ -98,7 +98,7 @@ class BibManagerHooks {
 		$sLink = '';
 		if ( empty( $entry ) ) {
 			$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' );
-			$sLink = $wgUser->getSkin()->link(
+			$sLink = Linker::link(
 			    $spTitle, $args['id'], array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $args['id'] ), array ( 'broken' => true )
 			);
 			$sTooltip = '<span>' . wfMsg('bm_error_not-existing');
@@ -109,7 +109,7 @@ class BibManagerHooks {
 			$sTooltip .= '</span>';
 		} else {
 			$oCitationTitle = Title::newFromText( $args['id'], $wgBibManagerCitationArticleNamespace );
-			$sLink = $wgUser->getSkin()->link( $oCitationTitle, $oCitationTitle->getText(), array ( 'title' => '' ) );
+			$sLink = Linker::link( $oCitationTitle, $oCitationTitle->getText(), array ( 'title' => '' ) );
 			$sTooltip = self::getTooltip( $entry, $args );
 		}
 		return '<span class="bibmanager-citation">[' . $sLink . ']' . $sTooltip . '</span>';
@@ -134,11 +134,11 @@ class BibManagerHooks {
 			    . XML::element( 'em', null, $value )
 			    ."<br/>";//. XML::element( 'br', null, null ); //This is just a little exercise
 		}
-		
+
 		$tooltip[] = self::getIcons( $entry );
 		$tooltipString = implode( "", $tooltip );
 		$tooltipString = '<span>' . $tooltipString . '</span>';
-		
+
 		if ( isset( $args['mode'] ) && $args['mode'] == 'full' ) {
 			$format = self::formatEntry( $entry );
 			$tooltipString = ' ' . $format . ' ' . $tooltipString;
@@ -237,7 +237,7 @@ class BibManagerHooks {
 				$filter [$temp[0]] = $temp[1];
 			}
 		}
-		
+
 		$out = self::getTable($entries);
 
 		return $out;
@@ -258,7 +258,7 @@ class BibManagerHooks {
 	 * @param array $args
 	 * @param Parser $parser
 	 * @param PPFrame $frame
-	 * @return string 
+	 * @return string
 	 */
 	public static function onBibprintTag ( $input, $args, $parser, $frame ) {
 		global $wgUser;
@@ -335,14 +335,14 @@ class BibManagerHooks {
 
 			if ( $key == 'url' ) {
 				$urlKey = $prefixedKeys ? 'bm_url' : 'url';
-				$value = ' '.XML::element( 
-					'a', 
-					array( 
-						'href'   => $entry[$urlKey], 
-						'target' => '_blank', 
+				$value = ' '.XML::element(
+					'a',
+					array(
+						'href'   => $entry[$urlKey],
+						'target' => '_blank',
 						'class'  => 'external',
 						'rel'    => 'nofollow'
-					), 
+					),
 					wfMsg( 'bm_url')
 				);
 			}
@@ -353,7 +353,7 @@ class BibManagerHooks {
 		wfRunHooks( 'BibManagerFormatEntry', array ( $entry, $prefixedKeys, &$format ) );
 		return $format;
 	}
-	
+
 	public static function getTableEntry($citLink, $citFormat, $citIcons){
 		$out = '';
 		$out .= XML::openElement( 'tr' );
@@ -363,7 +363,7 @@ class BibManagerHooks {
 		$out .= XML::closeElement( 'tr' );
 		return $out;
 	}
-	
+
 	public static function getTable($res){
 		global $wgUser, $wgBibManagerCitationArticleNamespace;
 		$out = XML::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
@@ -372,7 +372,7 @@ class BibManagerHooks {
 		foreach ( $res as $key=>$val ) {
 			if (empty($val)){
 				$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' ); // TODO RBV (10.11.11 13:50): Dublicate code --> encapsulate
-				$citLink = $wgUser->getSkin()->link(
+				$citLink = Linker::link(
 				    $spTitle, $key, array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $key ), array ( 'broken' => true )
 				);
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $key ));
@@ -384,7 +384,7 @@ class BibManagerHooks {
 			}
 			else {
 				$title = Title::newFromText( $val['bm_bibtexCitation'], $wgBibManagerCitationArticleNamespace );
-				$citLink = $wgUser->getSkin()->link(
+				$citLink = Linker::link(
 				    $title, $title->getText()
 				);
 				$citFormat = self::formatEntry( $val );
