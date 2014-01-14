@@ -50,9 +50,8 @@ class BibManagerList extends SpecialPage {
 		    )
 		);
 
-		$htmlForm = new HTMLForm( $formDescriptor, 'bm_list_search' );
+		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_list_search' );
 		$htmlForm->setSubmitText( wfMsg( 'bm_list_search_submit' ) );
-		$htmlForm->setTitle( $this->getTitle() );
 		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
 		$htmlForm->show();
 
