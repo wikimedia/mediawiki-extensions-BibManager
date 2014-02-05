@@ -200,13 +200,11 @@ class BibManagerHooks {
 	 * @return string List of used <bib />-tags
 	 */
 	public static function onBiblistTag ( $input, $args, $parser, $frame ) {
-		global $wgTitle, $wgUser;
+		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
 		$parser->disableCache();
-		if ( $wgTitle === null )
-			return '';
 
-		$article = new Article( $wgTitle );
+		$article = new Article( $parser->getTitle() );
 		$content = $article->fetchContent();
 
 		$out = array ( );
