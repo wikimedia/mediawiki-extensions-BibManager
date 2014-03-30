@@ -27,12 +27,12 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgExtensionCredits['specialpage'][] = array (
     'path'           => __FILE__,
     'name'           => 'BibManager',
-    'author'         => array ( 
-		'Hornemann Institut', 'Hallo Welt! Medienwerkstatt GmbH', 
+    'author'         => array (
+		'Hornemann Institut', 'Hallo Welt! Medienwerkstatt GmbH',
 		'Tobias Weichart', 'Robert Vogel'
 	),
     'url'            => 'http://www.mediawiki.org/wiki/Extension:BibManager',
-    'version'        => 1.0,
+    'version'        => '1.1.0',
     'descriptionmsg' => 'bibmanager-desc',
 );
 
@@ -61,6 +61,7 @@ $wgAutoloadClasses['BibManagerDelete']      = $dir . 'specialpages/BibManagerDel
 $wgAutoloadClasses['BibManagerEdit']        = $dir . 'specialpages/BibManagerEdit_body.php';
 
 //Add I18N
+$wgMessagesDirs['BibManager'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['BibManager'] = $dir . 'BibManager.i18n.php';
 $wgExtensionAliasesFiles['BibManager']  = $dir . 'BibManager.alias.php';
 
