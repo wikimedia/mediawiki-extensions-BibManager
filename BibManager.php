@@ -63,7 +63,7 @@ $wgAutoloadClasses['BibManagerEdit']        = $dir . 'specialpages/BibManagerEdi
 //Add I18N
 $wgMessagesDirs['BibManager'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['BibManager'] = $dir . 'BibManager.i18n.php';
-$wgExtensionAliasesFiles['BibManager']  = $dir . 'BibManager.alias.php';
+$wgExtensionMessagesFiles['BibManagerAlias']  = $dir . 'BibManager.alias.php';
 
 //Add SpecialPages
 $wgSpecialPages['BibManagerList']        = 'BibManagerList';

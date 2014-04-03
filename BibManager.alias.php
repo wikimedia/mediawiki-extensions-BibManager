@@ -1,13 +1,13 @@
 <?php
-
 /**
  * Aliases for special pages for extension BibManager
  *
  * @addtogroup Extensions
  */
-$aliases = array ( );
 
-$aliases['en'] = array (
+$specialPageAliases = array ( );
+
+$specialPageAliases['en'] = array (
     'BibManagerCreate'      => array ( 'BibManager Create entry', 'Create BibEntry' ),
     'BibManagerDelete'      => array ( 'BibManager Delete entry','Delete BibEntry' ),
     'BibManagerEdit'        => array ( 'BibManager Edit entry','Edit BibEntry' ),
@@ -17,7 +17,7 @@ $aliases['en'] = array (
     'BibManagerExport'      => array ( 'BibManager Export','Export BibEntry' )
 );
 
-$aliases['de'] = array (
+$specialPageAliases['de'] = array (
     'BibManagerCreate'      => array ( 'Bibliographieeintrag anlegen' ),
     'BibManagerDelete'      => array ( 'Bibliographieeintrag löschen' ),
     'BibManagerEdit'        => array ( 'Bibliographieeintrag bearbeiten' ),
@@ -27,7 +27,7 @@ $aliases['de'] = array (
 	'BibManagerExport'      => array ( 'Bibliographieeinträge exportieren' )
 );
 
-$aliases['de-formal'] = array (
+$specialPageAliases['de-formal'] = array (
     'BibManagerCreate'      => array ( 'Bibliographieeintrag anlegen' ),
     'BibManagerDelete'      => array ( 'Bibliographieeintrag löschen' ),
     'BibManagerEdit'        => array ( 'Bibliographieeintrag bearbeiten' ),
