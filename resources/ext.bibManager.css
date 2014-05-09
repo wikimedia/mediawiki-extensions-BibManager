@@ -1,121 +1,125 @@
 span.bibmanager-citation {
-        position:relative;
-        color: black;
-        cursor:help;
+		position:relative;
+		color: black;
+		cursor:help;
 }
 
 span.bibmanager-citation > span {
-        background-color: #FAFAFA;
-        display:none;
-        text-decoration: none;
-        position: absolute; 
-        top: 15px;
-        left: 20px;
-        width: 350px;
-        z-index: 100;
-        border:3px dotted #555;
-        padding:10px;
-        text-align: left;
+		background-color: #FAFAFA;
+		display:none;
+		text-decoration: none;
+		position: absolute; 
+		top: 15px;
+		left: 20px;
+		width: 350px;
+		z-index: 100;
+		border:3px dotted #555;
+		padding:10px;
+		text-align: left;
 }
 
 span.bibmanager-citation:hover > span {
-        display: block;
+		display: block;
 }
 
 span.bm_icon_link{
-        display: inline;
-        position: relative;
-        top: 0px;
-        left: 0px;
-        width: 16px;
-        height: 16px;
-        border: none;
-        padding: 0;
-        margin-left: 5px;
+		display: inline;
+		position: relative;
+		top: 0px;
+		left: 0px;
+		width: 16px;
+		height: 16px;
+		border: none;
+		padding: 0;
+		margin-left: 5px;
 }
 
 #bm_form input,
 #bm_form textarea,
 #bm_form select {
-        border:1px solid #BBB;
-        padding: 3px;
+		border:1px solid #BBB;
+		padding: 3px;
 }
 
 #bm_form input:focus,
 #bm_form textarea:focus,
 #bm_form select:focus {
-        border-color: #99F;
+		border-color: #99F;
 }
 
 #bm_form .error {
-        font-size: small;
+		font-size: small;
 }
 
 #bm_form .mw-label {
-        font-style: italic;
-        vertical-align: middle;
-        padding-right: 5px;
+		font-style: italic;
+		vertical-align: middle;
+		padding-right: 5px;
 }
 
 input[readonly] {
-        color: #AAA;
-        background-color: #FAFAFA;
+		color: #AAA;
+		background-color: #FAFAFA;
 }
 
 #bm_table a.icon {
-        position: relative;
-        width: 16px;
-        text-indent: 9999px;
-        margin: 3px;
-        background-repeat: no-repeat;
-        display: inline-block;
+	position: relative;
+	width: 16px;
+	text-indent: 9999px;
+	margin: 3px;
+	background-repeat: no-repeat;
+	display: inline-block;
+	overflow: hidden;
 }
 
 #bm_table a.edit {
-        background-image: url('images/pencil.png');
+	/*@embed*/
+	background-image: url(images/pencil.png);
 }
 
 #bm_table a.delete {
-        background-image: url('images/cross.png');
+	/*@embed*/
+	background-image: url(images/cross.png);
 }
 
 #bm_table a.export {
-        background-image: url('images/disk.png');
+	/*@embed*/
+	background-image: url(images/disk.png);
 }
 
 #bm_delete th {
-        text-align: right;
-        background-color: #EEE;
+	text-align: right;
+	background-color: #EEE;
 }
 
 #bm_table table th {
-        background-color: #EEE;
-        border: 1px solid #BBB;
+	background-color: #EEE;
+	border: 1px solid #BBB;
 }
 
 #bm_table table, #bm_delete {
-        border-collapse: collapse;
-        margin: 10px 0;
-        border: 1px solid #BBB;
+	border-collapse: collapse;
+	margin: 10px 0;
+	border: 1px solid #BBB;
 }
 
 #bm_table th,
 #bm_table td,
 #bm_delete th,
 #bm_delete td{
-        padding: 5px;
-        border: 1px solid #BBB;
+	padding: 5px;
+	border: 1px solid #BBB;
 }
 
 table.bm_list_table {
-        border-collapse: collapse;
-        width: 100%;
+	border-collapse: collapse;
+	width: 100%;
 }
 
 table.bm_list_table td{
-        padding: 3px;
+	padding: 3px;
 }
 
 table.bm_list_table tr:hover {
-        background-color: #FCFCFC;
+	background-color: #FCFCFC;
 }
