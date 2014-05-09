@@ -127,8 +127,9 @@ class BibManagerPagerList extends AlphabeticPager {
 		$tablerow[] = '<tr>';
 		$tablerow[] = '  <td style="vertical-align:top;">' . $citationLink . '</td>';
 		$tablerow[] = '  <td>' . $format . '</td>';
-		if ($wgUser->isAllowed('bibmanageredit') || $wgUser->isAllowed('bibmanagerdelete'))
-		$tablerow[] = '  <td style="text-align:center;">' . $editLink . $deleteLink . '</td>';
+		if ($wgUser->isAllowed('bibmanageredit') || $wgUser->isAllowed('bibmanagerdelete')) {
+			$tablerow[] = '  <td style="text-align:center;">' . $editLink . $deleteLink . '</td>';
+		}
 		$tablerow[] = '  <td style="text-align:center;">' . $exportLink . '</td>';
 		$tablerow[] = '<tr>';
 

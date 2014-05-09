@@ -20,11 +20,11 @@ class SpecialBibManagerList extends SpecialPage {
 		$wgOut->addHTML( '<div id="bm_form">' );
 
 		$createLink = Linker::link(
-		    SpecialPage::getTitleFor( 'BibManagerCreate' ),
+			SpecialPage::getTitleFor( 'BibManagerCreate' ),
 			SpecialPageFactory::getPage('BibManagerCreate')->getDescription()
 		);
 		$importLink = Linker::link(
-		    SpecialPage::getTitleFor( 'BibManagerImport' ),
+			SpecialPage::getTitleFor( 'BibManagerImport' ),
 			SpecialPageFactory::getPage('BibManagerImport')->getDescription()
 		);
 		$wgOut->addHtml( wfMsg( 'bm_list_welcome', $createLink, $importLink ) );
@@ -34,19 +34,19 @@ class SpecialBibManagerList extends SpecialPage {
 		}
 		ksort( $selectValues );
 		$formDescriptor = array (
-		    'bm_list_search_text' => array (
-			'label' => wfMsg( 'bm_list_search_term' ),
-			'section' => 'title',
-			'class' => 'HTMLTextField',
-			'default' => $wgRequest->getVal( 'wpbm_list_search_text', '' ),
-		    ),
-		    'bm_list_search_select' => array (
-			'label' => wfMsg( 'bm_list_search_fieldname' ),
-			'section' => 'title',
-			'class' => 'HTMLSelectField',
-			'options' => $selectValues,
-			'default' => $wgRequest->getVal( 'wpbm_list_search_select', '' )
-		    )
+			'bm_list_search_text' => array (
+				'label' => wfMsg( 'bm_list_search_term' ),
+				'section' => 'title',
+				'class' => 'HTMLTextField',
+				'default' => $wgRequest->getVal( 'wpbm_list_search_text', '' ),
+			),
+			'bm_list_search_select' => array (
+				'label' => wfMsg( 'bm_list_search_fieldname' ),
+				'section' => 'title',
+				'class' => 'HTMLSelectField',
+				'options' => $selectValues,
+				'default' => $wgRequest->getVal( 'wpbm_list_search_select', '' )
+			)
 		);
 
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_list_search' );
@@ -72,7 +72,15 @@ class SpecialBibManagerList extends SpecialPage {
 			$table[] = '    </tr>';
 			$table[] = $sDataBody;
 			$table[] = '  </table>';
-			$table[] = XML::submitButton( wfMsg( "bm_list_table_submit-export" ), array ( 'style' => 'float:right;' ) );
+			$table[] = Html::input(
+				'submit-export',
+				wfMsg( "bm_list_table_submit-export" ),
+				'submit',
+				array (
+					'style' => 'float:right;',
+					'class' => 'mw-ui-button mw-ui-progressive'
+				)
+			);
 			$table[] = '</form>';
 
 			$wgOut->addHTML( implode( "\n", $table ) );

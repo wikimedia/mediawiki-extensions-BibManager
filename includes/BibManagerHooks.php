@@ -72,7 +72,7 @@ class BibManagerHooks {
 		global $wgBibManagerCitationArticleNamespace;
 		$parser->disableCache();
 		if ( !isset( $args['id'] ) )
-			return '[' . wfMsg( 'bm_missing-id' ) . ']';
+			return '[' . wfMessage( 'bm_missing-id' )->escaped() . ']';
 
 		$entry = BibManagerRepository::singleton()
 			->getBibEntryByCitation( $args['id'] );
@@ -84,10 +84,10 @@ class BibManagerHooks {
 			$sLink = Linker::link(
 				$spTitle, $args['id'], array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $args['id'] ), array ( 'broken' => true )
 			);
-			$sTooltip = '<span>' . wfMsg('bm_error_not-existing');
+			$sTooltip = '<span>' . wfMessage('bm_error_not-existing')->escaped();
 			if ($wgUser->isAllowed('bibmanagercreate')){
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $args['id'] ));
-				$sTooltip .= XML::element("a", array("href" => $sLinkToEdit), wfMsg( 'bm_tag_click_to_create' ));
+				$sTooltip .= XML::element("a", array("href" => $sLinkToEdit), wfMessage( 'bm_tag_click_to_create' )->escaped());
 			}
 			$sTooltip .= '</span>';
 		} else {
@@ -113,7 +113,7 @@ class BibManagerHooks {
 			if ( $unprefixedKey == 'author' ) {
 				$value = implode( '; ', explode( ' and ', $value ) ); // TODO RBV (22.12.11 15:34): Duplicate code!
 			}
-			$tooltip[] = XML::element( 'strong', null, wfMsg( $key ) . ': ' ) . ' '
+			$tooltip[] = XML::element( 'strong', null, wfMessage( $key )->escaped() . ': ' ) . ' '
 				. XML::element( 'em', null, $value )
 				."<br/>";//. XML::element( 'br', null, null ); //This is just a little exercise
 		}
@@ -153,7 +153,7 @@ class BibManagerHooks {
 
 		$out = array ( );
 		foreach ( $icons as $key => $iconDesc ) {
-			$text = wfMsg( $iconDesc['title'] );
+			$text = wfMessage( $iconDesc['title'] )->escaped();
 			$iconEl = XML::element(
 				'img', array (
 				'src' => $iconDesc['src'],
@@ -192,12 +192,12 @@ class BibManagerHooks {
 
 		$out = array ( );
 		$out[] = XML::element( 'hr', null, null );
-		$out[] = wfMsg( 'bm_tag_tag-used' );
+		$out[] = wfMessage( 'bm_tag_tag-used' )->escaped();
 
 		$bibTags = array ( );
 		preg_match_all( '<bib.*?id=[\'"\ ]*(.*?)[\'"\ ].*?>', $content, $bibTags ); // TODO RBV (10.11.11 13:31): It might be better to have a db table for wikipage <-> citation relationship. This table could be updated in bib-Tag callback.
 		if ( empty( $bibTags[0][0] ) )
-			return wfMsg( 'bm_tag_no-tags-used' ); //No Tags found
+			return wfMessage( 'bm_tag_no-tags-used' )->escaped(); //No Tags found
 		$entries = array ( );
 		$repo = BibManagerRepository::singleton();
 
@@ -227,7 +227,7 @@ class BibManagerHooks {
 		/*
 		  $aMissingCits = array_diff(self::$aBibTagUsed, $aFoundCits);
 		  foreach ($aMissingCits as $sCit){
-		  $aOut [$sCit] = "<li><a href='".SpecialPage::getTitleFor("BibManagerCreate")->getLocalURL()."' >[".$sCit."]</a> (".wfMsg('bm_error_not-existing').")</li>";
+		  $aOut [$sCit] = "<li><a href='".SpecialPage::getTitleFor("BibManagerCreate")->getLocalURL()."' >[".$sCit."]</a> (".wfMessage('bm_error_not-existing')->escaped().")</li>";
 		  }
 		 */
 	}
@@ -247,7 +247,7 @@ class BibManagerHooks {
 		$parser->disableCache();
 
 		if ( !isset( $args['filter'] ) && !isset($args['citation'] ))
-			return '[' . wfMsg( 'bm_missing-filter' ) . ']';
+			return '[' . wfMessage( 'bm_missing-filter' )->escaped() . ']';
 		$repo = BibManagerRepository::singleton();
 		if (isset($args['citation'])){
 			$res [] = $repo->getBibEntryByCitation($args['citation']);
@@ -281,7 +281,7 @@ class BibManagerHooks {
 				$conds[] = implode( ' OR ', $tmpCond );
 			}
 			if ( empty( $conds ) )
-				return '[' . wfMsg( 'bm_invalid-filter' ) . ']';
+				return '[' . wfMessage( 'bm_invalid-filter' )->escaped() . ']';
 
 			$res = $repo->getBibEntries( $conds );
 		}
@@ -312,7 +312,7 @@ class BibManagerHooks {
 				$value = implode( '; ', explode( ' and ', $value ) );
 
 			if ( $key == 'editor' )
-				$value .= wfMsg( 'bm_editor_addition' );
+				$value .= wfMessage( 'bm_editor_addition' )->escaped();
 
 			if ( $key == 'url' ) {
 				$urlKey = $prefixedKeys ? 'bm_url' : 'url';
@@ -324,7 +324,7 @@ class BibManagerHooks {
 						'class'  => 'external',
 						'rel'    => 'nofollow'
 					),
-					wfMsg( 'bm_url')
+					wfMessage( 'bm_url')->escaped()
 				);
 			}
 
@@ -349,7 +349,7 @@ class BibManagerHooks {
 		global $wgUser, $wgBibManagerCitationArticleNamespace;
 		$out = Html::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
 		if ( $res === false )
-			return '[' . wfMsg( 'bm_no-data-found' ) . ']';
+			return '[' . wfMessage( 'bm_no-data-found' )->escaped() . ']';
 		foreach ( $res as $key=>$val ) {
 			if (empty($val)){
 				$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' ); // TODO RBV (10.11.11 13:50): Dublicate code --> encapsulate
@@ -357,9 +357,9 @@ class BibManagerHooks {
 					$spTitle, $key, array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $key ), array ( 'broken' => true )
 				);
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $key ));
-				$citFormat = '<em>' . wfMsg('bm_error_not-existing');
+				$citFormat = '<em>' . wfMessage('bm_error_not-existing')->escaped();
 				if ($wgUser->isAllowed('bibmanagercreate'))
-					$citFormat .= Html::element('a', array('href' => $sLinkToEdit), wfMsg( 'bm_tag_click_to_create' ));
+					$citFormat .= Html::element('a', array('href' => $sLinkToEdit), wfMessage( 'bm_tag_click_to_create' )->escaped());
 				$citFormat .='</em>';
 				$citIcons = '';
 			}

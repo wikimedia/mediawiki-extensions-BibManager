@@ -34,13 +34,6 @@ span.bm_icon_link{
 		margin-left: 5px;
 }
 
-#bm_form input,
-#bm_form textarea,
-#bm_form select {
-		border:1px solid #BBB;
-		padding: 3px;
-}
-
 #bm_form input:focus,
 #bm_form textarea:focus,
 #bm_form select:focus {
