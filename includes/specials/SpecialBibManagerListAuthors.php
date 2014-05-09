@@ -4,7 +4,6 @@ class BibManagerListAuthors extends SpecialPage {
 
 	function __construct () {
 		parent::__construct( 'BibManagerListAuthors' );
-		wfLoadExtensionMessages( 'BibManager' );
 	}
 
 	/**

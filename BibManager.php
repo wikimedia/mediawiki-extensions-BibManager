@@ -25,45 +25,43 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 }
 
 $wgExtensionCredits['specialpage'][] = array (
-    'path'           => __FILE__,
-    'name'           => 'BibManager',
-    'author'         => array (
+	'path'           => __FILE__,
+	'name'           => 'BibManager',
+	'author'         => array (
 		'Hornemann Institut', 'Hallo Welt! Medienwerkstatt GmbH',
 		'Tobias Weichart', 'Robert Vogel'
 	),
-    'url'            => 'http://www.mediawiki.org/wiki/Extension:BibManager',
-    'version'        => '1.1.0',
-    'descriptionmsg' => 'bibmanager-desc',
+	'url'            => 'http://www.mediawiki.org/wiki/Extension:BibManager',
+	'version'        => '1.23.0',
+	'descriptionmsg' => 'bibmanager-desc',
 );
 
-$dir = dirname( __FILE__ ) . '/';
-
 //Register classes
-$wgAutoloadClasses['Structures_BibTex'] = $dir . 'lib/Structures_BibTex/BibTex.php'; //External library for parsing
+$wgAutoloadClasses['Structures_BibTex'] = __DIR__ . 'includes/lib/Structures_BibTex/BibTex.php'; //External library for parsing
 
-$wgAutoloadClasses['BibManagerHooks']               = $dir . 'includes/BibManagerHooks.php';
-$wgAutoloadClasses['BibManagerFieldsList']          = $dir . 'includes/BibManagerFieldsList.php';
-$wgAutoloadClasses['BibManagerLocalMWDatabaseRepo'] = $dir . 'includes/BibManagerLocalMWDatabaseRepo.php';
-$wgAutoloadClasses['BibManagerPagerList']           = $dir . 'includes/BibManagerPagerList.php';
-$wgAutoloadClasses['BibManagerPagerListAuthors']    = $dir . 'includes/BibManagerPagerListAuthors.php';
-$wgAutoloadClasses['BibManagerRepository']          = $dir . 'includes/BibManagerRepository.php';
-$wgAutoloadClasses['BibManagerValidator']           = $dir . 'includes/BibManagerValidator.php';
-$wgAutoloadClasses['BibManagerLocalMWDatabaseRepo'] = $dir . 'includes/BibManagerLocalMWDatabaseRepo.php';
-$wgAutoloadClasses['BibManagerRepository']          = $dir . 'includes/BibManagerRepository.php';
+$wgAutoloadClasses['BibManagerHooks']               = __DIR__ . 'includes/BibManagerHooks.php';
+$wgAutoloadClasses['BibManagerFieldsList']          = __DIR__ . 'includes/BibManagerFieldsList.php';
+$wgAutoloadClasses['BibManagerLocalMWDatabaseRepo'] = __DIR__ . 'includes/BibManagerLocalMWDatabaseRepo.php';
+$wgAutoloadClasses['BibManagerPagerList']           = __DIR__ . 'includes/BibManagerPagerList.php';
+$wgAutoloadClasses['BibManagerPagerListAuthors']    = __DIR__ . 'includes/BibManagerPagerListAuthors.php';
+$wgAutoloadClasses['BibManagerRepository']          = __DIR__ . 'includes/BibManagerRepository.php';
+$wgAutoloadClasses['BibManagerValidator']           = __DIR__ . 'includes/BibManagerValidator.php';
+$wgAutoloadClasses['BibManagerLocalMWDatabaseRepo'] = __DIR__ . 'includes/BibManagerLocalMWDatabaseRepo.php';
+$wgAutoloadClasses['BibManagerRepository']          = __DIR__ . 'includes/BibManagerRepository.php';
 
 //SpecialPages
-$wgAutoloadClasses['BibManagerList']        = $dir . 'specialpages/BibManagerList_body.php';
-$wgAutoloadClasses['BibManagerListAuthors'] = $dir . 'specialpages/BibManagerListAuthors_body.php';
-$wgAutoloadClasses['BibManagerImport']      = $dir . 'specialpages/BibManagerImport_body.php';
-$wgAutoloadClasses['BibManagerExport']      = $dir . 'specialpages/BibManagerExport_body.php';
-$wgAutoloadClasses['BibManagerCreate']      = $dir . 'specialpages/BibManagerCreate_body.php';
-$wgAutoloadClasses['BibManagerDelete']      = $dir . 'specialpages/BibManagerDelete_body.php';
-$wgAutoloadClasses['BibManagerEdit']        = $dir . 'specialpages/BibManagerEdit_body.php';
+$wgAutoloadClasses['BibManagerList']        = __DIR__ . 'includes/specials/SpecialBibManagerList.php';
+$wgAutoloadClasses['BibManagerListAuthors'] = __DIR__ . 'includes/specials/SpecialBibManagerListAuthors.php';
+$wgAutoloadClasses['BibManagerImport']      = __DIR__ . 'includes/specials/SpecialBibManagerImport.php';
+$wgAutoloadClasses['BibManagerExport']      = __DIR__ . 'includes/specials/SpecialBibManagerExport.php';
+$wgAutoloadClasses['BibManagerCreate']      = __DIR__ . 'includes/specials/SpecialBibManagerCreate.php';
+$wgAutoloadClasses['BibManagerDelete']      = __DIR__ . 'includes/specials/SpecialBibManagerDelete.php';
+$wgAutoloadClasses['BibManagerEdit']        = __DIR__ . 'includes/specials/SpecialBibManagerEdit.php';
 
 //Add I18N
 $wgMessagesDirs['BibManager'] = __DIR__ . '/i18n';
-$wgExtensionMessagesFiles['BibManager'] = $dir . 'BibManager.i18n.php';
-$wgExtensionMessagesFiles['BibManagerAlias']  = $dir . 'BibManager.alias.php';
+$wgExtensionMessagesFiles['BibManager'] = __DIR__ . 'BibManager.i18n.php';
+$wgExtensionMessagesFiles['BibManagerAlias']  = __DIR__ . 'BibManager.alias.php';
 
 //Add SpecialPages
 $wgSpecialPages['BibManagerList']        = 'BibManagerList';
@@ -75,19 +73,19 @@ $wgSpecialPages['BibManagerCreate']      = 'BibManagerCreate';
 $wgSpecialPages['BibManagerEdit']        = 'BibManagerEdit';
 
 //Add SpecialPages to group
-$wgSpecialPageGroups['BibManagerList']        = 'BibManager';
-$wgSpecialPageGroups['BibManagerListAuthors'] = 'BibManager';
-$wgSpecialPageGroups['BibManagerImport']      = 'BibManager';
-$wgSpecialPageGroups['BibManagerExport']      = 'BibManager';
-$wgSpecialPageGroups['BibManagerDelete']      = 'BibManager';
-$wgSpecialPageGroups['BibManagerCreate']      = 'BibManager';
-$wgSpecialPageGroups['BibManagerEdit']        = 'BibManager';
+$wgSpecialPageGroups['BibManagerList']        = 'bibmanager';
+$wgSpecialPageGroups['BibManagerListAuthors'] = 'bibmanager';
+$wgSpecialPageGroups['BibManagerImport']      = 'bibmanager';
+$wgSpecialPageGroups['BibManagerExport']      = 'bibmanager';
+$wgSpecialPageGroups['BibManagerDelete']      = 'bibmanager';
+$wgSpecialPageGroups['BibManagerCreate']      = 'bibmanager';
+$wgSpecialPageGroups['BibManagerEdit']        = 'bibmanager';
 
 //Add Hookhandler
 $wgHooks['ParserFirstCallInit'][] = 'BibManagerHooks::onParserFirstCallInit';
 $wgHooks['BeforePageDisplay'][]   = 'BibManagerHooks::onBeforePageDisplay';
 //$wgHooks['SkinAfterContent'][]    = 'BibManagerHooks::onSkinAfterContent';
-$wgHooks['LoadExtensionSchemaUpdates'][] = 'BibManagerHooks::onLoadExtensionSchemaUpdates'; //Register SQL File
+$wgHooks['LoadExtensionSchemaUpdates'][] = 'BibManagerHooks::onLoadExtensionSchemaUpdates';
 
 //Config Variables
 $wgBibManagerUseJS = true;
@@ -118,4 +116,4 @@ $wgBibManagerScholarLink = 'http://scholar.google.com/scholar?q=%title%';
 $wgGroupPermissions['sysop']['bibmanageredit']   = true;
 $wgGroupPermissions['sysop']['bibmanagerdelete'] = true;
 $wgGroupPermissions['sysop']['bibmanagercreate'] = true;
-unset( $dir );
+unset( __DIR__ );

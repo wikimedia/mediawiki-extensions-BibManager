@@ -4,7 +4,6 @@ class BibManagerEdit extends UnlistedSpecialPage {
 
 	public function __construct () {
 		parent::__construct( 'BibManagerEdit' , 'bibmanageredit');
-		wfLoadExtensionMessages( 'BibManager' );
 	}
 
 	/**

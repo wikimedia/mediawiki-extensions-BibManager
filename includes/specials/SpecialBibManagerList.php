@@ -4,7 +4,6 @@ class BibManagerList extends SpecialPage {
 
 	function __construct () {
 		parent::__construct( 'BibManagerList' );
-		wfLoadExtensionMessages( 'BibManager' );
 	}
 
 	/**

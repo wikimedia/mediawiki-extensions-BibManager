@@ -4,7 +4,6 @@ class BibManagerCreate extends IncludableSpecialPage {
 
 	public function __construct () {
 		parent::__construct( 'BibManagerCreate' , 'bibmanagercreate');
-		wfLoadExtensionMessages( 'BibManager' );
 	}
 
 	/**
