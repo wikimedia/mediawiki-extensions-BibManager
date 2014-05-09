@@ -1,6 +1,6 @@
 <?php
 
-class BibManagerCreate extends IncludableSpecialPage {
+class SpecialBibManagerCreate extends IncludableSpecialPage {
 
 	public function __construct () {
 		parent::__construct( 'BibManagerCreate' , 'bibmanagercreate');

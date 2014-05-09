@@ -1,6 +1,6 @@
 <?php
 
-class BibManagerListAuthors extends SpecialPage {
+class SpecialBibManagerListAuthors extends SpecialPage {
 
 	function __construct () {
 		parent::__construct( 'BibManagerListAuthors' );

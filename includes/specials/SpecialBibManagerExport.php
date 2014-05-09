@@ -1,6 +1,6 @@
 <?php
 
-class BibManagerExport extends UnlistedSpecialPage {
+class SpecialBibManagerExport extends UnlistedSpecialPage {
 
 	public function __construct () {
 		parent::__construct( 'BibManagerExport' );
@@ -15,7 +15,7 @@ class BibManagerExport extends UnlistedSpecialPage {
 	public function execute ( $par ) {
 		global $wgOut, $wgRequest;
 		// TODO RBV (17.12.11 16:46): This is very similar to the BibManagerEdit SpecialPage --> encapsulate logic
-		
+
 		$givenValues = $wgRequest->getArray( 'cit', array() );
 		$out = '';
 		foreach ( $givenValues as $citation ) {
@@ -36,7 +36,7 @@ class BibManagerExport extends UnlistedSpecialPage {
 				if ( empty( $value ) ) continue;
 				$lines[$fieldName] = $value;
 			}
-			
+
 			$bibtex = new Structures_BibTex();
 			$bibtex->setOption("extractAuthors", false);
 			$bibtex->addEntry($lines);
@@ -49,8 +49,8 @@ class BibManagerExport extends UnlistedSpecialPage {
 		$filename = 'export-' . date( 'Y-m-d_H-i-s' ) . '.bib';
 		$wgRequest->response()->header( "Content-type: application/x-bibtex; charset=utf-8" );
 		$wgRequest->response()->header( "Content-disposition: attachment;filename={$filename}" );
-		
-		
+
+
 		echo $out;
 	}
 

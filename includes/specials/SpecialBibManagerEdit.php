@@ -1,6 +1,6 @@
 <?php
 
-class BibManagerEdit extends UnlistedSpecialPage {
+class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 	public function __construct () {
 		parent::__construct( 'BibManagerEdit' , 'bibmanageredit');

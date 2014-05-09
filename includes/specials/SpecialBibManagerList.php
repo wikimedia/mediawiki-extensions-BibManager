@@ -1,6 +1,6 @@
 <?php
 
-class BibManagerList extends SpecialPage {
+class SpecialBibManagerList extends SpecialPage {
 
 	function __construct () {
 		parent::__construct( 'BibManagerList' );

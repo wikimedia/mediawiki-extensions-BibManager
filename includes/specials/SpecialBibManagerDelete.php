@@ -1,6 +1,6 @@
 <?php
 
-class BibManagerDelete extends UnlistedSpecialPage {
+class SpecialBibManagerDelete extends UnlistedSpecialPage {
 
 	public function __construct () {
 		parent::__construct( 'BibManagerDelete' , 'bibmanagerdelete');

@@ -1,6 +1,6 @@
 <?php
 
-class BibManagerImport extends SpecialPage {
+class SpecialBibManagerImport extends SpecialPage {
 
 	public function __construct () {
 		parent::__construct( 'BibManagerImport' , 'bibmanageredit');
