@@ -37,7 +37,7 @@ $wgExtensionCredits['specialpage'][] = array (
 );
 
 //Register classes
-$wgAutoloadClasses['Structures_BibTex'] = __DIR__ . '/includes/lib/Structures_BibTex/BibTex.php'; //External library for parsing
+$wgAutoloadClasses['Structures_BibTex'] = __DIR__ . '/includes/libs/Structures_BibTex/BibTex.php'; //External library for parsing
 
 $wgAutoloadClasses['BibManagerHooks']               = __DIR__ . '/includes/BibManagerHooks.php';
 $wgAutoloadClasses['BibManagerFieldsList']          = __DIR__ . '/includes/BibManagerFieldsList.php';
@@ -87,8 +87,23 @@ $wgHooks['BeforePageDisplay'][]   = 'BibManagerHooks::onBeforePageDisplay';
 //$wgHooks['SkinAfterContent'][]    = 'BibManagerHooks::onSkinAfterContent';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'BibManagerHooks::onLoadExtensionSchemaUpdates';
 
+$resourceModuleTemplate = array(
+	'styles' => 'ext.bibManager.css',
+	'localBasePath' => __DIR__.'/resources',
+	'remoteExtPath' => 'BibManager/resources'
+);
+
+$wgResourceModules['ext.bibManager.List'] = array(
+	'scripts' => 'ext.bibManager.List.js'
+) + $resourceModuleTemplate;
+
+$wgResourceModules['ext.bibManager.Edit'] = array(
+	'scripts' => 'ext.bibManager.Edit.js'
+) + $resourceModuleTemplate;
+
+unset( $resourceModuleTemplate );
+
 //Config Variables
-$wgBibManagerUseJS = true;
 $wgBibManagerRepoClass = 'BibManagerLocalMWDatabaseRepo';
 $wgBibManagerCitationFormats = array (
     '-'             => '%author%: %title%, %year%',

@@ -12,18 +12,18 @@ class BibManagerHooks {
 			// <= 1.16 support
 			global $wgExtNewTables, $wgExtModifiedFields;
 			$wgExtNewTables[] = array (
-			    'bibmanager',
-			    dirname( dirname( __FILE__ ) ) . '/BibManager.sql'
+				'bibmanager',
+				dirname( dirname( __FILE__ ) ) . '/BibManager.sql'
 			);
 		} else {
 			// >= 1.17 support
 			$updater->addExtensionUpdate(
-			    array (
+				array (
 				'addTable',
 				'bibmanager',
 				dirname( dirname( __FILE__ ) ) . '/BibManager.sql',
 				true
-			    )
+				)
 			);
 		}
 		return true;
@@ -36,30 +36,13 @@ class BibManagerHooks {
 	 * @return bool Always true to keep hook running
 	 */
 	public static function onBeforePageDisplay ( &$out, &$skin ) {
-		global $wgBibManagerUseJS, $wgScriptPath;
-		if ( $wgBibManagerUseJS == false )
-			return true;
-		if ( $out->hasHeadItem( 'BibManager' ) )
-			return true; //prevent double loading
-
-		$out->addExtensionStyle(
-		    htmlspecialchars( $wgScriptPath . '/extensions/BibManager/client/BibManagerCommon.css' )
-		);
-
-		global $wgJsMimeType;
-		if ( $out->getTitle()->isSpecial( 'BibManagerEdit' )
-		    || $out->getTitle()->isSpecial( 'BibManagerCreate' ) ) {
-			$encJsFile = htmlspecialchars( $wgScriptPath . '/extensions/BibManager/client/BibManagerEdit.js' );
-			$head = '<script type="' . $wgJsMimeType . '" src="' . $encJsFile . '"></script>';
-			$out->addHeadItem( 'BibManager', $head );
+		if ( $out->getTitle()->equals( SpecialPage::getTitleFor( 'BibManagerEdit' ) )
+			|| $out->getTitle()->equals( SpecialPage::getTitleFor( 'BibManagerCreate' ) ) ) {
+			$out->addModules( 'ext.bibManager.Edit');
 		}
 
-		if ( $out->hasHeadItem( 'BibManagerList' ) )
-			return true;
-		if ( $out->getTitle()->isSpecial( 'BibManagerList' ) ) {
-			$encJsFile = htmlspecialchars( $wgScriptPath . '/extensions/BibManager/client/BibManagerList.js' );
-			$head = '<script type="' . $wgJsMimeType . '" src="' . $encJsFile . '"></script>';
-			$out->addHeadItem( 'BibManagerList', $head );
+		if ( $out->getTitle()->equals( SpecialPage::getTitleFor( 'BibManagerList' ) ) ) {
+			$out->addModules( 'ext.bibManager.List');
 		}
 		return true;
 	}
@@ -92,14 +75,14 @@ class BibManagerHooks {
 			return '[' . wfMsg( 'bm_missing-id' ) . ']';
 
 		$entry = BibManagerRepository::singleton()
-		    ->getBibEntryByCitation( $args['id'] );
+			->getBibEntryByCitation( $args['id'] );
 
 		$sTooltip = '';
 		$sLink = '';
 		if ( empty( $entry ) ) {
 			$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' );
 			$sLink = Linker::link(
-			    $spTitle, $args['id'], array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $args['id'] ), array ( 'broken' => true )
+				$spTitle, $args['id'], array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $args['id'] ), array ( 'broken' => true )
 			);
 			$sTooltip = '<span>' . wfMsg('bm_error_not-existing');
 			if ($wgUser->isAllowed('bibmanagercreate')){
@@ -118,7 +101,7 @@ class BibManagerHooks {
 	public static function getTooltip ( $entry, $args ) {
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$entryTypeFields = array_merge(
-		    $typeDefs[$entry['bm_bibtexEntryType']]['required'], $typeDefs[$entry['bm_bibtexEntryType']]['optional']
+			$typeDefs[$entry['bm_bibtexEntryType']]['required'], $typeDefs[$entry['bm_bibtexEntryType']]['optional']
 		);
 
 		$tooltip = array ( );
@@ -131,8 +114,8 @@ class BibManagerHooks {
 				$value = implode( '; ', explode( ' and ', $value ) ); // TODO RBV (22.12.11 15:34): Duplicate code!
 			}
 			$tooltip[] = XML::element( 'strong', null, wfMsg( $key ) . ': ' ) . ' '
-			    . XML::element( 'em', null, $value )
-			    ."<br/>";//. XML::element( 'br', null, null ); //This is just a little exercise
+				. XML::element( 'em', null, $value )
+				."<br/>";//. XML::element( 'br', null, null ); //This is just a little exercise
 		}
 
 		$tooltip[] = self::getIcons( $entry );
@@ -153,17 +136,17 @@ class BibManagerHooks {
 
 		if ( !empty( $entry['bm_bibtexCitation'] ) && $wgUser->isAllowed('bibmanageredit') ) {
 			$icons['edit'] = array (
-			    'src' => $wgScriptPath . '/extensions/BibManager/client/images/pencil.png',
-			    'title' => 'bm_tooltip_edit',
-			    'href' => SpecialPage::getTitleFor( 'BibManagerEdit' )
+				'src' => $wgScriptPath . '/extensions/BibManager/client/images/pencil.png',
+				'title' => 'bm_tooltip_edit',
+				'href' => SpecialPage::getTitleFor( 'BibManagerEdit' )
 				->getLocalURL( array ( 'bm_bibtexCitation' => $entry['bm_bibtexCitation'] ) )
 			);
 		}
 		$scholarLink = str_replace( '%title%', $entry['bm_title'], $wgBibManagerScholarLink );
 		$icons['scholar'] = array (
-		    'src' => $wgScriptPath . '/extensions/BibManager/client/images/book.png',
-		    'title' => 'bm_tooltip_scholar',
-		    'href' => $scholarLink
+			'src' => $wgScriptPath . '/extensions/BibManager/client/images/book.png',
+			'title' => 'bm_tooltip_scholar',
+			'href' => $scholarLink
 		);
 
 		wfRunHooks( 'BibManagerGetIcons', array ( $entry, &$icons ) );
@@ -364,38 +347,38 @@ class BibManagerHooks {
 
 	public static function getTable($res){
 		global $wgUser, $wgBibManagerCitationArticleNamespace;
-		$out = XML::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
+		$out = Html::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
 		if ( $res === false )
 			return '[' . wfMsg( 'bm_no-data-found' ) . ']';
 		foreach ( $res as $key=>$val ) {
 			if (empty($val)){
 				$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' ); // TODO RBV (10.11.11 13:50): Dublicate code --> encapsulate
 				$citLink = Linker::link(
-				    $spTitle, $key, array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $key ), array ( 'broken' => true )
+					$spTitle, $key, array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $key ), array ( 'broken' => true )
 				);
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $key ));
 				$citFormat = '<em>' . wfMsg('bm_error_not-existing');
 				if ($wgUser->isAllowed('bibmanagercreate'))
-					$citFormat .= XML::element('a', array('href' => $sLinkToEdit), wfMsg( 'bm_tag_click_to_create' ));
+					$citFormat .= Html::element('a', array('href' => $sLinkToEdit), wfMsg( 'bm_tag_click_to_create' ));
 				$citFormat .='</em>';
 				$citIcons = '';
 			}
 			else {
 				$title = Title::newFromText( $val['bm_bibtexCitation'], $wgBibManagerCitationArticleNamespace );
 				$citLink = Linker::link(
-				    $title, $title->getText()
+					$title, $title->getText()
 				);
 				$citFormat = self::formatEntry( $val );
 				$citIcons = self::getIcons( $val );
 			}
 
-			$out .= XML::openElement( 'tr' );
+			$out .= Html::openElement( 'tr' );
 			$out .= '<td style="width:100px; text-align: left; vertical-align: top;">[' . $citLink . ']</td>';
 			$out .= '<td>' . $citFormat . '</td>';
 			$out .= '<td style="width:70px">' . $citIcons . '</td>';
-			$out .= XML::closeElement( 'tr' );
+			$out .= Html::closeElement( 'tr' );
 		}
-		$out .= XML::closeElement( 'table' );
+		$out .= Html::closeElement( 'table' );
 		return $out;
 	}
 }
