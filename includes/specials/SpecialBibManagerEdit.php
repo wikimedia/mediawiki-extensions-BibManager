@@ -24,16 +24,20 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 		$citation = !empty( $par ) ? $par : $wgRequest->getVal( 'bm_bibtexCitation', '' );
 
-		$entry = array ( );
+		$entry = array();
 		$entry['bm_bibtexCitation'] = $citation;
 		if ( !empty( $citation ) ) {
 			$e = BibManagerRepository::singleton()
-			    ->getBibEntryByCitation( $citation );
-			if ( !empty( $e ) )
+					->getBibEntryByCitation( $citation );
+			if ( !empty( $e ) ) {
 				$entry = $e;
+			}
 		}
 
 		$entryType = $wgRequest->getVal( 'bm_select_type', '' );
+		if( empty( $entryType ) ) {
+			$entryType = $wgRequest->getVal( 'wpbm_bibtexEntryType', '' );
+		}
 		if ( isset( $entry['bm_bibtexEntryType'] ) ) {
 			$entryType = $entry['bm_bibtexEntryType'];
 		}
@@ -53,13 +57,13 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$bibTeXFields = BibManagerFieldsList::getFieldDefinitions();
 
-		$formDescriptor = array ( );
+		$formDescriptor = array();
 		$formDescriptor['bm_bibtexCitation'] = array (
-		    'class' => 'HTMLTextField',
-		    'label' => wfMsg( 'bm_citation' ),
-		    'section' => 'citation',
-		    'required' => true,
-		    'validation-callback' => 'BibManagerValidator::validateCitation'
+			'class' => 'HTMLTextField',
+			'label' => wfMsg( 'bm_citation' ),
+			'section' => 'citation',
+			'required' => true,
+			'validation-callback' => 'BibManagerValidator::validateCitation'
 		);
 
 		$editMode = $wgRequest->getBool( 'bm_edit_mode' );
@@ -68,12 +72,13 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 			$formDescriptor['bm_bibtexCitation']['default'] = $entry['bm_bibtexCitation'];
 			$formDescriptor['bm_bibtexCitation']['help-message'] = 'bm_readonly';
 
-			if ( $editMode )
+			if ( $editMode ) {
 				unset( $formDescriptor['bm_bibtexCitation']['validation-callback'] ); //If it is a edit we dont need to revalidate
+			}
 
 			$formDescriptor['bm_edit_mode'] = array (
-			    'class' => 'HTMLHiddenField',
-			    'default' => 1
+				'class' => 'HTMLHiddenField',
+				'default' => 1
 			);
 		}
 
@@ -93,8 +98,8 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		}
 
 		$formDescriptor['bm_bibtexEntryType'] = array (
-		    'class' => 'HTMLHiddenField',
-		    'default' => $entryType
+			'class' => 'HTMLHiddenField',
+			'default' => $entryType
 		);
 		$formDescriptor['bm_select_type'] = $formDescriptor['bm_bibtexEntryType'];
 
@@ -119,12 +124,13 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 	 */
 	public function submitForm ( $formData ) {
 		global $wgOut, $wgRequest;
-
+//var_dump($formData);
+//die();
 		$repo = BibManagerRepository::singleton();
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
-		$entryType = $wgRequest->getVal( 'bm_select_type', '' ); //Hidden fields are not included in $formData???
+		$entryType = $formData['bm_bibtexEntryType'];
 		$entryFields = array_merge(
-		    $typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
+			$typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
 		);
 
 		$submittedFields = array ( );

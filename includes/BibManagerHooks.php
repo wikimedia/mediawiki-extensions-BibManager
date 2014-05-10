@@ -64,6 +64,8 @@ class BibManagerHooks {
 		if ( !isset( $args['id'] ) ) {
 			return '[' . wfMessage( 'bm_missing-id' )->escaped() . ']';
 		}
+		$parser->getOutput()->addModuleStyles( 'ext.bibManager.styles' );
+
 		$entry = BibManagerRepository::singleton()
 			->getBibEntryByCitation( $args['id'] );
 
@@ -72,7 +74,11 @@ class BibManagerHooks {
 		if ( empty( $entry ) ) {
 			$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' );
 			$sLink = Linker::link(
-				$spTitle, $args['id'], array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $args['id'] ), array ( 'broken' => true )
+				$spTitle,
+				$args['id'],
+				array( 'class' => 'new' ),
+				array ( 'bm_bibtexCitation' => $args['id'] ),
+				array ( 'broken' => true )
 			);
 			$sTooltip = '<span>' . wfMessage('bm_error_not-existing')->escaped();
 			if ($wgUser->isAllowed('bibmanagercreate')){
@@ -92,8 +98,15 @@ class BibManagerHooks {
 			}
 			$sTooltip .= '</span>';
 		} else {
-			$oCitationTitle = Title::newFromText( $args['id'], $wgBibManagerCitationArticleNamespace );
-			$sLink = Linker::link( $oCitationTitle, $oCitationTitle->getText(), array ( 'title' => '' ) );
+			$oCitationTitle = Title::newFromText(
+				$args['id'],
+				$wgBibManagerCitationArticleNamespace
+			);
+			$sLink = Linker::link(
+				$oCitationTitle,
+				$args['id'],
+				array ( 'title' => '' )
+			);
 			$sTooltip = self::getTooltip( $entry, $args );
 		}
 		return '<span class="bibmanager-citation">[' . $sLink . ']' . $sTooltip . '</span>';
@@ -137,7 +150,7 @@ class BibManagerHooks {
 
 		if ( !empty( $entry['bm_bibtexCitation'] ) && $wgUser->isAllowed('bibmanageredit') ) {
 			$icons['edit'] = array (
-				'src' => $wgScriptPath . '/extensions/BibManager/client/images/pencil.png',
+				'src' => $wgScriptPath . '/extensions/BibManager/resources/images/pencil.png',
 				'title' => 'bm_tooltip_edit',
 				'href' => SpecialPage::getTitleFor( 'BibManagerEdit' )
 				->getLocalURL( array ( 'bm_bibtexCitation' => $entry['bm_bibtexCitation'] ) )
@@ -145,7 +158,7 @@ class BibManagerHooks {
 		}
 		$scholarLink = str_replace( '%title%', $entry['bm_title'], $wgBibManagerScholarLink );
 		$icons['scholar'] = array (
-			'src' => $wgScriptPath . '/extensions/BibManager/client/images/book.png',
+			'src' => $wgScriptPath . '/extensions/BibManager/resources/images/book.png',
 			'title' => 'bm_tooltip_scholar',
 			'href' => $scholarLink
 		);
@@ -184,21 +197,21 @@ class BibManagerHooks {
 	 * @return string List of used <bib />-tags
 	 */
 	public static function onBiblistTag ( $input, $args, $parser, $frame ) {
-		global $wgUser;
-		global $wgBibManagerCitationArticleNamespace;
 		$parser->disableCache();
 
 		$article = new Article( $parser->getTitle() );
 		$content = $article->fetchContent();
+		$parser->getOutput()->addModuleStyles( 'ext.bibManager.styles' );
 
-		$out = array ( );
+		$out = array();
 		$out[] = XML::element( 'hr', null, null );
 		$out[] = wfMessage( 'bm_tag_tag-used' )->escaped();
 
 		$bibTags = array ( );
 		preg_match_all( '<bib.*?id=[\'"\ ]*(.*?)[\'"\ ].*?>', $content, $bibTags ); // TODO RBV (10.11.11 13:31): It might be better to have a db table for wikipage <-> citation relationship. This table could be updated in bib-Tag callback.
-		if ( empty( $bibTags[0][0] ) )
+		if ( empty( $bibTags[0][0] ) ) {
 			return wfMessage( 'bm_tag_no-tags-used' )->escaped(); //No Tags found
+		}
 		$entries = array ( );
 		$repo = BibManagerRepository::singleton();
 
@@ -349,26 +362,37 @@ class BibManagerHooks {
 	public static function getTable($res){
 		global $wgUser, $wgBibManagerCitationArticleNamespace;
 		$out = Html::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
-		if ( $res === false )
+		if ( $res === false ) {
 			return '[' . wfMessage( 'bm_no-data-found' )->escaped() . ']';
-		foreach ( $res as $key=>$val ) {
-			if (empty($val)){
+		}
+		foreach ( $res as $key => $val ) {
+			if ( empty( $val ) ){
 				$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' ); // TODO RBV (10.11.11 13:50): Dublicate code --> encapsulate
 				$citLink = Linker::link(
-					$spTitle, $key, array ( 'class' => 'new' ), array ( 'bm_bibtexCitation' => $key ), array ( 'broken' => true )
+					$spTitle,
+					$key,
+					array ( 'class' => 'new' ),
+					array ( 'bm_bibtexCitation' => $key ),
+					array ( 'broken' => true )
 				);
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $key ));
 				$citFormat = '<em>' . wfMessage('bm_error_not-existing')->escaped();
-				if ($wgUser->isAllowed('bibmanagercreate'))
-					$citFormat .= Html::element('a', array('href' => $sLinkToEdit), wfMessage( 'bm_tag_click_to_create' )->escaped());
+				if ( $wgUser->isAllowed('bibmanagercreate') ) {
+					$citFormat .= Html::element(
+						'a',
+						array( 'href' => $sLinkToEdit ),
+						wfMessage( 'bm_tag_click_to_create' )->text()
+					);
+				}
 				$citFormat .='</em>';
 				$citIcons = '';
 			}
 			else {
-				$title = Title::newFromText( $val['bm_bibtexCitation'], $wgBibManagerCitationArticleNamespace );
-				$citLink = Linker::link(
-					$title, $title->getText()
+				$title = Title::newFromText(
+					$val['bm_bibtexCitation'],
+					$wgBibManagerCitationArticleNamespace
 				);
+				$citLink = Linker::link( $title, $val['bm_bibtexCitation'] );
 				$citFormat = self::formatEntry( $val );
 				$citIcons = self::getIcons( $val );
 			}

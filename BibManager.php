@@ -88,17 +88,22 @@ $wgHooks['BeforePageDisplay'][]   = 'BibManagerHooks::onBeforePageDisplay';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'BibManagerHooks::onLoadExtensionSchemaUpdates';
 
 $resourceModuleTemplate = array(
-	'styles' => 'ext.bibManager.css',
 	'localBasePath' => __DIR__.'/resources',
 	'remoteExtPath' => 'BibManager/resources'
 );
 
+$wgResourceModules['ext.bibManager.styles'] = array(
+	'styles' => 'ext.bibManager.css',
+) + $resourceModuleTemplate;
+
 $wgResourceModules['ext.bibManager.List'] = array(
-	'scripts' => 'ext.bibManager.List.js'
+	'scripts' => 'ext.bibManager.List.js',
+	'dependencies' => 'ext.bibManager.styles'
 ) + $resourceModuleTemplate;
 
 $wgResourceModules['ext.bibManager.Edit'] = array(
-	'scripts' => 'ext.bibManager.Edit.js'
+	'scripts' => 'ext.bibManager.Edit.js',
+	'dependencies' => 'ext.bibManager.styles'
 ) + $resourceModuleTemplate;
 
 unset( $resourceModuleTemplate );

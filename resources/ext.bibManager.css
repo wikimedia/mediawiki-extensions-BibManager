@@ -1,58 +1,97 @@
 span.bibmanager-citation {
-		position:relative;
-		color: black;
-		cursor:help;
+	position:relative;
+	color: black;
+	cursor:help;
 }
 
 span.bibmanager-citation > span {
-		background-color: #FAFAFA;
-		display:none;
-		text-decoration: none;
-		position: absolute; 
-		top: 15px;
-		left: 20px;
-		width: 350px;
-		z-index: 100;
-		border:3px dotted #555;
-		padding:10px;
-		text-align: left;
+	background-color: #FAFAFA;
+	display:none;
+	text-decoration: none;
+	position: absolute; 
+	top: 15px;
+	left: 20px;
+	width: 350px;
+	z-index: 100;
+	border:3px dotted #555;
+	padding:10px;
+	text-align: left;
 }
 
 span.bibmanager-citation:hover > span {
-		display: block;
+	display: block;
 }
 
 span.bm_icon_link{
-		display: inline;
-		position: relative;
-		top: 0px;
-		left: 0px;
-		width: 16px;
-		height: 16px;
-		border: none;
-		padding: 0;
-		margin-left: 5px;
+	display: inline;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: 16px;
+	height: 16px;
+	border: none;
+	padding: 0;
+	margin-left: 5px;
+}
+
+.bm-icon {
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+	text-indent: -9999px;
+	overflow: hidden;
+	margin: 4px;
+}
+
+.bm-icon .bm-icon-book {
+	/*@embed*/
+	background-image: url(images/book.png);
+}
+
+.bm-icon .bm-icon-cross {
+	/*@embed*/
+	background-image: url(images/cross.png);
+}
+
+.bm-icon .bm-icon-disk {
+	/*@embed*/
+	background-image: url(images/disk.png);
+}
+
+.bm-icon .bm-icon-link {
+	/*@embed*/
+	background-image: url(images/link.png);
+}
+
+.bm-icon .bm-icon-link_error {
+	/*@embed*/
+	background-image: url(images/link_error.png);
+}
+
+.bm-icon .bm-icon-pencil {
+	/*@embed*/
+	background-image: url(images/pencil.png);
 }
 
 #bm_form input:focus,
 #bm_form textarea:focus,
 #bm_form select:focus {
-		border-color: #99F;
+	border-color: #99F;
 }
 
 #bm_form .error {
-		font-size: small;
+	font-size: small;
 }
 
 #bm_form .mw-label {
-		font-style: italic;
-		vertical-align: middle;
-		padding-right: 5px;
+	font-style: italic;
+	vertical-align: middle;
+	padding-right: 5px;
 }
 
 input[readonly] {
-		color: #AAA;
-		background-color: #FAFAFA;
+	color: #AAA;
+	background-color: #FAFAFA;
 }
 
 #bm_table a.icon {

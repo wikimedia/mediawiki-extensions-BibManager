@@ -14,7 +14,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 		);
 
 		if ( $dbr->numRows( $res ) > 0 ) {
-			$aExistingCitations = array ( );
+			$aExistingCitations = array();
 			foreach ( $res as $row ) {
 				$aExistingCitations[] = $row->bm_bibtexCitation;
 			}

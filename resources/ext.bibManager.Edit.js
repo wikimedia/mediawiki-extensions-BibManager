@@ -1,14 +1,7 @@
-addOnloadHook(bm_initCreateForm); //Register onload eventlistener. --> TODO: Maybe use jQuery in later MW versions?
+$(document).ready(function(){
+	$('#bm_select_entry_type_submit').hide();
+});
 
-function bm_initCreateForm() {
-        var d = document;
-        var entryTypeSelect = d.getElementById( 'bm_select_type' );
-        if( entryTypeSelect ) {
-                addHandler( entryTypeSelect, 'change', bm_entryTypeSelectChanged );
-                d.getElementById('bm_select_entry_type_submit').style.display = 'none';
-        }
-}
-
-function bm_entryTypeSelectChanged( e ) {
-        e.target.form.submit();
-}
+$(document).on( 'change', '#bm_select_type', function( e ) {
+	e.target.form.submit();
+});

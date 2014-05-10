@@ -20,37 +20,37 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 		}
 
 		global $wgRequest;
-		$wgOut->setPageTitle( wfMsg( 'heading_create' ) );
+		$wgOut->setPageTitle( wfMessage( 'heading_create' )->plain() );
 		$wgOut->addWikiMsg( 'bm_create_welcome' );
 		$formDescriptor = array (
-		    'bm_select_type' => array (
+			'bm_select_type' => array (
 			'class' => 'HTMLSelectField',
-			'label' => wfMsg( 'bm_label_entry_type_select' ),
+			'label' => wfMessage( 'bm_label_entry_type_select' )->plain(),
 			'id' => 'bm_select_type',
 			'options' => array (
-			    '' => '-',
-			    wfMsg( 'bm_entry_type_article' ) => 'article',
-			    wfMsg( 'bm_entry_type_book' ) => 'book',
-			    wfMsg( 'bm_entry_type_booklet' ) => 'booklet',
-			    wfMsg( 'bm_entry_type_conference' ) => 'conference',
-			    wfMsg( 'bm_entry_type_inbook' ) => 'inbook',
-			    wfMsg( 'bm_entry_type_incollection' ) => 'incollection',
-			    wfMsg( 'bm_entry_type_inproceedings' ) => 'inproceedings',
-			    wfMsg( 'bm_entry_type_manual' ) => 'manual',
-			    wfMsg( 'bm_entry_type_mastersthesis' ) => 'mastersthesis',
-			    wfMsg( 'bm_entry_type_misc' ) => 'misc',
-			    wfMsg( 'bm_entry_type_phdthesis' ) => 'phdthesis',
-			    wfMsg( 'bm_entry_type_proceedings' ) => 'proceedings',
-			    wfMsg( 'bm_entry_type_techreport' ) => 'techreport',
-			    wfMsg( 'bm_entry_type_unpublished' ) => 'unpublished'
+				'' => '-',
+				wfMessage( 'bm_entry_type_article' )->plain() => 'article',
+				wfMessage( 'bm_entry_type_book' )->plain() => 'book',
+				wfMessage( 'bm_entry_type_booklet' )->plain() => 'booklet',
+				wfMessage( 'bm_entry_type_conference' )->plain() => 'conference',
+				wfMessage( 'bm_entry_type_inbook' )->plain() => 'inbook',
+				wfMessage( 'bm_entry_type_incollection' )->plain() => 'incollection',
+				wfMessage( 'bm_entry_type_inproceedings' )->plain() => 'inproceedings',
+				wfMessage( 'bm_entry_type_manual' )->plain() => 'manual',
+				wfMessage( 'bm_entry_type_mastersthesis' )->plain() => 'mastersthesis',
+				wfMessage( 'bm_entry_type_misc' )->plain() => 'misc',
+				wfMessage( 'bm_entry_type_phdthesis' )->plain() => 'phdthesis',
+				wfMessage( 'bm_entry_type_proceedings' )->plain() => 'proceedings',
+				wfMessage( 'bm_entry_type_techreport' )->plain() => 'techreport',
+				wfMessage( 'bm_entry_type_unpublished' )->plain() => 'unpublished'
 			)
-		    )
+			)
 		);
 
 		wfRunHooks( 'BibManagerCreateBeforeTypeSelectFormCreate', array ( $this, &$formDescriptor ) );
 
 		$entryTypeSelectionForm = new HTMLForm( $formDescriptor, $this->getContext() );
-		$entryTypeSelectionForm->setSubmitText( wfMsg( 'bm_select_entry_type_submit' ) );
+		$entryTypeSelectionForm->setSubmitText( wfMessage( 'bm_select_entry_type_submit' )->plain() );
 		$entryTypeSelectionForm->setSubmitId( 'bm_select_entry_type_submit' );
 		$entryTypeSelectionForm->setSubmitCallback( array ( $this, 'onSubmit' ) );
 
@@ -62,10 +62,10 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 		}
 
 		$entryTypeSelectionForm->addPostText(
-		    wfMsg(
+			wfMessage(
 				'bm_bibtex_string_import_link',
 				SpecialPage::getTitleFor( 'BibManagerImport' )->getLocalURL( $importParams )
-		    )
+			)->plain()
 		);
 
 		$wgOut->addHTML( '<div id="bm_form">' );

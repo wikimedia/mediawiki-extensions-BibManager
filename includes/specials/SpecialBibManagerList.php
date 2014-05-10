@@ -76,10 +76,7 @@ class SpecialBibManagerList extends SpecialPage {
 				'submit-export',
 				wfMsg( "bm_list_table_submit-export" ),
 				'submit',
-				array (
-					'style' => 'float:right;',
-					'class' => 'mw-ui-button mw-ui-progressive'
-				)
+				array ( 'style' => 'float:right;' )
 			);
 			$table[] = '</form>';
 
