@@ -117,15 +117,10 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 	/**
 	 * Submit callback for edit form
-	 * @global OutputPage $wgOut
-	 * @global WebRequest $wgRequest
 	 * @param array $formData
 	 * @return boolean
 	 */
 	public function submitForm ( $formData ) {
-		global $wgOut, $wgRequest;
-//var_dump($formData);
-//die();
 		$repo = BibManagerRepository::singleton();
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$entryType = $formData['bm_bibtexEntryType'];
@@ -145,8 +140,8 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		$repo->deleteBibEntry( $formData['bm_bibtexCitation'] );
 		$repo->saveBibEntry( $formData['bm_bibtexCitation'], $entryType, $submittedFields );
 
-		$wgOut->addWikiMsg( 'bm_success_save-complete' );
-		$wgOut->addHTML( wfMsg( 'bm_success_link-to-list', SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL() ) );
+		$this->getOutput()->addWikiMsg( 'bm_success_save-complete' );
+		$this->getOutput()->addHTML( wfMsg( 'bm_success_link-to-list', SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL() ) );
 
 		return true;
 	}

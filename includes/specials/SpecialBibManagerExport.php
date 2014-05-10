@@ -21,14 +21,15 @@ class SpecialBibManagerExport extends UnlistedSpecialPage {
 		foreach ( $givenValues as $citation ) {
 			$citation = str_replace( '__dot__', '.', $citation);
 			$entry = BibManagerRepository::singleton()->getBibEntryByCitation( $citation );
-			if ( empty( $entry ) ) continue;
-
+			if ( empty( $entry ) ) {
+				continue;
+			}
 			$lines = array();
 			$lines['entryType'] = $entry['bm_bibtexEntryType'];
 			$lines['cite'] = $entry['bm_bibtexCitation'];
 			$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 			$entryFields = array_merge( // TODO RBV (17.12.11 15:01): encapsulte in BibManagerFieldsList
-			    $typeDefs[$lines['entryType']]['required'], $typeDefs[$lines['entryType']]['optional']
+				$typeDefs[$lines['entryType']]['required'], $typeDefs[$lines['entryType']]['optional']
 			);
 
 			foreach ($entryFields as $fieldName){

@@ -15,10 +15,10 @@ class BibManagerPagerList extends AlphabeticPager {
 
 		wfRunHooks( 'BibManagerPagerBeforeSearch', array ( $this->searchType, $this->searchTerm, &$conds ) );
 		return array (
-		    'tables'  => 'bibmanager',
-		    'fields'  => '*',
-		    'conds'   => $conds,
-		    'options' => array ( 'ORDER BY' => 'bm_bibtexCitation ASC' ),
+			'tables'  => 'bibmanager',
+			'fields'  => '*',
+			'conds'   => $conds,
+			'options' => array ( 'ORDER BY' => 'bm_bibtexCitation ASC' ),
 		);
 	}
 
@@ -59,10 +59,12 @@ class BibManagerPagerList extends AlphabeticPager {
 			$offset = $this->mOffset;
 		}
 		$query = array( 'offset' => $offset );
-		if( !empty($this->searchType ) )
+		if( !empty($this->searchType ) ) {
 			$query['wpbm_list_search_select'] = $this->searchType;
-		if( !empty($this->searchTerm ) )
+		}
+		if( !empty($this->searchTerm ) ){
 			$query['wpbm_list_search_text'] = $this->searchTerm;
+		}
 
 		foreach ( $this->mLimitsShown as $limit ) {
 			$links[] = $this->makeLink(
@@ -86,13 +88,13 @@ class BibManagerPagerList extends AlphabeticPager {
 
 		$citationTitle = Title::newFromText( $row->bm_bibtexCitation, $wgBibManagerCitationArticleNamespace );
 
-		$citationLink = Linker::link( $citationTitle, $citationTitle->getText() );
-		$editLink     = '';
+		$citationLink = Linker::link( $citationTitle, $row->bm_bibtexCitation );
+		$editLink	 = '';
 		$deleteLink   = '';
-		$exportLink   = Xml::check(
+		$exportLink   = Html::input(
 			'cit[]',
-			false,
-			array('value' => str_replace( '.', '__dot__', $row->bm_bibtexCitation ) )
+			str_replace( '.', '__dot__', $row->bm_bibtexCitation ),
+			'checkbox'
 		);
 
 		$specialPageQuery = array ( 'bm_bibtexCitation' => $row->bm_bibtexCitation );

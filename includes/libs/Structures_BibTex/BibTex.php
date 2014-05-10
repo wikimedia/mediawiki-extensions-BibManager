@@ -139,7 +139,7 @@ class Structures_BibTex
      * @var string
      */
     var $authorstring;
-     
+
     /**
      * Constructor
      *
@@ -509,7 +509,7 @@ class Structures_BibTex
     {
         return in_array($entry, $this->allowedEntryTypes);
     }
-    
+
     /**
      * Checking whether an at is outside an entry
      *
@@ -866,7 +866,7 @@ class Structures_BibTex
         $value       = $begin.$value.$end;
         return $value;
     }
-    
+
     /**
      * Generates a warning
      *
@@ -915,7 +915,7 @@ class Structures_BibTex
     {
         return sizeof($this->data);
     }
-    
+
     /**
      * Returns the author formatted
      *
@@ -971,7 +971,6 @@ class Structures_BibTex
             $bibtex .= '@'.strtolower($entry['entryType']).' { '.$entry['cite'].",\n";
             //Other fields except author
             foreach ($entry as $key=>$val) {
-		    var_dump($key);
                 if ($this->_options['wordWrapWidth']>0) {
                     $val = $this->_wordWrap($val);
                 }
@@ -1032,7 +1031,7 @@ class Structures_BibTex
         }
         return $ret;
     }
-    
+
     /**
      * Returns the stored data in RTF format
      *
