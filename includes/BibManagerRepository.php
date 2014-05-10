@@ -6,7 +6,7 @@ abstract class BibManagerRepository {
 
 	/**
 	 * Singleton factory method.
-	 * @return BibManagerRepository 
+	 * @return BibManagerRepository
 	 */
 	public static function singleton () {
 		if ( self::$instance instanceof BibManagerRepository )
@@ -17,6 +17,9 @@ abstract class BibManagerRepository {
 		return self::$instance;
 	}
 
+	/**
+	 * @return array
+	 */
 	public abstract function getBibEntryByCitation ( $sCitation );
 
 	public abstract function getBibEntries ( $aOptions );

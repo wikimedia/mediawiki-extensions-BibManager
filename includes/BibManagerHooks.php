@@ -8,24 +8,14 @@ class BibManagerHooks {
 	 * @return boolean true if alright
 	 */
 	public static function onLoadExtensionSchemaUpdates ( $updater = null ) {
-		if ( $updater === null ) {
-			// <= 1.16 support
-			global $wgExtNewTables, $wgExtModifiedFields;
-			$wgExtNewTables[] = array (
-				'bibmanager',
-				dirname( dirname( __FILE__ ) ) . '/BibManager.sql'
-			);
-		} else {
-			// >= 1.17 support
-			$updater->addExtensionUpdate(
-				array (
+		$updater->addExtensionUpdate(
+			array (
 				'addTable',
 				'bibmanager',
-				dirname( dirname( __FILE__ ) ) . '/BibManager.sql',
+				dirname( __DIR__ ) . '/maintenance/bibmanager.sql',
 				true
-				)
-			);
-		}
+			)
+		);
 		return true;
 	}
 
@@ -71,9 +61,9 @@ class BibManagerHooks {
 		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
 		$parser->disableCache();
-		if ( !isset( $args['id'] ) )
+		if ( !isset( $args['id'] ) ) {
 			return '[' . wfMessage( 'bm_missing-id' )->escaped() . ']';
-
+		}
 		$entry = BibManagerRepository::singleton()
 			->getBibEntryByCitation( $args['id'] );
 
@@ -86,8 +76,19 @@ class BibManagerHooks {
 			);
 			$sTooltip = '<span>' . wfMessage('bm_error_not-existing')->escaped();
 			if ($wgUser->isAllowed('bibmanagercreate')){
-				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $args['id'] ));
-				$sTooltip .= XML::element("a", array("href" => $sLinkToEdit), wfMessage( 'bm_tag_click_to_create' )->escaped());
+				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )
+					->getLocalURL(
+						array (
+							'bm_bibtexCitation' => $args['id']
+						)
+					);
+				$sTooltip .= Html::element(
+					"a",
+					array(
+						"href" => $sLinkToEdit
+					),
+					wfMessage( 'bm_tag_click_to_create' )->text()
+				);
 			}
 			$sTooltip .= '</span>';
 		} else {
