@@ -92,4 +92,8 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 		);
 		return true;
 	}
+
+	protected function getGroupName() {
+		return 'bibmanager';
+	}
 }

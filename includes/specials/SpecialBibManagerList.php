@@ -92,4 +92,8 @@ class SpecialBibManagerList extends SpecialPage {
 	public function submitForm ( $formData ) {
 		return false;
 	}
+
+	protected function getGroupName() {
+		return 'bibmanager';
+	}
 }

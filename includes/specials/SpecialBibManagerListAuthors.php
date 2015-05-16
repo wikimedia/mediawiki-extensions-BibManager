@@ -42,4 +42,7 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 		return false;
 	}
 
+	protected function getGroupName() {
+		return 'bibmanager';
+	}
 }

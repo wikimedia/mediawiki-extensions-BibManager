@@ -101,4 +101,8 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		}
 		return $result;
 	}
+
+	protected function getGroupName() {
+		return 'bibmanager';
+	}
 }

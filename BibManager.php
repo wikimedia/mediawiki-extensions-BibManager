@@ -72,15 +72,6 @@ $wgSpecialPages['BibManagerDelete']      = 'SpecialBibManagerDelete';
 $wgSpecialPages['BibManagerCreate']      = 'SpecialBibManagerCreate';
 $wgSpecialPages['BibManagerEdit']        = 'SpecialBibManagerEdit';
 
-//Add SpecialPages to group
-$wgSpecialPageGroups['BibManagerList']        = 'bibmanager';
-$wgSpecialPageGroups['BibManagerListAuthors'] = 'bibmanager';
-$wgSpecialPageGroups['BibManagerImport']      = 'bibmanager';
-$wgSpecialPageGroups['BibManagerExport']      = 'bibmanager';
-$wgSpecialPageGroups['BibManagerDelete']      = 'bibmanager';
-$wgSpecialPageGroups['BibManagerCreate']      = 'bibmanager';
-$wgSpecialPageGroups['BibManagerEdit']        = 'bibmanager';
-
 //Add Hookhandler
 $wgHooks['ParserFirstCallInit'][] = 'BibManagerHooks::onParserFirstCallInit';
 $wgHooks['BeforePageDisplay'][]   = 'BibManagerHooks::onBeforePageDisplay';

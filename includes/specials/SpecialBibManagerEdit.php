@@ -145,4 +145,8 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 		return true;
 	}
+
+	protected function getGroupName() {
+		return 'bibmanager';
+	}
 }

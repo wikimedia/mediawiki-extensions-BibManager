@@ -100,4 +100,8 @@ class SpecialBibManagerImport extends SpecialPage {
 
 		return true;
 	}
+
+	protected function getGroupName() {
+		return 'bibmanager';
+	}
 }

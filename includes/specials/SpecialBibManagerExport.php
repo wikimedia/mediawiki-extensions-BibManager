@@ -55,4 +55,7 @@ class SpecialBibManagerExport extends UnlistedSpecialPage {
 		echo $out;
 	}
 
+	protected function getGroupName() {
+		return 'bibmanager';
+	}
 }
