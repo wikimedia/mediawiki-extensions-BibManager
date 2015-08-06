@@ -155,7 +155,7 @@ class BibManagerFieldsList {
 			'validation-callback' => 'BibManagerValidator::validateYear',
 		    ) // The year of publication (or, if unpublished, the year of creation)
 		);
-		wfRunHooks( 'BibManagerGetFieldDefinitions', array ( &$fieldDefinitions ) );
+		Hooks::run( 'BibManagerGetFieldDefinitions', array ( &$fieldDefinitions ) );
 		return $fieldDefinitions;
 	}
 
@@ -234,7 +234,7 @@ class BibManagerFieldsList {
 		    )
 		);
 
-		wfRunHooks( 'BibManagerGetTypeDefinitions', array ( &$typeDefinitions ) );
+		Hooks::run( 'BibManagerGetTypeDefinitions', array ( &$typeDefinitions ) );
 		return $typeDefinitions;
 	}
 

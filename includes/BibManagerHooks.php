@@ -119,7 +119,7 @@ class BibManagerHooks {
 		);
 
 		$tooltip = array ( );
-		wfRunHooks( 'BibManagerBibTagBeforeTooltip', array ( &$entry ) );
+		Hooks::run( 'BibManagerBibTagBeforeTooltip', array ( &$entry ) );
 		foreach ( $entry as $key => $value ) {
 			$unprefixedKey = substr( $key, 3 );
 			if ( empty( $value ) || !in_array( $unprefixedKey, $entryTypeFields ) )
@@ -163,7 +163,7 @@ class BibManagerHooks {
 			'href' => $scholarLink
 		);
 
-		wfRunHooks( 'BibManagerGetIcons', array ( $entry, &$icons ) );
+		Hooks::run( 'BibManagerGetIcons', array ( $entry, &$icons ) );
 
 		$out = array ( );
 		foreach ( $icons as $key => $iconDesc ) {
@@ -345,7 +345,7 @@ class BibManagerHooks {
 			$format = str_replace( '%' . $key . '%', $value, $format );
 		}
 
-		wfRunHooks( 'BibManagerFormatEntry', array ( $entry, $prefixedKeys, &$format ) );
+		Hooks::run( 'BibManagerFormatEntry', array ( $entry, $prefixedKeys, &$format ) );
 		return $format;
 	}
 

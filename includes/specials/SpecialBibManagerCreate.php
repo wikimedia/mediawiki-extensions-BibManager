@@ -47,7 +47,7 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 			)
 		);
 
-		wfRunHooks( 'BibManagerCreateBeforeTypeSelectFormCreate', array ( $this, &$formDescriptor ) );
+		Hooks::run( 'BibManagerCreateBeforeTypeSelectFormCreate', array ( $this, &$formDescriptor ) );
 
 		$entryTypeSelectionForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$entryTypeSelectionForm->setSubmitText( wfMessage( 'bm_select_entry_type_submit' )->plain() );

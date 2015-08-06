@@ -13,7 +13,7 @@ class BibManagerPagerList extends AlphabeticPager {
 			$conds[] = "bm_" . $this->searchType . " LIKE '%" . $this->searchTerm . "%'";
 		}
 
-		wfRunHooks( 'BibManagerPagerBeforeSearch', array ( $this->searchType, $this->searchTerm, &$conds ) );
+		Hooks::run( 'BibManagerPagerBeforeSearch', array ( $this->searchType, $this->searchTerm, &$conds ) );
 		return array (
 			'tables'  => 'bibmanager',
 			'fields'  => '*',

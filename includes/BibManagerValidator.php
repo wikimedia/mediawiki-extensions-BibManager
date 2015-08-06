@@ -46,7 +46,7 @@ class BibManagerValidator {
 		}
 
 		$result = true;
-		wfRunHooks( 'BibManagerValidateCitation', array ( $value, $allData, &$result ) );
+		Hooks::run( 'BibManagerValidateCitation', array ( $value, $allData, &$result ) );
 
 		return $result;
 	}
