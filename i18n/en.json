@@ -19,7 +19,7 @@
 	"heading_edit": "BibManager: Edit entry (type: $1)",
 	"heading_list": "BibManager: Overview",
 	"heading_list_authors": "BibManager: Overview authors",
-	"bm_list_welcome": "Welcome to the overview page of the BibManager-Extension!<br />Depending on your authorization you can search for existing entries, edit, delete or export an entry as BibTeX-String.  Please use the SpecialPages $1 and $2 if you'd like to add a new entry or import a BibTeX-String.",
+	"bm_list_welcome": "Welcome to the overview page of the BibManager-Extension!<br />Depending on your authorization you can search for existing entries, edit, delete or export an entry as BibTeX-String. Please use the SpecialPages $1 and $2 if you'd like to add a new entry or import a BibTeX-String.",
 	"bm_list_search_submit": "Search",
 	"bm_list_search_term": "Searchterm",
 	"bm_list_search-title": "Search",
