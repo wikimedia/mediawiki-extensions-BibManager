@@ -16,7 +16,7 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 	function execute ( $par ) {
 		global $wgOut;
 		$this->setHeaders();
-		$wgOut->setPageTitle( wfMsg( 'heading_list_authors' ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_list_authors' ) );
 
 		$pager = new BibManagerPagerListAuthors();
 		$sDataBody = $pager->getBody();
@@ -25,8 +25,8 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 			$table = array ( );
 			$table[] = '	<table class="wikitable" style="width:100%;">';
 			$table[] = '		<tr>';
-			$table[] = '			<th >' . wfMsg( 'bm_list_author_table_heading-author' ) . '</th>';
-			$table[] = '			<th style="width: 100px;">' . wfMsg( 'bm_list_author_table_heading-amount' ) . '</th>';
+			$table[] = '			<th >' . $this->msg( 'bm_list_author_table_heading-author' )->escaped() . '</th>';
+			$table[] = '			<th style="width: 100px;">' . $this->msg( 'bm_list_author_table_heading-amount' )->escaped() . '</th>';
 			$table[] = '		</tr>';
 			$table[] = $sDataBody;
 			$table[] = '	</table>';
@@ -34,7 +34,7 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 			$wgOut->addHTML( implode( "\n", $table ) );
 			$wgOut->addHTML( $pager->getNavigationBar() );
 		} else {
-			$wgOut->addHtml( wfMsg( 'bm_error_no-data-found' ) );
+			$wgOut->addHtml( $this->msg( 'bm_error_no-data-found' )->escaped() );
 		}
 	}
 

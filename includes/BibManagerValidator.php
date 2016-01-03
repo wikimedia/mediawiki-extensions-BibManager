@@ -9,7 +9,7 @@ class BibManagerValidator {
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions(); // TODO RBV (17.12.11 13:34): Cache?
 		$currentType = $typeDefs[$entryType];
 		if ( in_array( $fieldName, $currentType['required'] ) ) {
-			return wfMsg( 'bm_required-field-empty' );
+			return wfMessage( 'bm_required-field-empty' )->text();
 		}
 		return true;
 	}
@@ -22,7 +22,7 @@ class BibManagerValidator {
 	 */
 	public static function validateEmpty ( $value, $allData = '' ) {
 		if ( empty( $value ) )
-			return wfMsg( 'bm_required-field-empty' );
+			return wfMessage( 'bm_required-field-empty' )->text();
 	}
 
 	/**
@@ -34,11 +34,11 @@ class BibManagerValidator {
 	public static function validateCitation ( $value, $allData = '' ) {
 		global $wgBibManagerCitationArticleNamespace;
 		if ( empty( $value ) )
-			return wfMsg( 'bm_required-field-empty' );
+			return wfMessage( 'bm_required-field-empty' )->text();
 		//HINT: http://www.mediawiki.org/wiki/Help:Bad_title
 		$title = Title::newFromText( $value, $wgBibManagerCitationArticleNamespace );
 		if ( $title === null )
-			return wfMsg( 'bm_error_citation_invalid' );
+			return wfMessage( 'bm_error_citation_invalid' )->text();
 
 		$repo = BibManagerRepository::singleton();
 		if ( $repo->getBibEntries( array ( "bm_bibtexCitation" => $value ) ) !== false ) {
@@ -59,7 +59,7 @@ class BibManagerValidator {
 	 */
 	public static function validateLetter ( $value, $allData = '' ) {
 		if ( !empty( $value ) && !preg_match( "/^[\pL]*$/", $value ) )
-			return wfMsg( 'bm_wrong-character' );
+			return wfMessage( 'bm_wrong-character' )->text();
 		return true;
 	}
 
@@ -72,7 +72,7 @@ class BibManagerValidator {
 	public static function validateLetterAndNumber ( $value, $allData = '' ) {
 
 		if ( !empty( $value ) && !preg_match( "/^[\pL0-9\ ]*$/", $value ) )
-			return wfMsg( 'bm_wrong-character' );
+			return wfMessage( 'bm_wrong-character' )->text();
 		return true;
 	}
 
@@ -84,7 +84,7 @@ class BibManagerValidator {
 	 */
 	public static function validateInt ( $value, $allData = '' ) {
 		if ( !empty( $value ) && !filter_var( $value, FILTER_VALIDATE_INT ) )
-			return wfMsg( 'bm_wrong-character' );
+			return wfMessage( 'bm_wrong-character' )->text();
 		return true;
 	}
 
@@ -286,7 +286,7 @@ class BibManagerValidator {
 	public static function validatePages ( $value, $allData = '' ) {
 		$result = self::validateRequired( 'pages', $value, $allData );
 		if ( $result === true && !empty( $value ) && !preg_match( "/^[0-9\:\=-]*$/", $value ) )
-			$result = wfMsg( 'bm_wrong-character' );
+			$result = wfMessage( 'bm_wrong-character' )->text();
 		return $result;
 	}
 
@@ -354,7 +354,7 @@ class BibManagerValidator {
 	public static function validateUrl ( $value, $allData = '' ) {
 		$result = self::validateRequired( 'url', $value, $allData );
 		if ( $result === true && !empty( $value ) && !filter_var( $value, FILTER_VALIDATE_URL ) )
-			$result = wfMsg( 'bm_wrong-url-format' );
+			$result = wfMessage( 'bm_wrong-url-format' )->text();
 		return $result;
 	}
 
@@ -381,7 +381,7 @@ class BibManagerValidator {
 	public static function validateYear ( $value, $allData = '' ) {
 		$result = self::validateRequired( 'year', $value, $allData );
 		if ( !empty( $value ) && !preg_match( "/^[0-9]*$/", $value ) )
-			$result = wfMsg( 'bm_wrong-character' );
+			$result = wfMessage( 'bm_wrong-character' )->text();
 		return $result;
 	}
 

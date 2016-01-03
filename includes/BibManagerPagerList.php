@@ -102,10 +102,10 @@ class BibManagerPagerList extends AlphabeticPager {
 		if ($wgUser->isAllowed('bibmanageredit')){
 			$editLink = Linker::link(
 				SpecialPage::getTitleFor( 'BibManagerEdit' ),
-				wfMsg( 'bm_list_table_edit' ),
+				$this->msg( 'bm_list_table_edit' )->escaped(),
 				array (
 					'class' => 'icon edit',
-					'title' => wfMsg( 'bm_list_table_edit' )
+					'title' => $this->msg( 'bm_list_table_edit' )->escaped()
 				),
 				$specialPageQuery
 			);
@@ -114,10 +114,10 @@ class BibManagerPagerList extends AlphabeticPager {
 		if ($wgUser->isAllowed('bibmanagerdelete')){
 			$deleteLink = Linker::link(
 				SpecialPage::getTitleFor( 'BibManagerDelete' ),
-				wfMsg( 'bm_list_table_delete' ),
+				$this->msg( 'bm_list_table_delete' )->escaped(),
 				array (
 					'class' => 'icon delete',
-					'title' => wfMsg( "bm_list_table_delete" )
+					'title' => $this->msg( "bm_list_table_delete" )->escaped()
 				),
 				$specialPageQuery
 			);

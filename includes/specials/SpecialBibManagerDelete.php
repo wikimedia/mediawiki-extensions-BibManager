@@ -21,18 +21,18 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 
 		global $wgRequest;
 		$this->setHeaders();
-		$wgOut->setPageTitle( wfMsg( 'heading_delete' ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_delete' ) );
 		$deleteSubmit = $wgRequest->getBool( 'bm_delete' );
 
 		$citation = $wgRequest->getVal( 'bm_bibtexCitation', '' );
 		if ( empty( $citation ) ) {
-			$wgOut->addHtml( wfMsg( 'bm_error_not-found', $citation ) );
+			$wgOut->addHtml( $this->msg( 'bm_error_not-found', $citation )->escaped() );
 			return;
 		}
 
 		$entry = BibManagerRepository::singleton()->getBibEntryByCitation( $citation );
 		if ( empty( $entry ) ) {
-			$wgOut->addHtml( wfMsg( 'bm_error_not-found', $citation ) );
+			$wgOut->addHtml( $this->msg( 'bm_error_not-found', $citation )->escaped() );
 		}
 		$entryType = $entry['bm_bibtexEntryType'];
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
@@ -40,7 +40,7 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		    $typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
 		);
 		if ( !$deleteSubmit ) {
-			$wgOut->addHTML( wfMsg( 'bm_delete_confirm-delete', $citation ) );
+			$wgOut->addHTML( $this->msg( 'bm_delete_confirm-delete', $citation )->escaped() );
 			$wgOut->addHTML( '<hr />' );
 
 			$table = array ( );
@@ -51,7 +51,7 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 			// bm_note, bm_number, bm_organization, bm_pages, bm_publisher, bm_school, bm_series,
 			// bm_title, bm_type, bm_url, bm_volume, bm_year
 			foreach ( $entryFields as $fieldName ) {
-				$table[] = '  <tr><th style="width:150px">' . wfMsg( 'bm_' . $fieldName ) . '</th><td>' . $entry['bm_' . $fieldName] . '</td></tr>';
+				$table[] = '  <tr><th style="width:150px">' . $this->msg( 'bm_' . $fieldName )->escaped() . '</th><td>' . $entry['bm_' . $fieldName] . '</td></tr>';
 			}
 			$table[] = '</table>';
 			$wgOut->addHTML( implode( "\n", $table ) );
@@ -68,7 +68,7 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		);
 
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_delete' );
-		$htmlForm->setSubmitText( wfMsg( 'bm_delete_submit' ) );
+		$htmlForm->setSubmitText( $this->msg( 'bm_delete_submit' )->text() );
 		$htmlForm->setSubmitCallback( array ( $this, 'formSubmit' ) );
 		//TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
 
@@ -91,12 +91,12 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		$result = BibManagerRepository::singleton()->deleteBibEntry( $formData['bm_bibtexCitation'] );
 
 		if ( $result === true ) {
-			$wgOut->addHtml( wfMsg( 'bm_success_save-complete' ) );
+			$wgOut->addHtml( $this->msg( 'bm_success_save-complete' )->escaped() );
 			$wgOut->addHtml(
-				wfMsg(
+				$this->msg(
 					'bm_success_link-to-list',
 					SpecialPage::getTitleFor( "BibManagerList" )->getLocalURL()
-				)
+				)->escaped()
 			);
 		}
 		return $result;

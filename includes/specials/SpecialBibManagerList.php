@@ -16,7 +16,7 @@ class SpecialBibManagerList extends SpecialPage {
 	function execute ( $par ) {
 		global $wgOut, $wgRequest, $wgUser;
 		$this->setHeaders();
-		$wgOut->setPageTitle( wfMsg( 'heading_list' ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_list' ) );
 		$wgOut->addHTML( '<div id="bm_form">' );
 
 		$createLink = Linker::link(
@@ -27,7 +27,7 @@ class SpecialBibManagerList extends SpecialPage {
 			SpecialPage::getTitleFor( 'BibManagerImport' ),
 			SpecialPageFactory::getPage('BibManagerImport')->getDescription()
 		);
-		$wgOut->addHtml( wfMsg( 'bm_list_welcome', $createLink, $importLink ) );
+		$wgOut->addHtml( $this->msg( 'bm_list_welcome', $createLink, $importLink )->escaped() );
 		$fieldDefs = BibManagerFieldsList::getFieldDefinitions();
 		foreach ( $fieldDefs as $fieldName => $fieldDef ) {
 			$selectValues [$fieldDef['label']] = $fieldName;
@@ -35,13 +35,13 @@ class SpecialBibManagerList extends SpecialPage {
 		ksort( $selectValues );
 		$formDescriptor = array (
 			'bm_list_search_text' => array (
-				'label' => wfMsg( 'bm_list_search_term' ),
+				'label-message' => 'bm_list_search_term',
 				'section' => 'title',
 				'class' => 'HTMLTextField',
 				'default' => $wgRequest->getVal( 'wpbm_list_search_text', '' ),
 			),
 			'bm_list_search_select' => array (
-				'label' => wfMsg( 'bm_list_search_fieldname' ),
+				'label-message' => 'bm_list_search_fieldname',
 				'section' => 'title',
 				'class' => 'HTMLSelectField',
 				'options' => $selectValues,
@@ -50,7 +50,7 @@ class SpecialBibManagerList extends SpecialPage {
 		);
 
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_list_search' );
-		$htmlForm->setSubmitText( wfMsg( 'bm_list_search_submit' ) );
+		$htmlForm->setSubmitText( $this->msg( 'bm_list_search_submit' )->text() );
 		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
 		$htmlForm->show();
 
@@ -63,18 +63,18 @@ class SpecialBibManagerList extends SpecialPage {
 			$table[] = '<form method="post" action="' . SpecialPage::getTitleFor( 'BibManagerExport' )->getLocalURL() . '">';
 			$table[] = '  <table class="wikitable" style="width:100%;">';
 			$table[] = '    <tr>';
-			$table[] = '      <th style="width: 100px;">' . wfMsg( 'bm_list_table_heading-name' ) . '</th>';
-			$table[] = '      <th>' . wfMsg( 'bm_list_table_heading-description' ) . '</th>';
+			$table[] = '      <th style="width: 100px;">' . $this->msg( 'bm_list_table_heading-name' )->escaped() . '</th>';
+			$table[] = '      <th>' . $this->msg( 'bm_list_table_heading-description' )->escaped() . '</th>';
 			if ($wgUser->isAllowed('bibmanagerdelete') || $wgUser->isAllowed('bibmanageredit')) {
-				$table[] = '      <th style="width: 70px;">' . wfMsg( 'bm_list_table_heading-actions' ) . '</th>';
+				$table[] = '      <th style="width: 70px;">' . $this->msg( 'bm_list_table_heading-actions' )->escaped() . '</th>';
 			}
-			$table[] = '      <th style="width: 50px;" id="bm_table_export_column_heading">' . wfMsg( 'bm_list_table_heading-export' ) . '</th>';
+			$table[] = '      <th style="width: 50px;" id="bm_table_export_column_heading">' . $this->msg( 'bm_list_table_heading-export' )->escaped() . '</th>';
 			$table[] = '    </tr>';
 			$table[] = $sDataBody;
 			$table[] = '  </table>';
 			$table[] = Html::input(
 				'submit-export',
-				wfMsg( "bm_list_table_submit-export" ),
+				$this->msg( "bm_list_table_submit-export" )->text(),
 				'submit',
 				array ( 'style' => 'float:right;' )
 			);
@@ -83,7 +83,7 @@ class SpecialBibManagerList extends SpecialPage {
 			$wgOut->addHTML( implode( "\n", $table ) );
 			$wgOut->addHTML( $pager->getNavigationBar() );
 		} else {
-			$wgOut->addHtml( wfMsg( 'bm_error_no-data-found' ) );
+			$wgOut->addHtml( $this->msg( 'bm_error_no-data-found' )->escaped() );
 		}
 		$wgOut->addHtml( '</div>' );
 		$wgOut->addHTML( '</div>' );

@@ -21,10 +21,10 @@ class SpecialBibManagerImport extends SpecialPage {
 
 		global $wgRequest;
 		$this->setHeaders();
-		$wgOut->setPageTitle( wfMsg( 'heading_import' ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_import' ) );
 
 		if ( $wgRequest->getVal( 'bm_bibtex', '' ) == '' ) {
-			$wgOut->addHtml( wfMsg( 'bm_import_welcome' ) );
+			$wgOut->addHtml( $this->msg( 'bm_import_welcome' )->escaped() );
 		}
 
 		$formDescriptor['bm_bibtex'] = array (
@@ -33,7 +33,7 @@ class SpecialBibManagerImport extends SpecialPage {
 		);
 
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_edit' );
-		$htmlForm->setSubmitText( wfMsg( 'bm_edit_submit' ) );
+		$htmlForm->setSubmitText( $this->msg( 'bm_edit_submit' )->text() );
 		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
 
 		$wgOut->addHTML( '<div id="bm_form">' );
@@ -95,8 +95,8 @@ class SpecialBibManagerImport extends SpecialPage {
 			$repo->saveBibEntry( $cleanedEntry[0], $cleanedEntry[1], $cleanedEntry[2] );
 		}
 
-		$wgOut->addHtml( wfMsg( 'bm_success_save-complete' ) );
-		$wgOut->addHtml( wfMsg( 'bm_success_link-to-list', SpecialPage::getTitleFor( "BibManagerList" )->getLocalURL() ) );
+		$wgOut->addHtml( $this->msg( 'bm_success_save-complete' )->escaped() );
+		$wgOut->addHtml( $this->msg( 'bm_success_link-to-list', SpecialPage::getTitleFor( "BibManagerList" )->getLocalURL() )->escaped() );
 
 		return true;
 	}

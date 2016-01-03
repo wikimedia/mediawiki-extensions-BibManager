@@ -52,7 +52,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		// bm_entry_type_incollection, bm_entry_type_inproceedings, bm_entry_type_manual,
 		// bm_entry_type_mastersthesis, bm_entry_type_misc, bm_entry_type_phdthesis,
 		// bm_entry_type_proceedings, bm_entry_type_techreport, bm_entry_type_unpublished
-		$wgOut->setPageTitle( wfMsg( 'heading_edit', wfMsg( 'bm_entry_type_' . $entryType ) ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_edit', $this->msg( 'bm_entry_type_' . $entryType )->text() ) );
 
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$bibTeXFields = BibManagerFieldsList::getFieldDefinitions();
@@ -60,7 +60,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		$formDescriptor = array();
 		$formDescriptor['bm_bibtexCitation'] = array (
 			'class' => 'HTMLTextField',
-			'label' => wfMsg( 'bm_citation' ),
+			'label-message' => 'bm_citation',
 			'section' => 'citation',
 			'required' => true,
 			'validation-callback' => 'BibManagerValidator::validateCitation'
@@ -106,7 +106,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		Hooks::run( 'BibManagerEditBeforeFormCreate', array ( $this, &$formDescriptor ) );
 
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_edit' );
-		$htmlForm->setSubmitText( wfMsg( 'bm_edit_submit' ) );
+		$htmlForm->setSubmitText( $this->msg( 'bm_edit_submit' )->text() );
 		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
 		//TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
 
@@ -141,7 +141,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		$repo->saveBibEntry( $formData['bm_bibtexCitation'], $entryType, $submittedFields );
 
 		$this->getOutput()->addWikiMsg( 'bm_success_save-complete' );
-		$this->getOutput()->addHTML( wfMsg( 'bm_success_link-to-list', SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL() ) );
+		$this->getOutput()->addHTML( $this->msg( 'bm_success_link-to-list', SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL() )->escaped() );
 
 		return true;
 	}
