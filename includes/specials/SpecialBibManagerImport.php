@@ -6,6 +6,10 @@ class SpecialBibManagerImport extends SpecialPage {
 		parent::__construct( 'BibManagerImport' , 'bibmanageredit');
 	}
 
+	public function doesWrites() {
+		return true;
+	}
+
 	/**
 	 * Main method of SpecialPage. Called by Framework.
 	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
