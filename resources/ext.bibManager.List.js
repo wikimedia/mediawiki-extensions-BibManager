@@ -6,6 +6,7 @@ function bm_initListForm() {
 	var inputs = table.getElementsByTagName( 'input' );
 	var exportheading = d.getElementById( 'bm_table_export_column_heading' );
 	var exportallcheckbox = d.createElement( 'input' );
+	var bm_export_checkboxes;
 	exportallcheckbox.type = 'checkbox';
 	exportallcheckbox.style.margin = '0 0 0 10px';
 	exportheading.style.width = '75px';
@@ -13,14 +14,14 @@ function bm_initListForm() {
 
 	bm_export_checkboxes = [];
 	for( var i = 0; i < inputs.length; i++ ) {
-		if( inputs[i].type == "checkbox" ) {
+		if( inputs[i].type === "checkbox" ) {
 			bm_export_checkboxes.push( inputs[i] );
 		}
 	}
 
-	exportallcheckbox.onclick = function (e) {
+	exportallcheckbox.onclick = function () {
 		for( var j = 0; j < bm_export_checkboxes.length; j++ ){
 			bm_export_checkboxes[j].checked = this.checked;
 		}
-	}
+	};
 }
