@@ -199,8 +199,9 @@ class BibManagerHooks {
 	public static function onBiblistTag ( $input, $args, $parser, $frame ) {
 		$parser->disableCache();
 
-		$article = new Article( $parser->getTitle() );
-		$content = $article->fetchContent();
+		$page = new WikiPage( $parser->getTitle() );
+		$pageContent = $page->getContent();
+		$content = ContentHandler::getContentText( $pageContent );
 		$parser->getOutput()->addModuleStyles( 'ext.bibManager.styles' );
 
 		$out = array();
