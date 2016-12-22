@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class BibManagerHooks {
 
 	/**
@@ -73,12 +75,11 @@ class BibManagerHooks {
 		$sLink = '';
 		if ( empty( $entry ) ) {
 			$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' );
-			$sLink = Linker::link(
+			$sLink = $parser->getLinkRenderer()->makeBrokenLink(
 				$spTitle,
 				$args['id'],
 				array( 'class' => 'new' ),
-				array ( 'bm_bibtexCitation' => $args['id'] ),
-				array ( 'broken' => true )
+				array ( 'bm_bibtexCitation' => $args['id'] )
 			);
 			$sTooltip = '<span>' . wfMessage('bm_error_not-existing')->escaped();
 			if ($wgUser->isAllowed('bibmanagercreate')){
@@ -102,7 +103,7 @@ class BibManagerHooks {
 				$args['id'],
 				$wgBibManagerCitationArticleNamespace
 			);
-			$sLink = Linker::link(
+			$sLink = $parser->getLinkRenderer()->makeLink(
 				$oCitationTitle,
 				$args['id'],
 				array ( 'title' => '' )
@@ -366,15 +367,15 @@ class BibManagerHooks {
 		if ( $res === false ) {
 			return '[' . wfMessage( 'bm_no-data-found' )->escaped() . ']';
 		}
+		$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 		foreach ( $res as $key => $val ) {
 			if ( empty( $val ) ){
 				$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' ); // TODO RBV (10.11.11 13:50): Dublicate code --> encapsulate
-				$citLink = Linker::link(
+				$citLink = $linkRenderer->makeBrokenLink(
 					$spTitle,
 					$key,
 					array ( 'class' => 'new' ),
-					array ( 'bm_bibtexCitation' => $key ),
-					array ( 'broken' => true )
+					array ( 'bm_bibtexCitation' => $key )
 				);
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $key ));
 				$citFormat = '<em>' . wfMessage('bm_error_not-existing')->escaped();
@@ -393,7 +394,7 @@ class BibManagerHooks {
 					$val['bm_bibtexCitation'],
 					$wgBibManagerCitationArticleNamespace
 				);
-				$citLink = Linker::link( $title, $val['bm_bibtexCitation'] );
+				$citLink = $linkRenderer->makeLink( $title, $val['bm_bibtexCitation'] );
 				$citFormat = self::formatEntry( $val );
 				$citIcons = self::getIcons( $val );
 			}

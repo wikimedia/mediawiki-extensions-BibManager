@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class BibManagerPagerList extends AlphabeticPager {
 	private $searchType = '';
 	private $searchTerm = '';
@@ -88,7 +90,9 @@ class BibManagerPagerList extends AlphabeticPager {
 
 		$citationTitle = Title::newFromText( $row->bm_bibtexCitation, $wgBibManagerCitationArticleNamespace );
 
-		$citationLink = Linker::link( $citationTitle, $row->bm_bibtexCitation );
+		$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
+
+		$citationLink = $linkRenderer->makeLink( $citationTitle, $row->bm_bibtexCitation );
 		$editLink	 = '';
 		$deleteLink   = '';
 		$exportLink   = Html::input(
@@ -100,9 +104,9 @@ class BibManagerPagerList extends AlphabeticPager {
 		$specialPageQuery = array ( 'bm_bibtexCitation' => $row->bm_bibtexCitation );
 
 		if ($wgUser->isAllowed('bibmanageredit')){
-			$editLink = Linker::link(
+			$editLink = $linkRenderer->makeLink(
 				SpecialPage::getTitleFor( 'BibManagerEdit' ),
-				$this->msg( 'bm_list_table_edit' )->escaped(),
+				$this->msg( 'bm_list_table_edit' )->text(),
 				array (
 					'class' => 'icon edit',
 					'title' => $this->msg( 'bm_list_table_edit' )->escaped()
@@ -112,9 +116,9 @@ class BibManagerPagerList extends AlphabeticPager {
 		}
 
 		if ($wgUser->isAllowed('bibmanagerdelete')){
-			$deleteLink = Linker::link(
+			$deleteLink = $linkRenderer->makeLink(
 				SpecialPage::getTitleFor( 'BibManagerDelete' ),
-				$this->msg( 'bm_list_table_delete' )->escaped(),
+				$this->msg( 'bm_list_table_delete' )->text(),
 				array (
 					'class' => 'icon delete',
 					'title' => $this->msg( "bm_list_table_delete" )->escaped()
