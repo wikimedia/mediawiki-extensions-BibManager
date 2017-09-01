@@ -13,7 +13,7 @@ class BibManagerExportRepo extends Maintenance {
 
 	public function execute() {
 		$sFilename     = $this->getOption( 'filename', 'new_export' );
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select(
 		    'bibmanager', 'bm_bibtexCitation'
 		);

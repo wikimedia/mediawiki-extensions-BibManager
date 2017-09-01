@@ -3,7 +3,7 @@
 class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 
 	public function getCitationsLike ( $sCitation ) {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select(
 			'bibmanager',
 			'bm_bibtexCitation',
@@ -33,7 +33,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	 * @return mixed
 	 */
 	public function getBibEntries ( $mOptions ) {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select(
 		    'bibmanager', '*', $mOptions
 		);
@@ -48,7 +48,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function getBibEntryByCitation ( $sCitation ) {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->selectRow(
 			'bibmanager',
 			'*',
