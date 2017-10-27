@@ -59,8 +59,7 @@ $wgAutoloadClasses['SpecialBibManagerDelete']      = __DIR__ . '/includes/specia
 $wgAutoloadClasses['SpecialBibManagerEdit']        = __DIR__ . '/includes/specials/SpecialBibManagerEdit.php';
 
 //Add I18N
-$wgMessagesDirs['BibManager'] = __DIR__ . '//i18n';
-$wgExtensionMessagesFiles['BibManager'] = __DIR__ . '/BibManager.i18n.php';
+$wgMessagesDirs['BibManager'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['BibManagerAlias']  = __DIR__ . '/BibManager.alias.php';
 
 //Add SpecialPages
