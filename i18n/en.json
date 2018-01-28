@@ -84,7 +84,7 @@
 	"bm_error_not-found": "The dataset \"$1\" was not found!",
 	"bm_error_no-data-found": "No datasets were found.",
 	"bm_wrong-character": "Entered wrong value!",
-	"bm_wrong-url-format": "Entered wrong value! (z.B. http://www.mediawiki.org)",
+	"bm_wrong-url-format": "Entered wrong value! (for example https://www.mediawiki.org)",
 	"bm_required-field-empty": "Do not leave this field empty!",
 	"bm_missing-id": "Citationkey missing",
 	"bm_missing-filter": "Filter missing",

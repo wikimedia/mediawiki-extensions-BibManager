@@ -7,7 +7,7 @@
 		"Tobias Weichart",
 		"Robert Vogel"
 	],
-	"url": "http://www.mediawiki.org/wiki/Extension:BibManager",
+	"url": "https://www.mediawiki.org/wiki/Extension:BibManager",
 	"descriptionmsg": "bibmanager-desc",
 	"license-name": "GPL-2.0-or-later",
 	"type": "specialpage",

@@ -35,7 +35,7 @@ class BibManagerValidator {
 		global $wgBibManagerCitationArticleNamespace;
 		if ( empty( $value ) )
 			return wfMessage( 'bm_required-field-empty' )->text();
-		//HINT: http://www.mediawiki.org/wiki/Help:Bad_title
+		//HINT: https://www.mediawiki.org/wiki/Help:Bad_title
 		$title = Title::newFromText( $value, $wgBibManagerCitationArticleNamespace );
 		if ( $title === null )
 			return wfMessage( 'bm_error_citation_invalid' )->text();

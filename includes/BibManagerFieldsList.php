@@ -3,7 +3,7 @@
 class BibManagerFieldsList {
 
 	public static function getFieldDefinitions () {
-		//HINT: http://semantic-mediawiki.org/wiki/Help:BibTeX_format
+		//HINT: https://semantic-mediawiki.org/wiki/Help:BibTeX_format
 		$fieldDefinitions = array (
 		    'address' => array (
 			'class' => 'HTMLTextField',

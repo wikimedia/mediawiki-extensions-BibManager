@@ -1,6 +1,6 @@
 <?php
 
-//HINT: http://www.mediawiki.org/wiki/Manual:Writing_maintenance_scripts
+//HINT: https://www.mediawiki.org/wiki/Manual:Writing_maintenance_scripts
 require_once( dirname(dirname(dirname(dirname(__FILE__)))) . '/maintenance/Maintenance.php' );
 
 class BibManagerExportRepo extends Maintenance {
