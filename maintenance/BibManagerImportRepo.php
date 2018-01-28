@@ -9,6 +9,8 @@ class BibManagerImportRepo extends Maintenance {
 		parent::__construct();
 
 		$this->addOption('filename', 'The name of the file', true, true);
+
+		$this->requireExtension( 'BibManager' );
 	}
 
 	public function execute() {
