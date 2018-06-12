@@ -22,6 +22,7 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 		global $wgRequest;
 		$wgOut->setPageTitle( wfMessage( 'heading_create' )->plain() );
 		$wgOut->addWikiMsg( 'bm_create_welcome' );
+		$wgOut->addModuleStyles( 'ext.bibManager.styles' );
 		$formDescriptor = array (
 			'bm_select_type' => array (
 			'class' => 'HTMLSelectField',
@@ -49,10 +50,11 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 
 		Hooks::run( 'BibManagerCreateBeforeTypeSelectFormCreate', array ( $this, &$formDescriptor ) );
 
-		$entryTypeSelectionForm = new HTMLForm( $formDescriptor, $this->getContext() );
-		$entryTypeSelectionForm->setSubmitText( wfMessage( 'bm_select_entry_type_submit' )->plain() );
-		$entryTypeSelectionForm->setSubmitId( 'bm_select_entry_type_submit' );
-		$entryTypeSelectionForm->setSubmitCallback( array ( $this, 'onSubmit' ) );
+		$entryTypeSelectionForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext() );
+		$entryTypeSelectionForm
+			->setSubmitText( wfMessage( 'bm_select_entry_type_submit' )->plain() )
+			->setSubmitId( 'bm_select_entry_type_submit' )
+			->setSubmitCallback( array ( $this, 'onSubmit' ) );
 
 		$citation = $wgRequest->getVal( 'bm_bibtexCitation', '' );
 		$importParams = array ( );
@@ -62,10 +64,10 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 		}
 
 		$entryTypeSelectionForm->addPostText(
-			wfMessage(
+			'<div class="bm-create-posttext">' . wfMessage(
 				'bm_bibtex_string_import_link',
 				SpecialPage::getTitleFor( 'BibManagerImport' )->getLocalURL( $importParams )
-			)->plain()
+			)->plain() . "</div>\n"
 		);
 
 		$wgOut->addHTML( '<div id="bm_form">' );

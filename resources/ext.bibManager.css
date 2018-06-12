@@ -155,3 +155,7 @@ table.bm_list_table td{
 table.bm_list_table tr:hover {
 	background-color: #FCFCFC;
 }
+
+.bm-create-posttext {
+	margin-top: 15px;
+}

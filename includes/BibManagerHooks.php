@@ -28,11 +28,6 @@ class BibManagerHooks {
 	 * @return bool Always true to keep hook running
 	 */
 	public static function onBeforePageDisplay ( &$out, &$skin ) {
-		if ( $out->getTitle()->equals( SpecialPage::getTitleFor( 'BibManagerEdit' ) )
-			|| $out->getTitle()->equals( SpecialPage::getTitleFor( 'BibManagerCreate' ) ) ) {
-			$out->addModules( 'ext.bibManager.Edit');
-		}
-
 		if ( $out->getTitle()->equals( SpecialPage::getTitleFor( 'BibManagerList' ) ) ) {
 			$out->addModules( 'ext.bibManager.List');
 		}
