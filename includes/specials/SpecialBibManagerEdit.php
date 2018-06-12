@@ -105,11 +105,10 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 		Hooks::run( 'BibManagerEditBeforeFormCreate', array ( $this, &$formDescriptor ) );
 
-		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_edit' );
-		$htmlForm->setSubmitText( $this->msg( 'bm_edit_submit' )->text() );
-		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
-		//TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
-
+		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'bm_edit' );
+		$htmlForm
+			->setSubmitText( $this->msg( 'bm_edit_submit' )->text() )
+			->setSubmitCallback( array ( $this, 'submitForm' ) );
 		$wgOut->addHTML( '<div id="bm_form">' );
 		$htmlForm->show();
 		$wgOut->addHTML( '</div>' );
@@ -141,7 +140,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		$repo->saveBibEntry( $formData['bm_bibtexCitation'], $entryType, $submittedFields );
 
 		$this->getOutput()->addWikiMsg( 'bm_success_save-complete' );
-		$this->getOutput()->addHTML( $this->msg( 'bm_success_link-to-list', SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL() )->escaped() );
+		$this->getOutput()->addHTML( $this->msg( 'bm_success_link-to-list', SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL() )->text() );
 
 		return true;
 	}
