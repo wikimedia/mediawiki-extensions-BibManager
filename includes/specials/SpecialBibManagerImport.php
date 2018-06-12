@@ -36,9 +36,10 @@ class SpecialBibManagerImport extends SpecialPage {
 		    'rows' => 25
 		);
 
-		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_edit' );
-		$htmlForm->setSubmitText( $this->msg( 'bm_edit_submit' )->text() );
-		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
+		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'bm_edit' );
+		$htmlForm
+			->setSubmitTextMsg( 'bm_edit_submit' )
+			->setSubmitCallback( array ( $this, 'submitForm' ) );
 
 		$wgOut->addHTML( '<div id="bm_form">' );
 		$htmlForm->show();
