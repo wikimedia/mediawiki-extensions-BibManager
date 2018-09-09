@@ -67,10 +67,6 @@
 		"ext.bibManager.List": {
 			"scripts": "ext.bibManager.List.js",
 			"dependencies": "ext.bibManager.styles"
-		},
-		"ext.bibManager.Edit": {
-			"scripts": "ext.bibManager.Edit.js",
-			"dependencies": "ext.bibManager.styles"
 		}
 	},
 	"ResourceFileModulePaths": {
