@@ -67,9 +67,11 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		    )
 		);
 
-		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_delete' );
-		$htmlForm->setSubmitText( $this->msg( 'bm_delete_submit' )->text() );
-		$htmlForm->setSubmitCallback( array ( $this, 'formSubmit' ) );
+		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'bm_delete' );
+		$htmlForm
+			->setSubmitText( $this->msg( 'bm_delete_submit' )->text() )
+			->setSubmitCallback( array ( $this, 'formSubmit' ) )
+			->setSubmitDestructive();
 		//TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
 
 		$wgOut->addHTML( '<div id="bm_form">' );
