@@ -15,10 +15,10 @@
 
 	// Environment
 	"browser": true,
-	"jquery": true,
 
 	"globals": {
-		"mediaWiki": false,
-		"addOnloadHook": false
+		"$": false,
+		"OO": false,
+		"mw": false
 	}
 }

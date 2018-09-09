@@ -1,16 +1,11 @@
-addOnloadHook(bm_initListForm); //Register onload eventlistener. --> TODO: Maybe use jQuery in later MW versions?
-
-function bm_initListForm() {
+$( function () {
 	var d = document;
 	var table = d.getElementById( 'bm_table' );
 	var inputs = table.getElementsByTagName( 'input' );
-	var exportheading = d.getElementById( 'bm_table_export_column_heading' );
-	var exportallcheckbox = d.createElement( 'input' );
 	var bm_export_checkboxes;
-	exportallcheckbox.type = 'checkbox';
-	exportallcheckbox.style.margin = '0 0 0 10px';
-	exportheading.style.width = '75px';
-	exportheading.appendChild( exportallcheckbox );
+
+	// Get the checkbox
+	var exportAllCheckbox = $(".bm-list-table-export-checkbox input");
 
 	bm_export_checkboxes = [];
 	for( var i = 0; i < inputs.length; i++ ) {
@@ -19,9 +14,9 @@ function bm_initListForm() {
 		}
 	}
 
-	exportallcheckbox.onclick = function () {
+	exportAllCheckbox.click( function() {
 		for( var j = 0; j < bm_export_checkboxes.length; j++ ){
 			bm_export_checkboxes[j].checked = this.checked;
 		}
-	};
-}
+	});
+} );

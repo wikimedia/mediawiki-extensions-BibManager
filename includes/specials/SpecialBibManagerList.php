@@ -70,7 +70,11 @@ class SpecialBibManagerList extends SpecialPage {
 			if ($wgUser->isAllowed('bibmanagerdelete') || $wgUser->isAllowed('bibmanageredit')) {
 				$table[] = '      <th style="width: 70px;">' . $this->msg( 'bm_list_table_heading-actions' )->escaped() . '</th>';
 			}
-			$table[] = '      <th style="width: 50px;" id="bm_table_export_column_heading">' . $this->msg( 'bm_list_table_heading-export' )->escaped() . '</th>';
+			$table[] = '      <th style="width: 50px;" id="bm_table_export_column_heading">' . $this->msg( 'bm_list_table_heading-export' )->escaped()
+			. new OOUI\CheckboxInputWidget( [
+				'classes' => [ 'bm-list-table-export-checkbox' ]
+			] )
+			. '</th>';
 			$table[] = '    </tr>';
 			$table[] = $sDataBody;
 			$table[] = '  </table>';
