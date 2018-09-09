@@ -17,6 +17,7 @@ class SpecialBibManagerList extends SpecialPage {
 		global $wgOut, $wgRequest, $wgUser;
 		$this->setHeaders();
 		$wgOut->setPageTitle( $this->msg( 'heading_list' ) );
+		$wgOut->enableOOUI();
 		$wgOut->addHTML( '<div id="bm_form">' );
 
 		$createLink = $this->getLinkRenderer()->makeLink(
@@ -27,7 +28,7 @@ class SpecialBibManagerList extends SpecialPage {
 			SpecialPage::getTitleFor( 'BibManagerImport' ),
 			SpecialPageFactory::getPage('BibManagerImport')->getDescription()
 		);
-		$wgOut->addHtml( $this->msg( 'bm_list_welcome', $createLink, $importLink )->escaped() );
+		$wgOut->addHtml( $this->msg( 'bm_list_welcome', $createLink, $importLink )->text() );
 		$fieldDefs = BibManagerFieldsList::getFieldDefinitions();
 		foreach ( $fieldDefs as $fieldName => $fieldDef ) {
 			$selectValues [$fieldDef['label']] = $fieldName;
@@ -49,10 +50,11 @@ class SpecialBibManagerList extends SpecialPage {
 			)
 		);
 
-		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'bm_list_search' );
-		$htmlForm->setSubmitText( $this->msg( 'bm_list_search_submit' )->text() );
-		$htmlForm->setSubmitCallback( array ( $this, 'submitForm' ) );
-		$htmlForm->show();
+		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'bm_list_search' );
+		$htmlForm
+			->setSubmitText( $this->msg( 'bm_list_search_submit' )->text() )
+			->setSubmitCallback( array ( $this, 'submitForm' ) )
+			->show();
 
 		$pager = new BibManagerPagerList(); // TODO RBV (17.12.11 15:08): We will need to change this when we support other repos than local DB
 		$wgOut->addHtml( '<div id="bm_table">' );
@@ -72,12 +74,11 @@ class SpecialBibManagerList extends SpecialPage {
 			$table[] = '    </tr>';
 			$table[] = $sDataBody;
 			$table[] = '  </table>';
-			$table[] = Html::input(
-				'submit-export',
-				$this->msg( "bm_list_table_submit-export" )->text(),
-				'submit',
-				array ( 'style' => 'float:right;' )
-			);
+			$table[] = new OOUI\ButtonInputWidget( [
+				'type' => 'submit',
+				'name' => 'submit-export',
+				'label' => $this->msg( 'bm_list_table_submit-export' )->text()
+			] );
 			$table[] = '</form>';
 
 			$wgOut->addHTML( implode( "\n", $table ) );

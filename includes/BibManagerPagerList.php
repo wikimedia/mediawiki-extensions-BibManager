@@ -93,13 +93,13 @@ class BibManagerPagerList extends AlphabeticPager {
 		$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 
 		$citationLink = $linkRenderer->makeLink( $citationTitle, $row->bm_bibtexCitation );
-		$editLink	 = '';
+		$editLink     = '';
 		$deleteLink   = '';
-		$exportLink   = Html::input(
-			'cit[]',
-			str_replace( '.', '__dot__', $row->bm_bibtexCitation ),
-			'checkbox'
-		);
+		$exportLink   = new OOUI\CheckboxInputWidget( [
+			'infusable' => true,
+			'name' => 'cit[]',
+			'value' => str_replace( '.', '__dot__', $row->bm_bibtexCitation ),
+		] );
 
 		$specialPageQuery = array ( 'bm_bibtexCitation' => $row->bm_bibtexCitation );
 
