@@ -84,7 +84,7 @@
 	"bm_error_not-found": "Der Datensatz \"$1\" wurde nicht gefunden!",
 	"bm_error_no-data-found": "Es wurden keine Datensätze gefunden.",
 	"bm_wrong-character": "Falscher Wert eingegeben!",
-	"bm_wrong-url-format": "Falscher Wert eingegeben! (z.B. http://www.mediawiki.org)",
+	"bm_wrong-url-format": "Falscher Wert eingegeben! (z.B. https://www.mediawiki.org)",
 	"bm_required-field-empty": "Eine Eingabe ist erforderlich!",
 	"bm_missing-id": "Zitatschlüssel fehlt",
 	"bm_missing-filter": "Filter fehlt",
