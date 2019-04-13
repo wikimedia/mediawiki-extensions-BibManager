@@ -131,8 +131,11 @@
 	"heading_import": "A page title",
 	"heading_list": "A page title",
 	"heading_list_authors": "A page title",
+	"action-bibmanagercreate": "{{doc-action|bibmanagercreate}}",
 	"right-bibmanagercreate": "{{doc-right|bibmanagercreate}}",
+	"action-bibmanagerdelete": "{{doc-action|bibmanagerdelete}}",
 	"right-bibmanagerdelete": "{{doc-right|bibmanagerdelete}}",
+	"action-bibmanageredit": "{{doc-action|bibmanageredit}}",
 	"right-bibmanageredit": "{{doc-right|bibmanageredit}}",
 	"specialpages-group-bibmanager": "{{doc-specialgroup}}"
 }

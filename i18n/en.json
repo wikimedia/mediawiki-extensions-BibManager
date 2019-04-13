@@ -133,8 +133,11 @@
 	"heading_import": "BibManager: Import BibTeX",
 	"heading_list": "BibManager: Overview",
 	"heading_list_authors": "BibManager: Overview authors",
+	"action-bibmanagercreate": "create bibliographic data and entries",
 	"right-bibmanagercreate": "Create bibliographic data and entries",
+	"action-bibmanagerdelete": "delete bibliographic data and entries",
 	"right-bibmanagerdelete": "Delete bibliographic data and entries",
+	"action-bibmanageredit": "edit bibliographic data and entries",
 	"right-bibmanageredit": "Edit bibliographic data and entries",
 	"specialpages-group-bibmanager": "BibManager"
 }
