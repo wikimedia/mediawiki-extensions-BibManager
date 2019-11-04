@@ -57,7 +57,7 @@ class BibManagerHooks {
 	public static function onBibTag ( $input, $args, $parser, $frame ) {
 		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
-		$parser->disableCache();
+		$parser->getOutput()->updateCacheExpiry( 0 );
 		if ( !isset( $args['id'] ) ) {
 			return '[' . wfMessage( 'bm_missing-id' )->escaped() . ']';
 		}
@@ -193,7 +193,7 @@ class BibManagerHooks {
 	 * @return string List of used <bib />-tags
 	 */
 	public static function onBiblistTag ( $input, $args, $parser, $frame ) {
-		$parser->disableCache();
+		$parser->getOutput()->updateCacheExpiry( 0 );
 
 		$page = new WikiPage( $parser->getTitle() );
 		$pageContent = $page->getContent();
@@ -255,7 +255,7 @@ class BibManagerHooks {
 	public static function onBibprintTag ( $input, $args, $parser, $frame ) {
 		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
-		$parser->disableCache();
+		$parser->getOutput()->updateCacheExpiry( 0 );
 
 		if ( !isset( $args['filter'] ) && !isset($args['citation'] ))
 			return '[' . wfMessage( 'bm_missing-filter' )->escaped() . ']';
