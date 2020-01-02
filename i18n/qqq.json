@@ -1,6 +1,5 @@
 {
 	"@metadata": {},
-	"BibManager": "{{doc-special}}",
 	"bibmanager-desc": "{{desc|name=BibManager|url=https://www.mediawiki.org/wiki/Extension:BibManager}}",
 	"bibmanagercreate": "{{doc-special}}",
 	"bibmanagerdelete": "{{doc-special}}",

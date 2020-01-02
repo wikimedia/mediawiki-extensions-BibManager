@@ -2,7 +2,6 @@
 	"@metadata": {
 		"authors": []
 	},
-	"BibManager": "BibManager",
 	"bibmanager-desc": "Allows you to administrate blibliography entries. Developed for \"[http://www.hornemann-institut.de Hornemann Institut] der HAWK Hochschule für Angewandte Wissenschaft und Kunst Hildesheim/Holzminden/Göttingen, gefördert von der Deutschen Forschungsgemeinschaft (DFG )\" by [http://www.hallowelt.biz Hallo Welt! Medienwerkstatt GmbH].",
 	"bibmanagercreate": "Add new entry",
 	"bibmanagerdelete": "Delete entry",
