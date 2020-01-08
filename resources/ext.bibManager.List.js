@@ -1,22 +1,22 @@
 $( function () {
-	var d = document;
-	var table = d.getElementById( 'bm_table' );
-	var inputs = table.getElementsByTagName( 'input' );
-	var bm_export_checkboxes;
+	var d = document, i, j,
+		table = d.getElementById( 'bm_table' ),
+		inputs = table.getElementsByTagName( 'input' ),
+		bmExportCheckboxes,
 
-	// Get the checkbox
-	var exportAllCheckbox = $(".bm-list-table-export-checkbox input");
+		// Get the checkbox
+		$exportAllCheckbox = $( '.bm-list-table-export-checkbox input' );
 
-	bm_export_checkboxes = [];
-	for( var i = 0; i < inputs.length; i++ ) {
-		if( inputs[i].type === "checkbox" ) {
-			bm_export_checkboxes.push( inputs[i] );
+	bmExportCheckboxes = [];
+	for ( i = 0; i < inputs.length; i++ ) {
+		if ( inputs[ i ].type === 'checkbox' ) {
+			bmExportCheckboxes.push( inputs[ i ] );
 		}
 	}
 
-	exportAllCheckbox.click( function() {
-		for( var j = 0; j < bm_export_checkboxes.length; j++ ){
-			bm_export_checkboxes[j].checked = this.checked;
+	$exportAllCheckbox.on( 'click', function () {
+		for ( j = 0; j < bmExportCheckboxes.length; j++ ) {
+			bmExportCheckboxes[ j ].checked = this.checked;
 		}
-	});
+	} );
 } );
