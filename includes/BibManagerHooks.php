@@ -102,12 +102,12 @@ class BibManagerHooks {
 				$args['id'],
 				array ( 'title' => '' )
 			);
-			$sTooltip = self::getTooltip( $entry, $args );
+			$sTooltip = self::getTooltip( $entry, $args, $parser->getUser() );
 		}
 		return '<span class="bibmanager-citation">[' . $sLink . ']' . $sTooltip . '</span>';
 	}
 
-	public static function getTooltip ( $entry, $args ) {
+	public static function getTooltip ( $entry, $args, User $user ) {
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$entryTypeFields = array_merge(
 			$typeDefs[$entry['bm_bibtexEntryType']]['required'], $typeDefs[$entry['bm_bibtexEntryType']]['optional']
@@ -127,7 +127,7 @@ class BibManagerHooks {
 				."<br/>";//. XML::element( 'br', null, null ); //This is just a little exercise
 		}
 
-		$tooltip[] = self::getIcons( $entry );
+		$tooltip[] = self::getIcons( $entry, $user );
 		$tooltipString = implode( "", $tooltip );
 		$tooltipString = '<span>' . $tooltipString . '</span>';
 
@@ -138,12 +138,12 @@ class BibManagerHooks {
 		return $tooltipString;
 	}
 
-	public static function getIcons ( $entry ) {
-		global $wgScriptPath, $wgUser;
+	public static function getIcons ( $entry, User $user ) {
+		global $wgScriptPath;
 		global $wgBibManagerScholarLink;
 		$icons = array ( );
 
-		if ( !empty( $entry['bm_bibtexCitation'] ) && $wgUser->isAllowed('bibmanageredit') ) {
+		if ( !empty( $entry['bm_bibtexCitation'] ) && $user->isAllowed('bibmanageredit') ) {
 			$icons['edit'] = array (
 				'src' => $wgScriptPath . '/extensions/BibManager/resources/images/pencil.png',
 				'title' => 'bm_tooltip_edit',
@@ -229,7 +229,7 @@ class BibManagerHooks {
 			}
 		}
 
-		$out = self::getTable($entries);
+		$out = self::getTable($entries, $parser->getUser());
 
 		return $out;
 
@@ -294,7 +294,7 @@ class BibManagerHooks {
 
 			$res = $repo->getBibEntries( $conds );
 		}
-		$out = self::getTable($res);
+		$out = self::getTable($res, $parser->getUser());
 		return $out;
 	}
 
@@ -354,8 +354,8 @@ class BibManagerHooks {
 		return $out;
 	}
 
-	public static function getTable($res){
-		global $wgUser, $wgBibManagerCitationArticleNamespace;
+	public static function getTable($res, User $user){
+		global $wgBibManagerCitationArticleNamespace;
 		$out = Html::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
 		if ( $res === false ) {
 			return '[' . wfMessage( 'bm_no-data-found' )->escaped() . ']';
@@ -372,7 +372,7 @@ class BibManagerHooks {
 				);
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $key ));
 				$citFormat = '<em>' . wfMessage('bm_error_not-existing')->escaped();
-				if ( $wgUser->isAllowed('bibmanagercreate') ) {
+				if ( $user->isAllowed('bibmanagercreate') ) {
 					$citFormat .= Html::element(
 						'a',
 						array( 'href' => $sLinkToEdit ),
@@ -389,7 +389,7 @@ class BibManagerHooks {
 				);
 				$citLink = $linkRenderer->makeLink( $title, $val['bm_bibtexCitation'] );
 				$citFormat = self::formatEntry( $val );
-				$citIcons = self::getIcons( $val );
+				$citIcons = self::getIcons( $val, $user );
 			}
 
 			$out .= Html::openElement( 'tr' );
