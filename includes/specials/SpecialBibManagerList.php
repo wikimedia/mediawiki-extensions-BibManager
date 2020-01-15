@@ -10,11 +10,10 @@ class SpecialBibManagerList extends SpecialPage {
 	 * Main method of SpecialPage. Called by Framwork.
 	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
 	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
-	 * @global User $wgUser Current MediaWiki User object
 	 * @param mixed $par string or false, provided by Framework
 	 */
 	function execute ( $par ) {
-		global $wgOut, $wgRequest, $wgUser;
+		global $wgOut, $wgRequest;
 		$this->setHeaders();
 		$wgOut->setPageTitle( $this->msg( 'heading_list' ) );
 		$wgOut->enableOOUI();
@@ -59,6 +58,7 @@ class SpecialBibManagerList extends SpecialPage {
 		$pager = new BibManagerPagerList(); // TODO RBV (17.12.11 15:08): We will need to change this when we support other repos than local DB
 		$wgOut->addHtml( '<div id="bm_table">' );
 		$sDataBody = $pager->getBody();
+		$user = $this->getUser();
 		if ( !empty( $sDataBody ) ) {
 			$wgOut->addHTML( $pager->getNavigationBar() );
 			$table = array ( );
@@ -67,7 +67,7 @@ class SpecialBibManagerList extends SpecialPage {
 			$table[] = '    <tr>';
 			$table[] = '      <th style="width: 100px;">' . $this->msg( 'bm_list_table_heading-name' )->escaped() . '</th>';
 			$table[] = '      <th>' . $this->msg( 'bm_list_table_heading-description' )->escaped() . '</th>';
-			if ($wgUser->isAllowed('bibmanagerdelete') || $wgUser->isAllowed('bibmanageredit')) {
+			if ($user->isAllowed('bibmanagerdelete') || $user->isAllowed('bibmanageredit')) {
 				$table[] = '      <th style="width: 70px;">' . $this->msg( 'bm_list_table_heading-actions' )->escaped() . '</th>';
 			}
 			$table[] = '      <th style="width: 50px;" id="bm_table_export_column_heading">' . $this->msg( 'bm_list_table_heading-export' )->escaped()

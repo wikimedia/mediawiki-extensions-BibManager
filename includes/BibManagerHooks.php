@@ -55,7 +55,6 @@ class BibManagerHooks {
 	 * @return String the link to the Bib-Cit entered by id
 	 */
 	public static function onBibTag ( $input, $args, $parser, $frame ) {
-		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
 		$parser->getOutput()->updateCacheExpiry( 0 );
 		if ( !isset( $args['id'] ) ) {
@@ -77,7 +76,7 @@ class BibManagerHooks {
 				array ( 'bm_bibtexCitation' => $args['id'] )
 			);
 			$sTooltip = '<span>' . wfMessage('bm_error_not-existing')->escaped();
-			if ($wgUser->isAllowed('bibmanagercreate')){
+			if ($parser->getUser()->isAllowed('bibmanagercreate')){
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )
 					->getLocalURL(
 						array (
@@ -253,7 +252,6 @@ class BibManagerHooks {
 	 * @return string
 	 */
 	public static function onBibprintTag ( $input, $args, $parser, $frame ) {
-		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
 		$parser->getOutput()->updateCacheExpiry( 0 );
 

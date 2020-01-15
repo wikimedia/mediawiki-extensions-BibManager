@@ -13,8 +13,8 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 	 * @param mixed $par string or false, provided by Framework
 	 */
 	public function execute ( $par ) {
-		global $wgUser, $wgOut;
-		if (!$wgUser->isAllowed('bibmanagerdelete')){
+		global $wgOut;
+		if (!$this->getUser()->isAllowed('bibmanagerdelete')){
 			$wgOut->showErrorPage('badaccess','badaccess-group0');
 			return true;
 		}

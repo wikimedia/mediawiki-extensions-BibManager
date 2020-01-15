@@ -13,8 +13,8 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 	 * @param mixed $par string or false, provided by Framework
 	 */
 	public function execute ( $par ) {
-		global $wgUser, $wgOut;
-		if (!$wgUser->isAllowed('bibmanagercreate')){
+		global $wgOut;
+		if (!$this->getUser()->isAllowed('bibmanagercreate')){
 			$wgOut->showErrorPage('badaccess','badaccess-group0');
 			return true;
 		}
