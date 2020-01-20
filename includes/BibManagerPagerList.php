@@ -80,12 +80,10 @@ class BibManagerPagerList extends AlphabeticPager {
 
 	/**
 	 *
-	 * @global User $wgUser
 	 * @param mixed $row
 	 * @return string
 	 */
 	function formatRow ( $row ) {
-		global $wgUser;
 		global $wgBibManagerCitationArticleNamespace;
 
 		$citationTitle = Title::newFromText( $row->bm_bibtexCitation, $wgBibManagerCitationArticleNamespace );
@@ -103,7 +101,8 @@ class BibManagerPagerList extends AlphabeticPager {
 
 		$specialPageQuery = array ( 'bm_bibtexCitation' => $row->bm_bibtexCitation );
 
-		if ($wgUser->isAllowed('bibmanageredit')){
+		$user = $this->getUser();
+		if ($user->isAllowed('bibmanageredit')){
 			$editLink = $linkRenderer->makeLink(
 				SpecialPage::getTitleFor( 'BibManagerEdit' ),
 				$this->msg( 'bm_list_table_edit' )->text(),
@@ -115,7 +114,7 @@ class BibManagerPagerList extends AlphabeticPager {
 			);
 		}
 
-		if ($wgUser->isAllowed('bibmanagerdelete')){
+		if ($user->isAllowed('bibmanagerdelete')){
 			$deleteLink = $linkRenderer->makeLink(
 				SpecialPage::getTitleFor( 'BibManagerDelete' ),
 				$this->msg( 'bm_list_table_delete' )->text(),
@@ -133,7 +132,7 @@ class BibManagerPagerList extends AlphabeticPager {
 		$tablerow[] = '<tr>';
 		$tablerow[] = '  <td style="vertical-align:top;">' . $citationLink . '</td>';
 		$tablerow[] = '  <td>' . $format . '</td>';
-		if ($wgUser->isAllowed('bibmanageredit') || $wgUser->isAllowed('bibmanagerdelete')) {
+		if ($user->isAllowed('bibmanageredit') || $user->isAllowed('bibmanagerdelete')) {
 			$tablerow[] = '  <td style="text-align:center;">' . $editLink . $deleteLink . '</td>';
 		}
 		$tablerow[] = '  <td style="text-align:center;">' . $exportLink . '</td>';
