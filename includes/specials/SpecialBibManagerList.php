@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class SpecialBibManagerList extends SpecialPage {
 
 	function __construct () {
@@ -19,14 +21,24 @@ class SpecialBibManagerList extends SpecialPage {
 		$wgOut->enableOOUI();
 		$wgOut->addHTML( '<div id="bm_form">' );
 
+		if ( class_exists( 'MediaWiki\Special\SpecialPageFactory' ) ) {
+			// MW 1.32+
+			$specialPageFactory = MediaWikiServices::getInstance()->getSpecialPageFactory();
+			$createPage = $specialPageFactory->getPage('BibManagerCreate');
+			$importPage = $specialPageFactory->getPage('BibManagerImport');
+		} else {
+			$createPage = SpecialPageFactory::getPage('BibManagerCreate');
+			$importPage = SpecialPageFactory::getPage('BibManagerImport');
+		}
 		$createLink = $this->getLinkRenderer()->makeLink(
 			SpecialPage::getTitleFor( 'BibManagerCreate' ),
-			SpecialPageFactory::getPage('BibManagerCreate')->getDescription()
+			$createPage->getDescription()
 		);
 		$importLink = $this->getLinkRenderer()->makeLink(
 			SpecialPage::getTitleFor( 'BibManagerImport' ),
-			SpecialPageFactory::getPage('BibManagerImport')->getDescription()
+			$importPage->getDescription()
 		);
+
 		$wgOut->addHtml( $this->msg( 'bm_list_welcome', $createLink, $importLink )->text() );
 		$fieldDefs = BibManagerFieldsList::getFieldDefinitions();
 		foreach ( $fieldDefs as $fieldName => $fieldDef ) {
