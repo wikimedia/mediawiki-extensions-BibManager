@@ -69,5 +69,5 @@ class BibManagerImportRepo extends Maintenance {
 	}
 }
 
-$maintClass = 'BibManagerImportRepo';
+$maintClass = BibManagerImportRepo::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
