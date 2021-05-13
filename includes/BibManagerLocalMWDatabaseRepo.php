@@ -63,7 +63,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function saveBibEntry ( $sCitation, $sEntryType, $aFields ) {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = wfGetDB( DB_PRIMARY );
 		return $dbw->insert(
 			'bibmanager',
 			$aFields + array (
@@ -74,7 +74,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function updateBibEntry ( $sCitation, $sEntryType, $aFields ) {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = wfGetDB( DB_PRIMARY );
 
 		return $dbw->update(
 			'bibmanager',
@@ -88,7 +88,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function deleteBibEntry ( $sCitation ) {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = wfGetDB( DB_PRIMARY );
 		$res = $dbw->delete(
 			'bibmanager',
 			array (
