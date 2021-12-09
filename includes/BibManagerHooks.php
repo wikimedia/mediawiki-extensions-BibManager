@@ -67,6 +67,8 @@ class BibManagerHooks {
 
 		$sTooltip = '';
 		$sLink = '';
+		$user = MediaWikiServices::getInstance()
+			->getUserFactory()->newFromUserIdentity( $parser->getUserIdentity() );
 		if ( empty( $entry ) ) {
 			$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' );
 			$sLink = $parser->getLinkRenderer()->makeBrokenLink(
@@ -76,7 +78,7 @@ class BibManagerHooks {
 				array ( 'bm_bibtexCitation' => $args['id'] )
 			);
 			$sTooltip = '<span>' . wfMessage('bm_error_not-existing')->escaped();
-			if ($parser->getUser()->isAllowed('bibmanagercreate')){
+			if ($user->isAllowed('bibmanagercreate')){
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )
 					->getLocalURL(
 						array (
@@ -102,7 +104,7 @@ class BibManagerHooks {
 				$args['id'],
 				array ( 'title' => '' )
 			);
-			$sTooltip = self::getTooltip( $entry, $args, $parser->getUser() );
+			$sTooltip = self::getTooltip( $entry, $args, $user );
 		}
 		return '<span class="bibmanager-citation">[' . $sLink . ']' . $sTooltip . '</span>';
 	}
@@ -229,7 +231,9 @@ class BibManagerHooks {
 			}
 		}
 
-		$out = self::getTable($entries, $parser->getUser());
+		$user = MediaWikiServices::getInstance()
+			->getUserFactory()->newFromUserIdentity( $parser->getUserIdentity() );
+		$out = self::getTable($entries, $user);
 
 		return $out;
 
@@ -294,7 +298,9 @@ class BibManagerHooks {
 
 			$res = $repo->getBibEntries( $conds );
 		}
-		$out = self::getTable($res, $parser->getUser());
+		$user = MediaWikiServices::getInstance()
+			->getUserFactory()->newFromUserIdentity( $parser->getUserIdentity() );
+		$out = self::getTable($res, $user);
 		return $out;
 	}
 
