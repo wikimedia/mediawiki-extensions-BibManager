@@ -20,8 +20,8 @@ class BibManagerExportRepo extends Maintenance {
 		    'bibmanager', 'bm_bibtexCitation'
 		);
 		$aReturn = array ( );
-		while ( $row = $dbr->fetchRow( $res ) ) {
-			$aReturn [] = $row;
+		foreach ( $row as $res ) {
+			$aReturn [] = (array)$row;
 		}
 		
 		$sOutput = "";
