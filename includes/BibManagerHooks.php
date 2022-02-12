@@ -60,7 +60,7 @@ class BibManagerHooks {
 		if ( !isset( $args['id'] ) ) {
 			return '[' . wfMessage( 'bm_missing-id' )->escaped() . ']';
 		}
-		$parser->getOutput()->addModuleStyles( 'ext.bibManager.styles' );
+		$parser->getOutput()->addModuleStyles( [ 'ext.bibManager.styles' ] );
 
 		$entry = BibManagerRepository::singleton()
 			->getBibEntryByCitation( $args['id'] );
@@ -199,7 +199,7 @@ class BibManagerHooks {
 		$page = new WikiPage( $parser->getTitle() );
 		$pageContent = $page->getContent();
 		$content = ContentHandler::getContentText( $pageContent );
-		$parser->getOutput()->addModuleStyles( 'ext.bibManager.styles' );
+		$parser->getOutput()->addModuleStyles( [ 'ext.bibManager.styles' ] );
 
 		$out = array();
 		$out[] = XML::element( 'hr', null, null );
