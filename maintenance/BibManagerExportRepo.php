@@ -46,7 +46,7 @@ class BibManagerExportRepo extends Maintenance {
 		
 		file_put_contents($sFilename, $sOutput);
 		if (file_exists($sFilename))
-			echo ("Export successfull!");
+			echo ("Export successful!");
 		else
 			echo ("Failed exporting.");
 	}
