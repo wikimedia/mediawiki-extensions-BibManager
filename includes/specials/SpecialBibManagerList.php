@@ -21,15 +21,9 @@ class SpecialBibManagerList extends SpecialPage {
 		$wgOut->enableOOUI();
 		$wgOut->addHTML( '<div id="bm_form">' );
 
-		if ( class_exists( 'MediaWiki\Special\SpecialPageFactory' ) ) {
-			// MW 1.32+
-			$specialPageFactory = MediaWikiServices::getInstance()->getSpecialPageFactory();
-			$createPage = $specialPageFactory->getPage('BibManagerCreate');
-			$importPage = $specialPageFactory->getPage('BibManagerImport');
-		} else {
-			$createPage = SpecialPageFactory::getPage('BibManagerCreate');
-			$importPage = SpecialPageFactory::getPage('BibManagerImport');
-		}
+		$specialPageFactory = MediaWikiServices::getInstance()->getSpecialPageFactory();
+		$createPage = $specialPageFactory->getPage('BibManagerCreate');
+		$importPage = $specialPageFactory->getPage('BibManagerImport');
 		$createLink = $this->getLinkRenderer()->makeLink(
 			SpecialPage::getTitleFor( 'BibManagerCreate' ),
 			$createPage->getDescription()
