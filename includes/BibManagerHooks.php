@@ -196,7 +196,7 @@ class BibManagerHooks {
 	public static function onBiblistTag ( $input, $args, $parser, $frame ) {
 		$parser->getOutput()->updateCacheExpiry( 0 );
 
-		$page = new WikiPage( $parser->getTitle() );
+		$page = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $parser->getTitle() );
 		$pageContent = $page->getContent();
 		$content = ContentHandler::getContentText( $pageContent );
 		$parser->getOutput()->addModuleStyles( [ 'ext.bibManager.styles' ] );
