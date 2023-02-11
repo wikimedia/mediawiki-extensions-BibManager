@@ -2,8 +2,8 @@
 
 class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
-	public function __construct () {
-		parent::__construct( 'BibManagerEdit' , 'bibmanageredit');
+	public function __construct() {
+		parent::__construct( 'BibManagerEdit', 'bibmanageredit' );
 	}
 
 	/**
@@ -11,11 +11,12 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
 	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
 	 * @param mixed $par string or false, provided by Framework
+	 * @return bool|void
 	 */
-	public function execute ( $par ) {
+	public function execute( $par ) {
 		global $wgOut;
-		if (!$this->getUser()->isAllowed('bibmanageredit')){
-			$wgOut->showErrorPage('badaccess','badaccess-group0');
+		if ( !$this->getUser()->isAllowed( 'bibmanageredit' ) ) {
+			$wgOut->showErrorPage( 'badaccess', 'badaccess-group0' );
 			return true;
 		}
 
@@ -24,7 +25,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 		$citation = !empty( $par ) ? $par : $wgRequest->getVal( 'bm_bibtexCitation', '' );
 
-		$entry = array();
+		$entry = [];
 		$entry['bm_bibtexCitation'] = $citation;
 		if ( !empty( $citation ) ) {
 			$e = BibManagerRepository::singleton()
@@ -35,7 +36,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		}
 
 		$entryType = $wgRequest->getVal( 'bm_select_type', '' );
-		if( empty( $entryType ) ) {
+		if ( empty( $entryType ) ) {
 			$entryType = $wgRequest->getVal( 'wpbm_bibtexEntryType', '' );
 		}
 		if ( isset( $entry['bm_bibtexEntryType'] ) ) {
@@ -57,14 +58,14 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$bibTeXFields = BibManagerFieldsList::getFieldDefinitions();
 
-		$formDescriptor = array();
-		$formDescriptor['bm_bibtexCitation'] = array (
+		$formDescriptor = [];
+		$formDescriptor['bm_bibtexCitation'] = [
 			'class' => 'HTMLTextField',
 			'label-message' => 'bm_citation',
 			'section' => 'citation',
 			'required' => true,
 			'validation-callback' => 'BibManagerValidator::validateCitation'
-		);
+		];
 
 		$editMode = $wgRequest->getBool( 'bm_edit_mode' );
 		if ( $editMode || !empty( $entry['bm_bibtexCitation'] ) ) { // TODO RBV (18.12.11 14:26): What if we come from an redlink?
@@ -73,13 +74,13 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 			$formDescriptor['bm_bibtexCitation']['help-message'] = 'bm_readonly';
 
 			if ( $editMode ) {
-				unset( $formDescriptor['bm_bibtexCitation']['validation-callback'] ); //If it is a edit we dont need to revalidate
+				unset( $formDescriptor['bm_bibtexCitation']['validation-callback'] ); // If it is a edit we dont need to revalidate
 			}
 
-			$formDescriptor['bm_edit_mode'] = array (
+			$formDescriptor['bm_edit_mode'] = [
 				'class' => 'HTMLHiddenField',
 				'default' => 1
-			);
+			];
 		}
 
 		foreach ( $typeDefs[$entryType]['required'] as $fieldName ) {
@@ -97,18 +98,18 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 			$formDescriptor['bm_' . $fieldName] = $fieldDef;
 		}
 
-		$formDescriptor['bm_bibtexEntryType'] = array (
+		$formDescriptor['bm_bibtexEntryType'] = [
 			'class' => 'HTMLHiddenField',
 			'default' => $entryType
-		);
+		];
 		$formDescriptor['bm_select_type'] = $formDescriptor['bm_bibtexEntryType'];
 
-		Hooks::run( 'BibManagerEditBeforeFormCreate', array ( $this, &$formDescriptor ) );
+		Hooks::run( 'BibManagerEditBeforeFormCreate', [ $this, &$formDescriptor ] );
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'bm_edit' );
 		$htmlForm
 			->setSubmitText( $this->msg( 'bm_edit_submit' )->text() )
-			->setSubmitCallback( array ( $this, 'submitForm' ) );
+			->setSubmitCallback( [ $this, 'submitForm' ] );
 		$wgOut->addHTML( '<div id="bm_form">' );
 		$htmlForm->show();
 		$wgOut->addHTML( '</div>' );
@@ -117,9 +118,9 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 	/**
 	 * Submit callback for edit form
 	 * @param array $formData
-	 * @return boolean
+	 * @return bool
 	 */
-	public function submitForm ( $formData ) {
+	public function submitForm( $formData ) {
 		$repo = BibManagerRepository::singleton();
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$entryType = $formData['bm_bibtexEntryType'];
@@ -127,7 +128,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 			$typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
 		);
 
-		$submittedFields = array ( );
+		$submittedFields = [];
 		foreach ( $formData as $key => $value ) {
 			$unprefixedKey = substr( $key, 3 );
 			if ( in_array( $unprefixedKey, $entryFields ) ) {
@@ -135,7 +136,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 			}
 		}
 
-		//No update? No problem...
+		// No update? No problem...
 		$repo->deleteBibEntry( $formData['bm_bibtexCitation'] );
 		$repo->saveBibEntry( $formData['bm_bibtexCitation'], $entryType, $submittedFields );
 
@@ -145,6 +146,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		return true;
 	}
 
+	/** @inheritDoc */
 	protected function getGroupName() {
 		return 'bibmanager';
 	}

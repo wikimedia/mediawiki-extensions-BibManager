@@ -2,7 +2,7 @@
 
 class SpecialBibManagerListAuthors extends SpecialPage {
 
-	function __construct () {
+	function __construct() {
 		parent::__construct( 'BibManagerListAuthors' );
 	}
 
@@ -13,7 +13,7 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 	 * @global User $wgUser Current MediaWiki User object
 	 * @param mixed $par string or false, provided by Framework
 	 */
-	function execute ( $par ) {
+	function execute( $par ) {
 		global $wgOut;
 		$this->setHeaders();
 		$wgOut->setPageTitle( $this->msg( 'heading_list_authors' ) );
@@ -22,7 +22,7 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 		$sDataBody = $pager->getBody();
 		if ( !empty( $sDataBody ) ) {
 			$wgOut->addHTML( $pager->getNavigationBar() );
-			$table = array ( );
+			$table = [];
 			$table[] = '	<table class="wikitable" style="width:100%;">';
 			$table[] = '		<tr>';
 			$table[] = '			<th >' . $this->msg( 'bm_list_author_table_heading-author' )->escaped() . '</th>';
@@ -38,10 +38,11 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 		}
 	}
 
-	public function submitForm ( $aFormData ) {
+	public function submitForm( $aFormData ) {
 		return false;
 	}
 
+	/** @inheritDoc */
 	protected function getGroupName() {
 		return 'bibmanager';
 	}

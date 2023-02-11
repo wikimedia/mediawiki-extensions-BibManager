@@ -2,8 +2,8 @@
 
 class SpecialBibManagerDelete extends UnlistedSpecialPage {
 
-	public function __construct () {
-		parent::__construct( 'BibManagerDelete' , 'bibmanagerdelete');
+	public function __construct() {
+		parent::__construct( 'BibManagerDelete', 'bibmanagerdelete' );
 	}
 
 	/**
@@ -11,11 +11,12 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
 	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
 	 * @param mixed $par string or false, provided by Framework
+	 * @return bool
 	 */
-	public function execute ( $par ) {
+	public function execute( $par ) {
 		global $wgOut;
-		if (!$this->getUser()->isAllowed('bibmanagerdelete')){
-			$wgOut->showErrorPage('badaccess','badaccess-group0');
+		if ( !$this->getUser()->isAllowed( 'bibmanagerdelete' ) ) {
+			$wgOut->showErrorPage( 'badaccess', 'badaccess-group0' );
 			return true;
 		}
 
@@ -37,13 +38,13 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		$entryType = $entry['bm_bibtexEntryType'];
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$entryFields = array_merge( // TODO RBV (17.12.11 15:01): encapsulte in BibManagerFieldsList
-		    $typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
+			$typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
 		);
 		if ( !$deleteSubmit ) {
 			$wgOut->addHTML( $this->msg( 'bm_delete_confirm-delete', $citation )->escaped() );
 			$wgOut->addHTML( '<hr />' );
 
-			$table = array ( );
+			$table = [];
 			$table[] = '<table id="bm_delete" class="wikitable" style="width:100%">';
 			// Give grep a chance to find the usages:
 			// bm_address, bm_annote, bm_author, bm_booktitle, bm_chapter, bm_crossref, bm_edition,
@@ -56,23 +57,23 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 			$table[] = '</table>';
 			$wgOut->addHTML( implode( "\n", $table ) );
 		}
-		$formDescriptor = array (
-		    'bm_delete' => array (
-			'class' => 'HTMLHiddenField',
-			'default' => true,
-		    ),
-		    'bm_bibtexCitation' => array (
-			'class' => 'HTMLHiddenField',
-			'default' => $citation,
-		    )
-		);
+		$formDescriptor = [
+			'bm_delete' => [
+				'class' => 'HTMLHiddenField',
+				'default' => true,
+			],
+			'bm_bibtexCitation' => [
+				'class' => 'HTMLHiddenField',
+				'default' => $citation,
+			]
+		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'bm_delete' );
 		$htmlForm
 			->setSubmitText( $this->msg( 'bm_delete_submit' )->text() )
-			->setSubmitCallback( array ( $this, 'formSubmit' ) )
+			->setSubmitCallback( [ $this, 'formSubmit' ] )
 			->setSubmitDestructive();
-		//TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
+		// TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
 
 		$wgOut->addHTML( '<div id="bm_form">' );
 		$htmlForm->show();
@@ -83,12 +84,13 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 	 * Submit callback for delete form
 	 * @global OutputPage $wgOut
 	 * @param array $formData
-	 * @return boolean
+	 * @return bool
 	 */
-	public function formSubmit ( $formData ) {
+	public function formSubmit( $formData ) {
 		global $wgOut;
-		if ( empty( $formData['bm_delete'] ) || $formData['bm_delete'] !== true )
+		if ( empty( $formData['bm_delete'] ) || $formData['bm_delete'] !== true ) {
 			return false;
+		}
 
 		$result = BibManagerRepository::singleton()->deleteBibEntry( $formData['bm_bibtexCitation'] );
 
@@ -104,6 +106,7 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		return $result;
 	}
 
+	/** @inheritDoc */
 	protected function getGroupName() {
 		return 'bibmanager';
 	}

@@ -2,29 +2,35 @@
 
 class BibManagerPagerListAuthors extends AlphabeticPager {
 
-	function getQueryInfo () {
-		return array (
-		    'tables' => 'bibmanager',
-		    'fields' => 'bm_author, count(bm_author)',
-		    'options' => array ( 'GROUP BY' => 'bm_author ASC' ),
-		);
+	/**
+	 * @return array
+	 */
+	function getQueryInfo() {
+		return [
+			'tables' => 'bibmanager',
+			'fields' => 'bm_author, count(bm_author)',
+			'options' => [ 'GROUP BY' => 'bm_author ASC' ],
+		];
 	}
 
-	function getIndexField () {
+	/**
+	 * @return string
+	 */
+	function getIndexField() {
 		return 'bm_author';
 	}
 
 	/**
-	 *
 	 * @global User $wgUser
 	 * @param type $row
-	 * @return string 
+	 * @return string
 	 */
-	function formatRow ( $row ) {
-		if ( empty( $row->bm_author ) )
+	function formatRow( $row ) {
+		if ( empty( $row->bm_author ) ) {
 			return false;
+		}
 		foreach ( $row as $key => $val ) {
-			$aData [$key] = $val;
+			$aData[$key] = $val;
 		}
 		$sLinkToList = SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL() . "?wpbm_list_search_select=author&wpbm_list_search_text=" . $aData['bm_author'];
 		$sOutput = "";
