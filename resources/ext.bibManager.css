@@ -1,20 +1,20 @@
 span.bibmanager-citation {
-	position:relative;
-	color: black;
-	cursor:help;
+	position: relative;
+	color: #000f;
+	cursor: help;
 }
 
 span.bibmanager-citation > span {
-	background-color: #FAFAFA;
-	display:none;
+	background-color: #fafafa;
+	display: none;
 	text-decoration: none;
-	position: absolute; 
+	position: absolute;
 	top: 15px;
 	left: 20px;
 	width: 350px;
 	z-index: 100;
-	border:3px dotted #555;
-	padding:10px;
+	border: 3px dotted #555;
+	padding: 10px;
 	text-align: left;
 }
 
@@ -22,7 +22,7 @@ span.bibmanager-citation:hover > span {
 	display: block;
 }
 
-span.bm_icon_link{
+span.bm_icon_link {
 	display: inline;
 	position: relative;
 	top: 0px;
@@ -44,39 +44,39 @@ span.bm_icon_link{
 }
 
 .bm-icon .bm-icon-book {
-	/*@embed*/
-	background-image: url(images/book.png);
+	/* @embed */
+	background-image: url( images/book.png );
 }
 
 .bm-icon .bm-icon-cross {
-	/*@embed*/
-	background-image: url(images/cross.png);
+	/* @embed */
+	background-image: url( images/cross.png );
 }
 
 .bm-icon .bm-icon-disk {
-	/*@embed*/
-	background-image: url(images/disk.png);
+	/* @embed */
+	background-image: url( images/disk.png );
 }
 
 .bm-icon .bm-icon-link {
-	/*@embed*/
-	background-image: url(images/link.png);
+	/* @embed */
+	background-image: url( images/link.png );
 }
 
 .bm-icon .bm-icon-link_error {
-	/*@embed*/
-	background-image: url(images/link_error.png);
+	/* @embed */
+	background-image: url( images/link_error.png );
 }
 
 .bm-icon .bm-icon-pencil {
-	/*@embed*/
-	background-image: url(images/pencil.png);
+	/* @embed */
+	background-image: url( images/pencil.png );
 }
 
 #bm_form input:focus,
 #bm_form textarea:focus,
 #bm_form select:focus {
-	border-color: #99F;
+	border-color: #99f;
 }
 
 #bm_form .error {
@@ -89,9 +89,9 @@ span.bm_icon_link{
 	padding-right: 5px;
 }
 
-input[readonly] {
-	color: #AAA;
-	background-color: #FAFAFA;
+input[ readonly ] {
+	color: #aaa;
+	background-color: #fafafa;
 }
 
 #bm_table a.icon {
@@ -105,42 +105,43 @@ input[readonly] {
 }
 
 #bm_table a.edit {
-	/*@embed*/
-	background-image: url(images/pencil.png);
+	/* @embed */
+	background-image: url( images/pencil.png );
 }
 
 #bm_table a.delete {
-	/*@embed*/
-	background-image: url(images/cross.png);
+	/* @embed */
+	background-image: url( images/cross.png );
 }
 
 #bm_table a.export {
-	/*@embed*/
-	background-image: url(images/disk.png);
+	/* @embed */
+	background-image: url( images/disk.png );
 }
 
 #bm_delete th {
 	text-align: right;
-	background-color: #EEE;
+	background-color: #eee;
 }
 
 #bm_table table th {
-	background-color: #EEE;
-	border: 1px solid #BBB;
+	background-color: #eee;
+	border: 1px solid #bbb;
 }
 
-#bm_table table, #bm_delete {
+#bm_table table,
+#bm_delete {
 	border-collapse: collapse;
 	margin: 10px 0;
-	border: 1px solid #BBB;
+	border: 1px solid #bbb;
 }
 
 #bm_table th,
 #bm_table td,
 #bm_delete th,
-#bm_delete td{
+#bm_delete td {
 	padding: 5px;
-	border: 1px solid #BBB;
+	border: 1px solid #bbb;
 }
 
 table.bm_list_table {
@@ -148,12 +149,12 @@ table.bm_list_table {
 	width: 100%;
 }
 
-table.bm_list_table td{
+table.bm_list_table td {
 	padding: 3px;
 }
 
 table.bm_list_table tr:hover {
-	background-color: #FCFCFC;
+	background-color: #fcfcfc;
 }
 
 .bm-create-posttext {
