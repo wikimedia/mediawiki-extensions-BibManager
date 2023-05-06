@@ -49,7 +49,7 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 			]
 		];
 
-		Hooks::run( 'BibManagerCreateBeforeTypeSelectFormCreate', [ $this, &$formDescriptor ] );
+		$this->getHookContainer()->run( 'BibManagerCreateBeforeTypeSelectFormCreate', [ $this, &$formDescriptor ] );
 
 		$entryTypeSelectionForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext() );
 		$entryTypeSelectionForm

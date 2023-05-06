@@ -104,7 +104,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		];
 		$formDescriptor['bm_select_type'] = $formDescriptor['bm_bibtexEntryType'];
 
-		Hooks::run( 'BibManagerEditBeforeFormCreate', [ $this, &$formDescriptor ] );
+		$this->getHookContainer()->run( 'BibManagerEditBeforeFormCreate', [ $this, &$formDescriptor ] );
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'bm_edit' );
 		$htmlForm

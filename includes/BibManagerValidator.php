@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class BibManagerValidator {
 
 	public static function validateRequired( $fieldName, $value, $allData ) {
@@ -50,7 +52,7 @@ class BibManagerValidator {
 		}
 
 		$result = true;
-		Hooks::run( 'BibManagerValidateCitation', [ $value, $allData, &$result ] );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerValidateCitation', [ $value, $allData, &$result ] );
 
 		return $result;
 	}

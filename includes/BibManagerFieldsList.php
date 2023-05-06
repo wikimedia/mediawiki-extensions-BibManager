@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class BibManagerFieldsList {
 
 	/**
@@ -158,7 +160,7 @@ class BibManagerFieldsList {
 				'validation-callback' => 'BibManagerValidator::validateYear',
 			] // The year of publication (or, if unpublished, the year of creation)
 		];
-		Hooks::run( 'BibManagerGetFieldDefinitions', [ &$fieldDefinitions ] );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerGetFieldDefinitions', [ &$fieldDefinitions ] );
 		return $fieldDefinitions;
 	}
 
@@ -241,7 +243,7 @@ class BibManagerFieldsList {
 			]
 		];
 
-		Hooks::run( 'BibManagerGetTypeDefinitions', [ &$typeDefinitions ] );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerGetTypeDefinitions', [ &$typeDefinitions ] );
 		return $typeDefinitions;
 	}
 

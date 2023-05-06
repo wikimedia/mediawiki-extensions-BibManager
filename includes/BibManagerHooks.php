@@ -115,7 +115,7 @@ class BibManagerHooks {
 		);
 
 		$tooltip = [];
-		Hooks::run( 'BibManagerBibTagBeforeTooltip', [ &$entry ] );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerBibTagBeforeTooltip', [ &$entry ] );
 		foreach ( $entry as $key => $value ) {
 			$unprefixedKey = substr( $key, 3 );
 			if ( empty( $value ) || !in_array( $unprefixedKey, $entryTypeFields ) ) {
@@ -160,7 +160,7 @@ class BibManagerHooks {
 			'href' => $scholarLink
 		];
 
-		Hooks::run( 'BibManagerGetIcons', [ $entry, &$icons ] );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerGetIcons', [ $entry, &$icons ] );
 
 		$out = [];
 		foreach ( $icons as $key => $iconDesc ) {
@@ -354,7 +354,7 @@ class BibManagerHooks {
 			$format = str_replace( '%' . $key . '%', $value, $format );
 		}
 
-		Hooks::run( 'BibManagerFormatEntry', [ $entry, $prefixedKeys, &$format ] );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerFormatEntry', [ $entry, $prefixedKeys, &$format ] );
 		return $format;
 	}
 

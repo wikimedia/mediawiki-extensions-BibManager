@@ -18,7 +18,7 @@ class BibManagerPagerList extends AlphabeticPager {
 			$conds[] = "bm_" . $this->searchType . " LIKE '%" . $this->searchTerm . "%'";
 		}
 
-		Hooks::run( 'BibManagerPagerBeforeSearch', [ $this->searchType, $this->searchTerm, &$conds ] );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerPagerBeforeSearch', [ $this->searchType, $this->searchTerm, &$conds ] );
 		return [
 			'tables'  => 'bibmanager',
 			'fields'  => '*',
