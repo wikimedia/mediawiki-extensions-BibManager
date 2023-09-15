@@ -1,20 +1,28 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 
-	public function getCitationsLike ( $sCitation ) {
-		$dbr = wfGetDB( DB_REPLICA );
+	/**
+	 * @param string $sCitation
+	 *
+	 * @return string
+	 */
+	public function getCitationsLike( $sCitation ): string {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+
 		$res = $dbr->select(
 			'bibmanager',
 			'bm_bibtexCitation',
-			array (
+			[
 				'bm_bibtexCitation '
 				. $dbr->buildLike( $sCitation, $dbr->anyString() )
-			)
+			]
 		);
 
 		if ( $res->numRows() > 0 ) {
-			$aExistingCitations = array();
+			$aExistingCitations = [];
 			foreach ( $res as $row ) {
 				$aExistingCitations[] = $row->bm_bibtexCitation;
 			}
@@ -24,78 +32,85 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 				$sCitation . 'X'
 			)->escaped();
 		}
+
 		return true;
 	}
 
 	/**
 	 *
 	 * @param mixed $mOptions
+	 *
 	 * @return mixed
 	 */
-	public function getBibEntries ( $mOptions ) {
-		$dbr = wfGetDB( DB_REPLICA );
+	public function getBibEntries( $mOptions ) {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+
 		$res = $dbr->select(
-		    'bibmanager', '*', $mOptions
+			'bibmanager', '*', $mOptions
 		);
-		$aReturn = array ( );
+		$aReturn = [];
 		foreach ( $res as $row ) {
-			$aReturn [] = (array)$row;
+			$aReturn[] = (array)$row;
 		}
-		if ( !empty( $aReturn ) )
+		if ( !empty( $aReturn ) ) {
 			return $aReturn;
-		else
+
+		} else {
 			return false;
+		}
 	}
 
-	public function getBibEntryByCitation ( $sCitation ) {
-		$dbr = wfGetDB( DB_REPLICA );
+	public function getBibEntryByCitation( $sCitation ): array {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+
 		$res = $dbr->selectRow(
 			'bibmanager',
 			'*',
-			array (
+			[
 				'bm_bibtexCitation' => $sCitation
-			)
+			]
 		);
 		if ( $res === false ) {
-			return array();
+			return [];
 		}
-		return (array) $res;
+
+		return (array)$res;
 	}
 
-	public function saveBibEntry ( $sCitation, $sEntryType, $aFields ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+	public function saveBibEntry( $sCitation, $sEntryType, $aFields ) {
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
+
 		return $dbw->insert(
 			'bibmanager',
-			$aFields + array (
+			$aFields + [
 				'bm_bibtexEntryType' => $sEntryType,
 				'bm_bibtexCitation' => $sCitation
-			)
+			]
 		);
 	}
 
-	public function updateBibEntry ( $sCitation, $sEntryType, $aFields ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+	public function updateBibEntry( $sCitation, $sEntryType, $aFields ) {
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
 
 		return $dbw->update(
 			'bibmanager',
-			$aFields + array (
+			$aFields + [
 				'bm_bibtexEntryType' => $sEntryType
-			),
-			array(
+			],
+			[
 				'bm_bibtexCitation' => $sCitation
-			)
+			]
 		);
 	}
 
-	public function deleteBibEntry ( $sCitation ) {
-		$dbw = wfGetDB( DB_PRIMARY );
-		$res = $dbw->delete(
-			'bibmanager',
-			array (
-				'bm_bibtexCitation' => $sCitation
-			)
-		);
+	public function deleteBibEntry( $sCitation ): bool {
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
 
-		return $res;
+		return $dbw->delete(
+			'bibmanager',
+			[
+				'bm_bibtexCitation' => $sCitation
+			]
+		);
 	}
 }

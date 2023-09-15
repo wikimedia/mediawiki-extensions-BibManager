@@ -6,56 +6,65 @@ class BibManagerHooks {
 
 	/**
 	 * Default MW-Importer (for MW <=1.16 and MW >= 1.17)
-	 * @param Updater $updater
-	 * @return boolean true if alright
+	 *
+	 * @param DatabaseUpdater|null $updater
+	 * @return bool true if alright
 	 */
-	public static function onLoadExtensionSchemaUpdates ( $updater = null ) {
-		$updater->addExtensionUpdate(
-			array (
-				'addTable',
-				'bibmanager',
-				dirname( __DIR__ ) . '/maintenance/bibmanager.sql',
-				true
-			)
-		);
+	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater = null ): bool {
+		$updater->addExtensionUpdate( [
+			'addTable',
+			'bibmanager',
+			dirname( __DIR__ ) . '/maintenance/bibmanager.sql',
+			true
+		] );
+
 		return true;
 	}
 
 	/**
-	 *
-	 * @param OutputPage $out
-	 * @param Skin $skin
+	 * @param OutputPage &$out
+	 * @param Skin &$skin
 	 * @return bool Always true to keep hook running
+	 *
+	 * @throws MWException
 	 */
-	public static function onBeforePageDisplay ( &$out, &$skin ) {
+	public static function onBeforePageDisplay( &$out, &$skin ): bool {
 		if ( $out->getTitle()->equals( SpecialPage::getTitleFor( 'BibManagerList' ) ) ) {
-			$out->addModules( 'ext.bibManager.List');
+			$out->addModules( 'ext.bibManager.List' );
 		}
+
 		return true;
 	}
 
 	/**
 	 * Init-method for the BibManager-Hooks
-	 * @param Parser $parser
+	 * @param Parser &$parser
 	 * @return bool Always true to keep hooks running
+	 *
+	 * @throws MWException
 	 */
-	public static function onParserFirstCallInit ( &$parser ) {
+	public static function onParserFirstCallInit( &$parser ): bool {
 		$parser->setHook( 'bib', 'BibManagerHooks::onBibTag' );
 		$parser->setHook( 'biblist', 'BibManagerHooks::onBiblistTag' );
 		$parser->setHook( 'bibprint', 'BibManagerHooks::onBibprintTag' );
+
 		return true;
 	}
 
 	/**
 	 * Method for the BibManager-Tag <bib id='citation' />
-	 * @param string $input
+	 *
+	 * @param string|null $input
 	 * @param array $args
 	 * @param Parser $parser
 	 * @param PPFrame $frame
-	 * @return String the link to the Bib-Cit entered by id
+	 * @return string the link to the Bib-Cit entered by id
+	 *
+	 * @throws MWException
 	 */
-	public static function onBibTag ( $input, $args, $parser, $frame ) {
+	public static function onBibTag( ?string $input, array $args, Parser $parser, PPFrame $frame ): string {
 		global $wgBibManagerCitationArticleNamespace;
+
 		$parser->getOutput()->updateCacheExpiry( 0 );
 		if ( !isset( $args['id'] ) ) {
 			return '[' . wfMessage( 'bm_missing-id' )->escaped() . ']';
@@ -65,8 +74,6 @@ class BibManagerHooks {
 		$entry = BibManagerRepository::singleton()
 			->getBibEntryByCitation( $args['id'] );
 
-		$sTooltip = '';
-		$sLink = '';
 		$user = MediaWikiServices::getInstance()
 			->getUserFactory()->newFromUserIdentity( $parser->getUserIdentity() );
 		if ( empty( $entry ) ) {
@@ -74,22 +81,34 @@ class BibManagerHooks {
 			$sLink = $parser->getLinkRenderer()->makeBrokenLink(
 				$spTitle,
 				$args['id'],
-				array( 'class' => 'new' ),
-				array ( 'bm_bibtexCitation' => $args['id'] )
+				[ 'class' => 'new' ],
+				[ 'bm_bibtexCitation' => $args['id'] ]
 			);
-			$sTooltip = '<span>' . wfMessage('bm_error_not-existing')->escaped();
-			if ($user->isAllowed('bibmanagercreate')){
+			$sTooltip = '<span>' . wfMessage( 'bm_error_not-existing' )->escaped();
+			if ( $user->isAllowed( 'bibmanagercreate' ) ) {
+
+				// DR 15.09.2023 Validate citation format
+				$result = true;
+				MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerValidateCitation', [
+					$args['id'], &$result ]
+				);
+
+				$sTooltipText = " ";
+				if ( $result !== true ) {
+					$sTooltipText .= $result . " ";
+				}
+
 				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )
 					->getLocalURL(
-						array (
+						[
 							'bm_bibtexCitation' => $args['id']
-						)
+						]
 					);
-				$sTooltip .= Html::element(
+				$sTooltip .= $sTooltipText . Html::element(
 					"a",
-					array(
+					[
 						"href" => $sLinkToEdit
-					),
+					],
 					wfMessage( 'bm_tag_click_to_create' )->text()
 				);
 			}
@@ -102,31 +121,44 @@ class BibManagerHooks {
 			$sLink = $parser->getLinkRenderer()->makeLink(
 				$oCitationTitle,
 				$args['id'],
-				array ( 'title' => '' )
+				[ 'title' => '' ]
 			);
 			$sTooltip = self::getTooltip( $entry, $args, $user );
 		}
+
 		return '<span class="bibmanager-citation">[' . $sLink . ']' . $sTooltip . '</span>';
 	}
 
-	public static function getTooltip ( $entry, $args, User $user ) {
+	/**
+	 * @param array $entry
+	 * @param array $args
+	 * @param User $user
+	 * @return string
+	 *
+	 * @throws Exception
+	 */
+	public static function getTooltip( array $entry, array $args, User $user ): string {
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$entryTypeFields = array_merge(
 			$typeDefs[$entry['bm_bibtexEntryType']]['required'], $typeDefs[$entry['bm_bibtexEntryType']]['optional']
 		);
 
-		$tooltip = array ( );
-		Hooks::run( 'BibManagerBibTagBeforeTooltip', array ( &$entry ) );
+		$tooltip = [];
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerBibTagBeforeTooltip', [ &$entry ] );
 		foreach ( $entry as $key => $value ) {
 			$unprefixedKey = substr( $key, 3 );
-			if ( empty( $value ) || !in_array( $unprefixedKey, $entryTypeFields ) )
-				continue; //Filter unnecessary fields
-			if ( $unprefixedKey == 'author' ) {
-				$value = implode( '; ', explode( ' and ', $value ) ); // TODO RBV (22.12.11 15:34): Duplicate code!
+			if ( empty( $value ) || !in_array( $unprefixedKey, $entryTypeFields ) ) {
+				// Filter unnecessary fields
+				continue;
 			}
-			$tooltip[] = XML::element( 'strong', null, wfMessage( $key )->escaped() . ': ' ) . ' '
-				. XML::element( 'em', null, $value )
-				."<br/>";//. XML::element( 'br', null, null ); //This is just a little exercise
+			if ( $unprefixedKey == 'author' ) {
+				// TODO RBV (22.12.11 15:34): Duplicate code!
+				$value = implode( '; ', explode( ' and ', $value ) );
+			}
+			// . Xml::element( 'br', null, null );
+			$tooltip[] = Xml::element( 'strong', null, wfMessage( $key )->escaped() . ': ' ) . ' '
+				. Xml::element( 'em', null, $value )
+				. "<br/>";
 		}
 
 		$tooltip[] = self::getIcons( $entry, $user );
@@ -137,49 +169,60 @@ class BibManagerHooks {
 			$format = self::formatEntry( $entry );
 			$tooltipString = ' ' . $format . ' ' . $tooltipString;
 		}
+
 		return $tooltipString;
 	}
 
-	public static function getIcons ( $entry, User $user ) {
+	/**
+	 * @param array $entry
+	 * @param User $user
+	 * @return string
+	 *
+	 * @throws MWException
+	 */
+	public static function getIcons( array $entry, User $user ): string {
 		global $wgScriptPath;
 		global $wgBibManagerScholarLink;
-		$icons = array ( );
+		$icons = [];
 
-		if ( !empty( $entry['bm_bibtexCitation'] ) && $user->isAllowed('bibmanageredit') ) {
-			$icons['edit'] = array (
+		if ( !empty( $entry['bm_bibtexCitation'] ) && $user->isAllowed( 'bibmanageredit' ) ) {
+			$icons['edit'] = [
 				'src' => $wgScriptPath . '/extensions/BibManager/resources/images/pencil.png',
 				'title' => 'bm_tooltip_edit',
 				'href' => SpecialPage::getTitleFor( 'BibManagerEdit' )
-				->getLocalURL( array ( 'bm_bibtexCitation' => $entry['bm_bibtexCitation'] ) )
-			);
+				->getLocalURL( [
+					'bm_bibtexCitation' => $entry['bm_bibtexCitation'],
+					'bm_edit_mode' => 1,
+				] )
+			];
 		}
 		$scholarLink = str_replace( '%title%', $entry['bm_title'], $wgBibManagerScholarLink );
-		$icons['scholar'] = array (
+		$icons['scholar'] = [
 			'src' => $wgScriptPath . '/extensions/BibManager/resources/images/book.png',
 			'title' => 'bm_tooltip_scholar',
 			'href' => $scholarLink
-		);
+		];
 
-		Hooks::run( 'BibManagerGetIcons', array ( $entry, &$icons ) );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerGetIcons', [ $entry, &$icons ] );
 
-		$out = array ( );
-		foreach ( $icons as $key => $iconDesc ) {
+		$out = [];
+		foreach ( $icons as $iconDesc ) {
 			$text = wfMessage( $iconDesc['title'] )->escaped();
-			$iconEl = XML::element(
-				'img', array (
-				'src' => $iconDesc['src'],
-				'alt' => $text,
-				'title' => $text
-				)
+			$iconEl = Xml::element(
+				'img', [
+					'src' => $iconDesc['src'],
+					'alt' => $text,
+					'title' => $text
+				]
 			);
-			$anchorEl = XML::tags(
-				'a', array (
-				'href' => $iconDesc['href'],
-				'title' => $text,
-				'target' => '_blank',
-				), $iconEl
+			$anchorEl = Xml::tags(
+				'a', [
+					'href' => $iconDesc['href'],
+					'title' => $text,
+					'target' => '_blank',
+				], $iconEl
 			);
-			$out[] = XML::wrapClass( $anchorEl, 'bm_icon_link' );
+			$out[] = Xml::wrapClass( $anchorEl, 'bm_icon_link' );
 		}
 
 		return implode( '', $out );
@@ -187,103 +230,121 @@ class BibManagerHooks {
 
 	/**
 	 * Method for the BibManager-Tag <biblist />
-	 * @param String $input
+	 *
+	 * @param string|null $input
 	 * @param array $args
 	 * @param Parser $parser
 	 * @param PPFrame $frame
+	 *
 	 * @return string List of used <bib />-tags
+	 * @throws MWException
 	 */
-	public static function onBiblistTag ( $input, $args, $parser, $frame ) {
+	public static function onBiblistTag( ?string $input, array $args, Parser $parser, PPFrame $frame ): string {
 		$parser->getOutput()->updateCacheExpiry( 0 );
 
 		$page = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $parser->getTitle() );
 		$pageContent = $page->getContent();
-		$content = ContentHandler::getContentText( $pageContent );
+		$content = $pageContent->getText();
 		$parser->getOutput()->addModuleStyles( [ 'ext.bibManager.styles' ] );
 
-		$out = array();
-		$out[] = XML::element( 'hr', null, null );
+		$out = [];
+		$out[] = Xml::element( 'hr', null, null );
 		$out[] = wfMessage( 'bm_tag_tag-used' )->escaped();
 
-		$bibTags = array ( );
-		preg_match_all( '<bib.*?id=[\'"\ ]*(.*?)[\'"\ ].*?>', $content, $bibTags ); // TODO RBV (10.11.11 13:31): It might be better to have a db table for wikipage <-> citation relationship. This table could be updated in bib-Tag callback.
+		$bibTags = [];
+		// TODO RBV (10.11.11 13:31): It might be better to have a db table for wikipage <-> citation relationship.
+		// This table could be updated in bib-Tag callback.
+		preg_match_all( '<bib.*?id=[\'"\ ]*(.*?)[\'"\ ].*?>', $content, $bibTags );
 		if ( empty( $bibTags[0][0] ) ) {
-			return wfMessage( 'bm_tag_no-tags-used' )->escaped(); //No Tags found
+			// No Tags found
+			return wfMessage( 'bm_tag_no-tags-used' )->escaped();
 		}
-		$entries = array ( );
+		$entries = [];
 		$repo = BibManagerRepository::singleton();
 
-		natsort( $bibTags[1] ); // TODO RBV (23.12.11 13:27): Customizable sorting?
+		// TODO RBV (23.12.11 13:27): Customizable sorting?
+		natsort( $bibTags[1] );
 
 		foreach ( $bibTags[1] as $citation ) {
 			// TODO RBV (10.11.11 13:14): This is not good. If a lot of citations every citation will cause db query.
 			$entries[$citation] = $repo->getBibEntryByCitation( $citation );
 		}
 
-		//$out[] = XML::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
+		// $out[] = Xml::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
 
 		// TODO RBV (23.12.11 13:28): Remove filtering
 		if ( isset( $args['filter'] ) ) {
 			$filterValues = explode( ',', $args['filter'] );
 			foreach ( $filterValues as $val ) {
 				$temp = explode( ':', trim( $val ) );
-				$filter [$temp[0]] = $temp[1];
+				$filter[$temp[0]] = $temp[1];
 			}
 		}
 
 		$user = MediaWikiServices::getInstance()
 			->getUserFactory()->newFromUserIdentity( $parser->getUserIdentity() );
-		$out = self::getTable($entries, $user);
 
-		return $out;
+		return self::getTable( $entries, $user );
 
-		//HINT: Maybe better way to find not existing entries after a _single_ db call.
+		// HINT: Maybe better way to find not existing entries after a _single_ db call.
 		/*
 		  $aMissingCits = array_diff(self::$aBibTagUsed, $aFoundCits);
 		  foreach ($aMissingCits as $sCit){
-		  $aOut [$sCit] = "<li><a href='".SpecialPage::getTitleFor("BibManagerCreate")->getLocalURL()."' >[".$sCit."]</a> (".wfMessage('bm_error_not-existing')->escaped().")</li>";
+		  $aOut [$sCit] = "<li>
+			<a href='".SpecialPage::getTitleFor("BibManagerCreate")->getLocalURL()."' >
+				[".$sCit."]
+			</a> (".wfMessage('bm_error_not-existing')->escaped().")
+		</li>";
 		  }
 		 */
 	}
 
 	/**
 	 * Method for the BibManager-Tag <bibprint />
-	 * @global object $wgScript
-	 * @param String $input
+	 * @param string|null $input
 	 * @param array $args
 	 * @param Parser $parser
 	 * @param PPFrame $frame
+	 *
 	 * @return string
+	 * @throws MWException
+	 * @global object $wgScript
+	 *
 	 */
-	public static function onBibprintTag ( $input, $args, $parser, $frame ) {
-		global $wgBibManagerCitationArticleNamespace;
+	public static function onBibprintTag( ?string $input, array $args, Parser $parser, PPFrame $frame ): string {
 		$parser->getOutput()->updateCacheExpiry( 0 );
 
-		if ( !isset( $args['filter'] ) && !isset($args['citation'] ))
+		if ( !isset( $args['filter'] ) && !isset( $args['citation'] ) ) {
 			return '[' . wfMessage( 'bm_missing-filter' )->escaped() . ']';
-		$repo = BibManagerRepository::singleton();
-		if (isset($args['citation'])){
-			$res [] = $repo->getBibEntryByCitation($args['citation']);
 		}
-		else {
+
+		$repo = BibManagerRepository::singleton();
+		if ( isset( $args['citation'] ) ) {
+			$res[] = $repo->getBibEntryByCitation( $args['citation'] );
+		} else {
 			$filters = explode( ',', trim( $args['filter'] ) );
 			$fieldsDefs = BibManagerFieldsList::getFieldDefinitions();
 			$validFieldNames = array_keys( $fieldsDefs );
-			$conds = array ( );
+			$conds = [];
 			foreach ( $filters as $val ) {
 				$keyValuePairs = explode( ':', trim( $val ), 2 );
-				if ( count( $keyValuePairs ) == 1 )
-					continue; //No ':' included, so we skip it.
+				if ( count( $keyValuePairs ) == 1 ) {
+					// No ':' included, so we skip it.
+					continue;
+				}
 
 				$key = $keyValuePairs[0];
-				if ( !in_array( $key, $validFieldNames ) )
-					continue; //No valid DB field, so skip it.
+				if ( !in_array( $key, $validFieldNames ) ) {
+					// No valid DB field, so skip it.
+					continue;
+				}
 
 				$values = explode( '|', $keyValuePairs[1] );
-				$tmpCond = array ( );
+				$tmpCond = [];
 				foreach ( $values as $value ) {
 					$tmpCondPart = 'bm_' . $key . ' ';
-					if ( strpos( $value, '%' ) !== false ) { //Truncating? We need a "LIKE"
+					// Truncating? We need a "LIKE"
+					if ( strpos( $value, '%' ) !== false ) {
 						$tmpCondPart .= 'LIKE "' . $value . '"';
 					} else {
 						$tmpCondPart .= '= "' . $value . '"';
@@ -293,102 +354,145 @@ class BibManagerHooks {
 
 				$conds[] = implode( ' OR ', $tmpCond );
 			}
-			if ( empty( $conds ) )
+			if ( empty( $conds ) ) {
 				return '[' . wfMessage( 'bm_invalid-filter' )->escaped() . ']';
+			}
 
 			$res = $repo->getBibEntries( $conds );
 		}
 		$user = MediaWikiServices::getInstance()
 			->getUserFactory()->newFromUserIdentity( $parser->getUserIdentity() );
-		$out = self::getTable($res, $user);
-		return $out;
+
+		return self::getTable( $res, $user );
 	}
 
-	public static function onSkinAfterContent ( &$data ) {
+	/**
+	 * @param string &$data
+	 *
+	 * @return bool
+	 * @throws MWException
+	 */
+	public static function onSkinAfterContent( string &$data ): bool {
 		$data .= self::onBiblistTag( null, null, null, null );
+
 		return true;
 	}
 
-	public static function formatEntry ( $entry, $formatOverride = '', $prefixedKeys = true ) {
+	/**
+	 * @param array $entry
+	 * @param string $formatOverride
+	 * @param bool $prefixedKeys
+	 *
+	 * @return string
+	 */
+	public static function formatEntry( array $entry, string $formatOverride = '', bool $prefixedKeys = true ): string {
 		global $wgBibManagerCitationFormats;
-		$format = $wgBibManagerCitationFormats['-']; //Use default
-		if ( isset( $entry['bm_bibtexEntryType'] ) && !empty( $wgBibManagerCitationFormats[$entry['bm_bibtexEntryType']] ) ) {
-			$format = !empty( $formatOverride ) ? $formatOverride : $wgBibManagerCitationFormats[$entry['bm_bibtexEntryType']];
+
+		// Use default
+		$format = $wgBibManagerCitationFormats['-'];
+		if ( isset( $entry['bm_bibtexEntryType'] )
+			&& !empty( $wgBibManagerCitationFormats[$entry['bm_bibtexEntryType']] ) ) {
+			$format = !empty( $formatOverride ) ? $formatOverride
+				: $wgBibManagerCitationFormats[$entry['bm_bibtexEntryType']];
 		}
 
-		foreach ( $entry as $key => $value ) { //Replace placeholders
-			if ( empty( $value ) )
+		// Replace placeholders
+		foreach ( $entry as $key => $value ) {
+			if ( empty( $value ) ) {
 				continue;
+			}
 
-			if ( $prefixedKeys )
-				$key = substr( $key, 3 ); //'bm_title' --> 'title'
+			if ( $prefixedKeys ) {
+				// 'bm_title' --> 'title'
+				$key = substr( $key, 3 );
+			}
 
-			if ( $key == 'author' || $key == 'editor' )
+			if ( $key == 'author' || $key == 'editor' ) {
 				$value = implode( '; ', explode( ' and ', $value ) );
+			}
 
-			if ( $key == 'editor' )
+			if ( $key == 'editor' ) {
 				$value .= wfMessage( 'bm_editor_addition' )->escaped();
+			}
 
 			if ( $key == 'url' ) {
 				$urlKey = $prefixedKeys ? 'bm_url' : 'url';
-				$value = ' '.XML::element(
+				$value = ' ' . Xml::element(
 					'a',
-					array(
+					[
 						'href'   => $entry[$urlKey],
 						'target' => '_blank',
 						'class'  => 'external',
 						'rel'    => 'nofollow'
-					),
-					wfMessage( 'bm_url')->escaped()
+					],
+					wfMessage( 'bm_url' )->escaped()
 				);
 			}
 
 			$format = str_replace( '%' . $key . '%', $value, $format );
 		}
 
-		Hooks::run( 'BibManagerFormatEntry', array ( $entry, $prefixedKeys, &$format ) );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerFormatEntry', [
+			$entry, $prefixedKeys, &$format
+		] );
+
 		return $format;
 	}
 
-	public static function getTableEntry($citLink, $citFormat, $citIcons){
-		$out = '';
-		$out .= XML::openElement( 'tr' );
-		$out .= '<td style="width:100px; text-align: left; vertical-align: top;">[' . $citLink . ']</td>';
-		$out .= '<td>' . $citFormat . '</td>';
-		$out .= '<td style="width:70px">' . $citIcons . '</td>';
-		$out .= XML::closeElement( 'tr' );
-		return $out;
-	}
-
-	public static function getTable($res, User $user){
+	/**
+	 * @param array|bool $res
+	 * @param User $user
+	 *
+	 * @return string
+	 *
+	 * @throws MWException
+	 */
+	public static function getTable( $res, User $user ): string {
 		global $wgBibManagerCitationArticleNamespace;
-		$out = Html::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
-		if ( $res === false ) {
+
+		$out = Html::openElement( 'table', [ 'class' => 'bm_list_table' ] );
+		if ( !$res ) {
 			return '[' . wfMessage( 'bm_no-data-found' )->escaped() . ']';
 		}
+
 		$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 		foreach ( $res as $key => $val ) {
-			if ( empty( $val ) ){
-				$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' ); // TODO RBV (10.11.11 13:50): Dublicate code --> encapsulate
+			if ( empty( $val ) ) {
+				// TODO RBV (10.11.11 13:50): Dublicate code --> encapsulate
+				$spTitle = SpecialPage::getTitleFor( 'BibManagerCreate' );
 				$citLink = $linkRenderer->makeBrokenLink(
 					$spTitle,
 					$key,
-					array ( 'class' => 'new' ),
-					array ( 'bm_bibtexCitation' => $key )
+					[ 'class' => 'new' ],
+					[ 'bm_bibtexCitation' => $key ]
 				);
-				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( array ( 'bm_bibtexCitation' => $key ));
-				$citFormat = '<em>' . wfMessage('bm_error_not-existing')->escaped();
-				if ( $user->isAllowed('bibmanagercreate') ) {
-					$citFormat .= Html::element(
+				$sLinkToEdit = SpecialPage::getTitleFor( 'BibManagerCreate' )->getLocalURL( [
+					'bm_bibtexCitation' => $key
+				] );
+				$citFormat = '<em>' . wfMessage( 'bm_error_not-existing' )->escaped();
+				if ( $user->isAllowed( 'bibmanagercreate' ) ) {
+					// DR 15.09.2023 Validate citation format
+					$result = true;
+
+					MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerValidateCitation', [
+						$key,
+						&$result
+					] );
+
+					$sFormatText = " ";
+					if ( $result !== true ) {
+						$sFormatText .= $result . " ";
+					}
+
+					$citFormat .= $sFormatText . Html::element(
 						'a',
-						array( 'href' => $sLinkToEdit ),
+						[ 'href' => $sLinkToEdit ],
 						wfMessage( 'bm_tag_click_to_create' )->text()
 					);
 				}
-				$citFormat .='</em>';
+				$citFormat .= '</em>';
 				$citIcons = '';
-			}
-			else {
+			} else {
 				$title = Title::newFromText(
 					$val['bm_bibtexCitation'],
 					$wgBibManagerCitationArticleNamespace
@@ -405,6 +509,7 @@ class BibManagerHooks {
 			$out .= Html::closeElement( 'tr' );
 		}
 		$out .= Html::closeElement( 'table' );
+
 		return $out;
 	}
 }

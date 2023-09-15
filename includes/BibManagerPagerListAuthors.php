@@ -2,31 +2,42 @@
 
 class BibManagerPagerListAuthors extends AlphabeticPager {
 
-	function getQueryInfo () {
-		return array (
-		    'tables' => 'bibmanager',
-		    'fields' => 'bm_author, count(bm_author)',
-		    'options' => array ( 'GROUP BY' => 'bm_author ASC' ),
-		);
+	/**
+	 * @return array
+	 */
+	public function getQueryInfo(): array {
+		return [
+			'tables' => 'bibmanager',
+			'fields' => 'bm_author, count(bm_author)',
+			'options' => [ 'GROUP BY' => 'bm_author ASC' ],
+		];
 	}
 
-	function getIndexField () {
+	/**
+	 * @return string
+	 */
+	public function getIndexField(): string {
 		return 'bm_author';
 	}
 
 	/**
+	 * @param mixed $row
 	 *
+	 * @return string
+	 * @throws MWException
 	 * @global User $wgUser
-	 * @param type $row
-	 * @return string 
 	 */
-	function formatRow ( $row ) {
-		if ( empty( $row->bm_author ) )
+	public function formatRow( $row ): string {
+		if ( empty( $row->bm_author ) ) {
 			return false;
-		foreach ( $row as $key => $val ) {
-			$aData [$key] = $val;
 		}
-		$sLinkToList = SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL() . "?wpbm_list_search_select=author&wpbm_list_search_text=" . $aData['bm_author'];
+		foreach ( $row as $key => $val ) {
+			$aData[$key] = $val;
+		}
+
+		$queryParams = "bm_list_search_select=author&bm_list_search_text=" . $aData['bm_author'];
+		$sLinkToList = SpecialPage::getTitleFor( 'BibManagerList' )->getLocalURL( $queryParams );
+
 		$sOutput = "";
 		$sOutput .= "<tr>";
 		$sOutput .= "	<td>";
@@ -36,6 +47,7 @@ class BibManagerPagerListAuthors extends AlphabeticPager {
 		$sOutput .= $aData['count(bm_author)'];
 		$sOutput .= "	</td>";
 		$sOutput .= "</tr>";
+
 		return $sOutput;
 	}
 

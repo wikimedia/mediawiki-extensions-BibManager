@@ -1,389 +1,377 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class BibManagerValidator {
 
-	public static function validateRequired ( $fieldName, $value, $allData ) {
-		if ( !empty( $value ) )
+	/**
+	 * @param string $fieldName
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|true
+	 * @throws Exception
+	 */
+	public static function validateRequired( string $fieldName, string $value, array $allData ) {
+		if ( !empty( $value ) ) {
 			return true;
+		}
+
 		$entryType = $allData['bm_bibtexEntryType'];
-		$typeDefs = BibManagerFieldsList::getTypeDefinitions(); // TODO RBV (17.12.11 13:34): Cache?
+		// TODO RBV (17.12.11 13:34): Cache?
+		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$currentType = $typeDefs[$entryType];
 		if ( in_array( $fieldName, $currentType['required'] ) ) {
 			return wfMessage( 'bm_required-field-empty' )->text();
 		}
-		return true;
-	}
 
-	/**
-	 * checks if value is set.
-	 * @param type $value
-	 * @param type $allData
-	 * @return type mixed true if valid, else error-message
-	 */
-	public static function validateEmpty ( $value, $allData = '' ) {
-		if ( empty( $value ) )
-			return wfMessage( 'bm_required-field-empty' )->text();
+		return true;
 	}
 
 	/**
 	 * checks if citation exists in database.
-	 * @param type $value
-	 * @param type $allData
-	 * @return type mixed true if valid, else error-message
+	 *
+	 * @param string|null $value
+	 *
+	 * @return string|true
+	 * @throws MWException
 	 */
-	public static function validateCitation ( $value, $allData = '' ) {
+	public static function validateCitation( ?string $value ) {
 		global $wgBibManagerCitationArticleNamespace;
-		if ( empty( $value ) )
-			return wfMessage( 'bm_required-field-empty' )->text();
-		//HINT: https://www.mediawiki.org/wiki/Help:Bad_title
-		$title = Title::newFromText( $value, $wgBibManagerCitationArticleNamespace );
-		if ( $title === null )
-			return wfMessage( 'bm_error_citation_invalid' )->text();
 
-		$repo = BibManagerRepository::singleton();
-		if ( $repo->getBibEntries( array ( "bm_bibtexCitation" => $value ) ) !== false ) {
-			return $repo->getCitationsLike( $value ); // TODO RBV (18.12.11 15:47): Bad interface! Better get citations by PK and if not empty create error message here!
+		if ( empty( $value ) ) {
+			return wfMessage( 'bm_required-field-empty' )->text();
 		}
 
 		$result = true;
-		Hooks::run( 'BibManagerValidateCitation', array ( $value, $allData, &$result ) );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerValidateCitation', [ $value, &$result ] );
+
+		// HINT: https://www.mediawiki.org/wiki/Help:Bad_title
+		$title = Title::newFromText( $value, $wgBibManagerCitationArticleNamespace );
+		if ( $title === null ) {
+			return wfMessage( 'bm_error_citation_invalid' )->text();
+		}
+
+		$repo = BibManagerRepository::singleton();
+		if ( $repo->getBibEntries( [ "bm_bibtexCitation" => $value ] ) !== false ) {
+			// TODO RBV (18.12.11 15:47): Bad interface!
+			// Better get citations by PK and if not empty create error message here!
+			return $repo->getCitationsLike( $value );
+		}
 
 		return $result;
-	}
-
-	/**
-	 * checks if the input-string only consists of Letters (all utf-8)
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
-	 */
-	public static function validateLetter ( $value, $allData = '' ) {
-		if ( !empty( $value ) && !preg_match( "/^[\pL]*$/", $value ) )
-			return wfMessage( 'bm_wrong-character' )->text();
-		return true;
-	}
-
-	/**
-	 * checks if the input-string only consists of Letters (all utf-8) and Integers
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
-	 */
-	public static function validateLetterAndNumber ( $value, $allData = '' ) {
-
-		if ( !empty( $value ) && !preg_match( "/^[\pL0-9\ ]*$/", $value ) )
-			return wfMessage( 'bm_wrong-character' )->text();
-		return true;
 	}
 
 	/**
 	 * checks if the input-string only consists Integers
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 *
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|true true if valid, else error-message
 	 */
-	public static function validateInt ( $value, $allData = '' ) {
-		if ( !empty( $value ) && !filter_var( $value, FILTER_VALIDATE_INT ) )
+	public static function validateInt( string $value, array $allData ) {
+		if ( !empty( $value ) && !filter_var( $value, FILTER_VALIDATE_INT ) ) {
 			return wfMessage( 'bm_wrong-character' )->text();
+		}
+
 		return true;
 	}
 
-	//<editor-fold defaultstate="collapsed" desc="One callback a day keeps the doctor away" >
-
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * This is necessary because MW 1.16.x does not validate required fields itself.
+	 *
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateAddress ( $value, $allData = '' ) {
-		//This is necessary because MW 1.16.x does not validate required fields itself.
-		$result = self::validateRequired( 'address', $value, $allData );
-		return $result;
+	public static function validateAddress( string $value, array $allData ) {
+		return self::validateRequired( 'address', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateAnnote ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'annote', $value, $allData );
-		return $result;
+	public static function validateAnnote( string $value, array $allData ) {
+		return self::validateRequired( 'annote', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateAuthor ( $value, $allData = '' ) {
+	public static function validateAuthor( string $value, array $allData ) {
 		$result = self::validateRequired( 'author', $value, $allData );
-		//Even if author is required it is sufficient if an editor is provided.
-		if( $result !== true && !empty( $allData['bm_editor'] ) ) $result = true;
+		// Even if author is required it is sufficient if an editor is provided.
+		if ( $result !== true && !empty( $allData['bm_editor'] ) ) {
+			$result = true;
+		}
+
 		return $result;
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateBooktitle ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'booktitle', $value, $allData );
-		return $result;
+	public static function validateBooktitle( string $value, array $allData ) {
+		return self::validateRequired( 'booktitle', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateChapter ( $value, $allData = '' ) {
+	public static function validateChapter( string $value, array $allData ) {
 		$result = self::validateRequired( 'chapter', $value, $allData );
 		if ( $result === true ) {
 			$result = self::validateInt( $value, $allData );
 		}
+
 		return $result;
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateCrossref ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'crossref', $value, $allData ); // TODO RBV (17.12.11 13:28): validate, hook?
-		return $result;
+	public static function validateCrossref( string $value, array $allData ) {
+		// TODO RBV (17.12.11 13:28): validate, hook?
+		return self::validateRequired( 'crossref', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateEdition ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'edition', $value, $allData );
-		return $result;
+	public static function validateEdition( string $value, array $allData ) {
+		return self::validateRequired( 'edition', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateEditor ( $value, $allData = '' ) {
+	public static function validateEditor( string $value, array $allData ) {
 		$result = self::validateRequired( 'editor', $value, $allData );
-		//Even if editor is required it is sufficient if an author is provided.
-		if( $result !== true && !empty( $allData['bm_author'] ) ) $result = true;
+		// Even if editor is required it is sufficient if an author is provided.
+		if ( $result !== true && !empty( $allData['bm_author'] ) ) {
+			$result = true;
+		}
+
 		return $result;
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateHowpublished ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'howpublished', $value, $allData );
-		return $result;
+	public static function validateHowpublished( string $value, array $allData ) {
+		return self::validateRequired( 'howpublished', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateInstitution ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'institution', $value, $allData );
-		return $result;
+	public static function validateInstitution( string $value, array $allData ) {
+		return self::validateRequired( 'institution', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateJournal ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'journal', $value, $allData );
-		return $result;
+	public static function validateJournal( string $value, array $allData ) {
+		return self::validateRequired( 'journal', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateKey ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'key', $value, $allData );
-		return $result;
+	public static function validateKey( string $value, array $allData ) {
+		return self::validateRequired( 'key', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateMonth ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'month', $value, $allData );
-		return $result;
+	public static function validateMonth( string $value, array $allData ) {
+		return self::validateRequired( 'month', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateNote ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'note', $value, $allData );
-		return $result;
+	public static function validateNote( string $value, array $allData ) {
+		return self::validateRequired( 'note', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateNumber ( $value, $allData = '' ) {
+	public static function validateNumber( string $value, array $allData ) {
 		$result = self::validateRequired( 'number', $value, $allData );
 		if ( $result === true ) {
 			$result = self::validateInt( $value, $allData );
 		}
+
 		return $result;
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateOrganization ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'organization', $value, $allData );
-		return $result;
+	public static function validateOrganization( string $value, array $allData ) {
+		return self::validateRequired( 'organization', $value, $allData );
 	}
 
 	/**
 	 * checks if the input-string is a valid page-type (just Int plus : or =)
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validatePages ( $value, $allData = '' ) {
+	public static function validatePages( string $value, array $allData ) {
 		$result = self::validateRequired( 'pages', $value, $allData );
-		if ( $result === true && !empty( $value ) && !preg_match( "/^[0-9\:\=-]*$/", $value ) )
+		if ( $result === true && !empty( $value ) && !preg_match( "/^[0-9\:\=-]*$/", $value ) ) {
 			$result = wfMessage( 'bm_wrong-character' )->text();
+		}
+
 		return $result;
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validatePublisher ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'publisher', $value, $allData );
-		return $result;
+	public static function validatePublisher( string $value, array $allData ) {
+		return self::validateRequired( 'publisher', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateSchool ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'school', $value, $allData );
-		return $result;
+	public static function validateSchool( string $value, array $allData ) {
+		return self::validateRequired( 'school', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateSeries ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'series', $value, $allData );
-		return $result;
+	public static function validateSeries( string $value, array $allData ) {
+		return self::validateRequired( 'series', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateTitle ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'title', $value, $allData );
-		return $result;
+	public static function validateTitle( string $value, array $allData ) {
+		return self::validateRequired( 'title', $value, $allData );
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateType ( $value, $allData = '' ) {
-		$result = self::validateRequired( 'type', $value, $allData );
-		return $result;
+	public static function validateType( string $value, array $allData ) {
+		return self::validateRequired( 'type', $value, $allData );
 	}
 
 	/**
 	 * checks if the input-string is a valid url (leading http:// required)
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateUrl ( $value, $allData = '' ) {
+	public static function validateUrl( string $value, array $allData ) {
 		$result = self::validateRequired( 'url', $value, $allData );
-		if ( $result === true && !empty( $value ) && !filter_var( $value, FILTER_VALIDATE_URL ) )
+		if ( $result === true && !empty( $value ) && !filter_var( $value, FILTER_VALIDATE_URL ) ) {
 			$result = wfMessage( 'bm_wrong-url-format' )->text();
+		}
+
 		return $result;
 	}
 
 	/**
-	 * 
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateVolume ( $value, $allData = '' ) {
+	public static function validateVolume( string $value, array $allData ) {
 		$result = self::validateRequired( 'volume', $value, $allData );
 		if ( $result === true ) {
 			$result = self::validateInt( $value, $allData );
 		}
+
 		return $result;
 	}
 
 	/**
 	 * checks if the input-string just consists of Integer
-	 * @param String $value
-	 * @param Array $allData
-	 * @return mixed true if valid, else error-message 
+	 *
+	 * @param string $value
+	 * @param array $allData
+	 * @return string|bool true if valid, else error-message
+	 * @throws Exception
 	 */
-	public static function validateYear ( $value, $allData = '' ) {
+	public static function validateYear( string $value, array $allData ) {
 		$result = self::validateRequired( 'year', $value, $allData );
-		if ( !empty( $value ) && !preg_match( "/^[0-9]*$/", $value ) )
+		if ( !empty( $value ) && !preg_match( "/^[0-9]*$/", $value ) ) {
 			$result = wfMessage( 'bm_wrong-character' )->text();
+		}
+
 		return $result;
 	}
-
-	//</editor-fold>
 }

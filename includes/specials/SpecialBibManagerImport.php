@@ -2,25 +2,29 @@
 
 class SpecialBibManagerImport extends SpecialPage {
 
-	public function __construct () {
-		parent::__construct( 'BibManagerImport' , 'bibmanageredit');
+	public function __construct() {
+		parent::__construct( 'BibManagerImport', 'bibmanageredit' );
 	}
 
-	public function doesWrites() {
+	/** @inheritDoc */
+	public function doesWrites(): bool {
 		return true;
 	}
 
 	/**
 	 * Main method of SpecialPage. Called by Framework.
+	 *
 	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
 	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
-	 * @param mixed $par string or false, provided by Framework
+	 * @param string|false $par string or false, provided by Framework
 	 */
-	public function execute ( $par ) {
+	public function execute( $par ): void {
 		global $wgOut;
-		if (!$this->getUser()->isAllowed('bibmanageredit')){
-			$wgOut->showErrorPage('badaccess','badaccess-group0');
-			return true;
+
+		if ( !$this->getUser()->isAllowed( 'bibmanageredit' ) ) {
+			$wgOut->showErrorPage( 'badaccess', 'badaccess-group0' );
+
+			return;
 		}
 
 		global $wgRequest;
@@ -31,15 +35,16 @@ class SpecialBibManagerImport extends SpecialPage {
 			$wgOut->addHtml( $this->msg( 'bm_import_welcome' )->escaped() );
 		}
 
-		$formDescriptor['bm_bibtex'] = array (
-		    'class' => 'HTMLTextAreaField',
-		    'rows' => 25
-		);
+		$formDescriptor['bm_bibtex'] = [
+			'class' => 'HTMLTextAreaField',
+			'rows' => 25,
+			'name' => 'bm_bibtex'
+		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'bm_edit' );
 		$htmlForm
 			->setSubmitTextMsg( 'bm_edit_submit' )
-			->setSubmitCallback( array ( $this, 'submitForm' ) );
+			->setSubmitCallback( [ $this, 'submitForm' ] );
 
 		$wgOut->addHTML( '<div id="bm_form">' );
 		$htmlForm->show();
@@ -48,51 +53,56 @@ class SpecialBibManagerImport extends SpecialPage {
 
 	/**
 	 * Submit callback for import form
-	 * @global OutputPage $wgOut
 	 * @param array $formData
 	 * @return mixed true on success, array of error messages on failure
+	 * @throws MWException
+	 * @throws Structures_BibTex_Exception
+	 * @global OutputPage $wgOut
 	 */
-	public function submitForm ( $formData ) {
+	public function submitForm( array $formData ) {
 		global $wgOut;
 
 		$bibtex = new Structures_BibTex();
-		$bibtex->setOption("extractAuthors", false);
+		$bibtex->setOption( "extractAuthors", false );
 		$bibtex->content = $formData['bm_bibtex'];
 		$bibtex->parse();
 
-		$errors = array ( );
+		$errors = [];
 		$repo = BibManagerRepository::singleton();
-		$cleanedEntries = array ( );
-		foreach ( $bibtex->data as $entry ) { // TODO RBV (18.12.11 15:05): Optimize this
-			if ( empty( $entry ) )
+		$cleanedEntries = [];
+		// TODO RBV (18.12.11 15:05): Optimize this
+		foreach ( $bibtex->data as $entry ) {
+			if ( empty( $entry ) ) {
 				continue;
+			}
 
-			$citation = trim($entry['cite']);
-			$entryType = $entry['entryType']; // TODO RBV (18.12.11 15:14): This is very similar to BibManagerEdit specialpage. --> encapsulate.
+			$citation = trim( $entry['cite'] );
+			// TODO RBV (18.12.11 15:14): This is very similar to BibManagerEdit specialpage. --> encapsulate.
+			$entryType = $entry['entryType'];
 			$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 			$entryFields = array_merge(
-			    $typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
+				$typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
 			);
 
-			$submittedFields = array ( );
+			$submittedFields = [];
 
 			foreach ( $entry as $key => $value ) {
 				if ( in_array( $key, $entryFields ) ) {
 					$submittedFields['bm_' . $key] = $value;
 				}
 			}
-			$existingEntry = $repo->getBibEntryByCitation( $citation );
+
 			$result = BibManagerValidator::validateCitation( $citation, $submittedFields );
+
 			if ( $result !== true ) {
 				$errors[] = $result;
-				//$errors[] = array( 'bm_error_citation_exists', $citation, $citation.'X' );
+				// $errors[] = array( 'bm_error_citation_exists', $citation, $citation.'X' );
 			} else {
 				// TODO RBV (18.12.11 16:02): field validation!!!
-				$cleanedEntries[] = array ( $citation, $entryType, $submittedFields );
+				$cleanedEntries[] = [ $citation, $entryType, $submittedFields ];
 			}
 		}
 		if ( !empty( $errors ) ) {
-
 			return '<ul><li>' . implode( '</li><li>', $errors ) . '</li></ul>';
 		}
 
@@ -100,12 +110,21 @@ class SpecialBibManagerImport extends SpecialPage {
 			$repo->saveBibEntry( $cleanedEntry[0], $cleanedEntry[1], $cleanedEntry[2] );
 		}
 
-		$wgOut->addHtml( $this->msg( 'bm_success_save-complete' )->escaped() );
-		$wgOut->addHtml( $this->msg( 'bm_success_link-to-list', SpecialPage::getTitleFor( "BibManagerList" )->getLocalURL() )->escaped() );
+		$wgOut->addHtml( sprintf(
+			'<div class="successbox"><strong>%s</strong></div><div class="visualClear" id="mw-pref-clear"></div>',
+			$this->msg( 'bm_success_save-complete' )->escaped() )
+		);
+
+		$wgOut->addHtml( sprintf(
+			'<a href="%s">%s</a>',
+			SpecialPage::getTitleFor( "BibManagerList" )->getLocalURL(),
+			$this->msg( 'bm_success_link-to-list' )->escaped() )
+		);
 
 		return true;
 	}
 
+	/** @inheritDoc */
 	protected function getGroupName() {
 		return 'bibmanager';
 	}

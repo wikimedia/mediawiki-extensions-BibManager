@@ -45,4 +45,4 @@ $prefixedKeys: Wether of not the keys of the $entry array are prefixed with 'bm_
 'BibManagerPagerBeforeSearch' : Use this hook to modify the search values
 $sSearchType: The searchtype selected by the user
 $sSearchTerm: The searchterm entered by the user
-&$sCond: The condition passed tBibManagerChangeSearchValueso the SQL-String
+&$sCond: The condition passed to the SQL-String

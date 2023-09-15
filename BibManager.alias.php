@@ -5,34 +5,34 @@
  * @addtogroup Extensions
  */
 
-$specialPageAliases = array ( );
+$specialPageAliases = [];
 
-$specialPageAliases['en'] = array (
-	'BibManagerCreate'      => array ( 'BibManagerCreate', 'BibManager Create entry', 'Create BibEntry' ),
-	'BibManagerDelete'      => array ( 'BibManagerDelete', 'BibManager Delete entry','Delete BibEntry' ),
-	'BibManagerEdit'        => array ( 'BibManagerEdit', 'BibManager Edit entry','Edit BibEntry' ),
-	'BibManagerList'        => array ( 'BibManagerList', 'BibManager Overview','List BibEntry' ),
-	'BibManagerListAuthors' => array ( 'BibManagerListAuthors', 'BibManager Author list','List BibEntries by Author' ),
-	'BibManagerImport'      => array ( 'BibManagerImport', 'BibManager Import','Import BibEntry' ),
-	'BibManagerExport'      => array ( 'BibManagerExport', 'BibManager Export','Export BibEntry' )
-);
+$specialPageAliases['en'] = [
+	'BibManagerCreate'      => [ 'BibManagerCreate', 'BibManager Create entry', 'Create BibEntry' ],
+	'BibManagerDelete'      => [ 'BibManagerDelete', 'BibManager Delete entry','Delete BibEntry' ],
+	'BibManagerEdit'        => [ 'BibManagerEdit', 'BibManager Edit entry','Edit BibEntry' ],
+	'BibManagerList'        => [ 'BibManagerList', 'BibManager Overview','List BibEntry' ],
+	'BibManagerListAuthors' => [ 'BibManagerListAuthors', 'BibManager Author list','List BibEntries by Author' ],
+	'BibManagerImport'      => [ 'BibManagerImport', 'BibManager Import','Import BibEntry' ],
+	'BibManagerExport'      => [ 'BibManagerExport', 'BibManager Export','Export BibEntry' ]
+];
 
-$specialPageAliases['de'] = array (
-	'BibManagerCreate'      => array ( 'Bibliographieeintrag anlegen' ),
-	'BibManagerDelete'      => array ( 'Bibliographieeintrag löschen' ),
-	'BibManagerEdit'        => array ( 'Bibliographieeintrag bearbeiten' ),
-	'BibManagerList'        => array ( 'Bibliographieeinträge verwalten' ),
-	'BibManagerListAuthors' => array ( 'Bibliographieeinträge nach Autoren' ),
-	'BibManagerImport'      => array ( 'Bibliographieeinträge importieren' ),
-	'BibManagerExport'      => array ( 'Bibliographieeinträge exportieren' )
-);
+$specialPageAliases['de'] = [
+	'BibManagerCreate'      => [ 'Bibliographieeintrag anlegen' ],
+	'BibManagerDelete'      => [ 'Bibliographieeintrag löschen' ],
+	'BibManagerEdit'        => [ 'Bibliographieeintrag bearbeiten' ],
+	'BibManagerList'        => [ 'Bibliographieeinträge verwalten' ],
+	'BibManagerListAuthors' => [ 'Bibliographieeinträge nach Autoren' ],
+	'BibManagerImport'      => [ 'Bibliographieeinträge importieren' ],
+	'BibManagerExport'      => [ 'Bibliographieeinträge exportieren' ]
+];
 
-$specialPageAliases['de-formal'] = array (
-	'BibManagerCreate'      => array ( 'Bibliographieeintrag anlegen' ),
-	'BibManagerDelete'      => array ( 'Bibliographieeintrag löschen' ),
-	'BibManagerEdit'        => array ( 'Bibliographieeintrag bearbeiten' ),
-	'BibManagerList'        => array ( 'Bibliographieeinträge verwalten' ),
-	'BibManagerListAuthors' => array ( 'Bibliographieeinträge nach Autoren' ),
-	'BibManagerImport'      => array ( 'Bibliographieeinträge importieren' ),
-	'BibManagerExport'      => array ( 'Bibliographieeinträge exportieren' )
-);
+$specialPageAliases['de-formal'] = [
+	'BibManagerCreate'      => [ 'Bibliographieeintrag anlegen' ],
+	'BibManagerDelete'      => [ 'Bibliographieeintrag löschen' ],
+	'BibManagerEdit'        => [ 'Bibliographieeintrag bearbeiten' ],
+	'BibManagerList'        => [ 'Bibliographieeinträge verwalten' ],
+	'BibManagerListAuthors' => [ 'Bibliographieeinträge nach Autoren' ],
+	'BibManagerImport'      => [ 'Bibliographieeinträge importieren' ],
+	'BibManagerExport'      => [ 'Bibliographieeinträge exportieren' ]
+];
