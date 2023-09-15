@@ -1,7 +1,8 @@
 <?php
 
 // HINT: https://www.mediawiki.org/wiki/Manual:Writing_maintenance_scripts
-require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/maintenance/Maintenance.php';
+
+require_once dirname( __DIR__, 3 ) . '/maintenance/Maintenance.php';
 
 class BibManagerImportRepo extends Maintenance {
 
@@ -13,6 +14,9 @@ class BibManagerImportRepo extends Maintenance {
 		$this->requireExtension( 'BibManager' );
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function execute() {
 		$sFilename = $this->getOption( 'filename', 'new_export' );
 
@@ -28,14 +32,15 @@ class BibManagerImportRepo extends Maintenance {
 		$entries = $bibTexParser->returnArrays();
 
 		$repo = BibManagerRepository::singleton();
-		$cleanedEntries = [];
-		foreach ( $entries[2] as $entry ) { // TODO RBV (18.12.11 15:05): Optimize this
+		// TODO RBV (18.12.11 15:05): Optimize this
+		foreach ( $entries[2] as $entry ) {
 			if ( empty( $entry ) ) {
 				continue;
 			}
 
 			$citation = trim( $entry['bibtexCitation'] );
-			$entryType = $entry['bibtexEntryType']; // TODO RBV (18.12.11 15:14): This is very similar to BibManagerEdit specialpage. --> encapsulate.
+			// TODO RBV (18.12.11 15:14): This is very similar to BibManagerEdit specialpage. --> encapsulate.
+			$entryType = $entry['bibtexEntryType'];
 			$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 			$entryFields = array_merge(
 				$typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']

@@ -8,16 +8,17 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 
 	/**
 	 * Main method of SpecialPage. Called by Framework.
+	 * @param string|false $par string or false, provided by Framework
+	 * @throws MWException
 	 * @global OutputPage $wgOut Current MediaWiki WebRequest object
 	 * @global WebRequest $wgRequest Current MediaWiki OutputPage object
-	 * @param mixed $par string or false, provided by Framework
-	 * @return bool
 	 */
 	public function execute( $par ) {
 		global $wgOut;
 		if ( !$this->getUser()->isAllowed( 'bibmanagercreate' ) ) {
 			$wgOut->showErrorPage( 'badaccess', 'badaccess-group0' );
-			return true;
+
+			return;
 		}
 
 		global $wgRequest;
@@ -29,6 +30,7 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 				'class' => 'HTMLSelectField',
 				'label' => wfMessage( 'bm_label_entry_type_select' )->plain(),
 				'id' => 'bm_select_type',
+				'name' => 'bm_select_type',
 				'options' => [
 					'' => '-',
 					wfMessage( 'bm_entry_type_article' )->plain() => 'article',
@@ -78,21 +80,25 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 
 	/**
 	 * Submit callback for create form
-	 * @global OutputPage $wgOut
 	 * @param array $formData
 	 * @return bool Always true
+	 * @throws MWException
+	 * @global OutputPage $wgOut
 	 */
-	public function onSubmit( $formData ) {
+	public function onSubmit( array $formData ): bool {
 		global $wgOut, $wgRequest;
+
 		$citation = $wgRequest->getVal( 'bm_bibtexCitation' );
 		if ( !isset( $formData['bm_bibtexCitation'] ) && !empty( $citation ) ) {
 			// This should not be necessary, but it seems the hidden field from
 			//the type selection form is not properly included in $formData
 			$formData['bm_bibtexCitation'] = $citation;
 		}
+
 		$wgOut->redirect(
 			SpecialPage::getTitleFor( 'BibManagerEdit' )->getFullURL( $formData )
 		);
+
 		return true;
 	}
 

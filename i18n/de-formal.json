@@ -132,6 +132,6 @@
 	"bm_month_oct": "Oktober",
 	"bm_month_nov": "November",
 	"bm_month_dec": "Dezember",
-	"bm_success_save-complete": "<div class=\"successbox\"><strong>Ihre Daten wurden erfolgreich gespeichert!</strong></div><div class=\"visualClear\" id=\"mw-pref-clear\"></div>",
-	"bm_success_link-to-list": "<a href=\"$1\">Zurück zur Übersicht</a>"
+	"bm_success_save-complete": "Ihre Daten wurden erfolgreich gespeichert!",
+	"bm_success_link-to-list": "Zurück zur Übersicht"
 }

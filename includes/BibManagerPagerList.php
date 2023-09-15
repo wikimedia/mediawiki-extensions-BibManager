@@ -9,16 +9,23 @@ class BibManagerPagerList extends AlphabeticPager {
 	/** @var string */
 	private $searchTerm = '';
 
-	function getQueryInfo() {
+	/**
+	 * @return array
+	 */
+	public function getQueryInfo(): array {
 		global $wgRequest;
-		$this->searchType = $wgRequest->getVal( 'wpbm_list_search_select', '' );
-		$this->searchTerm = $wgRequest->getVal( 'wpbm_list_search_text', '' );
+
+		$this->searchType = $wgRequest->getVal( 'bm_list_search_select', '' );
+		$this->searchTerm = $wgRequest->getVal( 'bm_list_search_text', '' );
 		$conds = [];
 		if ( !empty( $this->searchType ) && !empty( $this->searchTerm ) ) {
 			$conds[] = "bm_" . $this->searchType . " LIKE '%" . $this->searchTerm . "%'";
 		}
 
-		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerPagerBeforeSearch', [ $this->searchType, $this->searchTerm, &$conds ] );
+		MediaWikiServices::getInstance()->getHookContainer()->run( 'BibManagerPagerBeforeSearch', [
+			$this->searchType, $this->searchTerm, &$conds
+		] );
+
 		return [
 			'tables'  => 'bibmanager',
 			'fields'  => '*',
@@ -27,24 +34,26 @@ class BibManagerPagerList extends AlphabeticPager {
 		];
 	}
 
-	function getIndexField() {
+	public function getIndexField(): string {
 		return 'bm_bibtexCitation';
 	}
 
 	/**
 	 * Override from base class to add query string parameters
+	 *
 	 * @return array
 	 */
-	function getPagingQueries() {
+	public function getPagingQueries(): array {
 		$queries = parent::getPagingQueries();
+
 		if ( !empty( $this->searchType ) ) {
 			foreach ( $queries as $type => $query ) {
-				$queries[$type]['wpbm_list_search_select'] = $this->searchType;
+				$queries[$type]['bm_list_search_select'] = $this->searchType;
 			}
 		}
 		if ( !empty( $this->searchTerm ) ) {
 			foreach ( $queries as $type => $query ) {
-				$queries[$type]['wpbm_list_search_text'] = $this->searchTerm;
+				$queries[$type]['bm_list_search_text'] = $this->searchTerm;
 			}
 		}
 		return $queries;
@@ -52,11 +61,13 @@ class BibManagerPagerList extends AlphabeticPager {
 
 	/**
 	 * Override from base class to add query string parameters
+	 *
 	 * @global Language $wgLang
 	 * @return array
 	 */
-	function getLimitLinks() {
+	public function getLimitLinks(): array {
 		global $wgLang;
+
 		$links = [];
 		if ( $this->mIsBackwards ) {
 			$offset = $this->mPastTheEndIndex;
@@ -65,10 +76,10 @@ class BibManagerPagerList extends AlphabeticPager {
 		}
 		$query = [ 'offset' => $offset ];
 		if ( !empty( $this->searchType ) ) {
-			$query['wpbm_list_search_select'] = $this->searchType;
+			$query['bm_list_search_select'] = $this->searchType;
 		}
 		if ( !empty( $this->searchTerm ) ) {
-			$query['wpbm_list_search_text'] = $this->searchTerm;
+			$query['bm_list_search_text'] = $this->searchTerm;
 		}
 
 		foreach ( $this->mLimitsShown as $limit ) {
@@ -78,14 +89,17 @@ class BibManagerPagerList extends AlphabeticPager {
 				'num'
 			);
 		}
+
 		return $links;
 	}
 
 	/**
 	 * @param mixed $row
+	 *
 	 * @return string
+	 * @throws MWException
 	 */
-	function formatRow( $row ) {
+	public function formatRow( $row ): string {
 		// phpcs:ignore MediaWiki.Usage.ExtendClassUsage.FunctionConfigUsage
 		global $wgBibManagerCitationArticleNamespace;
 
@@ -112,7 +126,7 @@ class BibManagerPagerList extends AlphabeticPager {
 					'class' => 'icon edit',
 					'title' => $this->msg( 'bm_list_table_edit' )->escaped()
 				],
-				$specialPageQuery
+				array_merge( $specialPageQuery, [ 'bm_edit_mode' => 1 ] )
 			);
 		}
 

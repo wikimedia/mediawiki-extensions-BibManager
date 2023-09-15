@@ -5,7 +5,8 @@
 		"Hornemann Institut",
 		"Hallo Welt! Medienwerkstatt GmbH",
 		"Tobias Weichart",
-		"Robert Vogel"
+		"Robert Vogel",
+		"Daniel Riedmüller (Hallo Welt!)"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:BibManager",
 	"descriptionmsg": "bibmanager-desc",
@@ -44,7 +45,8 @@
 		"BibManagerAlias": "BibManager.alias.php"
 	},
 	"AutoloadClasses": {
-		"Structures_BibTex": "includes/libs/Structures_BibTex/BibTex.php",
+		"Structures_BibTex": "includes/libs/Structures_BibTex/Structures/BibTex.php",
+		"PARSEENTRIES": "includes/libs/PARSEENTRIES.php",
 		"BibManagerHooks": "includes/BibManagerHooks.php",
 		"BibManagerFieldsList": "includes/BibManagerFieldsList.php",
 		"BibManagerLocalMWDatabaseRepo": "includes/BibManagerLocalMWDatabaseRepo.php",

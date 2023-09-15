@@ -1,9 +1,17 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 
-	public function getCitationsLike( $sCitation ) {
-		$dbr = wfGetDB( DB_REPLICA );
+	/**
+	 * @param string $sCitation
+	 *
+	 * @return string
+	 */
+	public function getCitationsLike( $sCitation ): string {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+
 		$res = $dbr->select(
 			'bibmanager',
 			'bm_bibtexCitation',
@@ -24,16 +32,19 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 				$sCitation . 'X'
 			)->escaped();
 		}
+
 		return true;
 	}
 
 	/**
 	 *
 	 * @param mixed $mOptions
+	 *
 	 * @return mixed
 	 */
 	public function getBibEntries( $mOptions ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+
 		$res = $dbr->select(
 			'bibmanager', '*', $mOptions
 		);
@@ -49,8 +60,9 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 		}
 	}
 
-	public function getBibEntryByCitation( $sCitation ) {
-		$dbr = wfGetDB( DB_REPLICA );
+	public function getBibEntryByCitation( $sCitation ): array {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+
 		$res = $dbr->selectRow(
 			'bibmanager',
 			'*',
@@ -61,11 +73,13 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 		if ( $res === false ) {
 			return [];
 		}
+
 		return (array)$res;
 	}
 
 	public function saveBibEntry( $sCitation, $sEntryType, $aFields ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
+
 		return $dbw->insert(
 			'bibmanager',
 			$aFields + [
@@ -76,7 +90,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function updateBibEntry( $sCitation, $sEntryType, $aFields ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
 
 		return $dbw->update(
 			'bibmanager',
@@ -89,15 +103,14 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 		);
 	}
 
-	public function deleteBibEntry( $sCitation ) {
-		$dbw = wfGetDB( DB_PRIMARY );
-		$res = $dbw->delete(
+	public function deleteBibEntry( $sCitation ): bool {
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
+
+		return $dbw->delete(
 			'bibmanager',
 			[
 				'bm_bibtexCitation' => $sCitation
 			]
 		);
-
-		return $res;
 	}
 }

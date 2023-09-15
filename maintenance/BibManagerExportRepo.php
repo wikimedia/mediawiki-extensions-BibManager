@@ -1,24 +1,31 @@
 <?php
 
 // HINT: https://www.mediawiki.org/wiki/Manual:Writing_maintenance_scripts
-require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/maintenance/Maintenance.php';
+use MediaWiki\MediaWikiServices;
+
+require_once dirname( __DIR__, 3 ) . '/maintenance/Maintenance.php';
 
 class BibManagerExportRepo extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
+
 		$this->addOption( 'filename', 'The name of the file', true, true );
 		$this->requireExtension( 'BibManager' );
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function execute() {
 		$sFilename     = $this->getOption( 'filename', 'new_export' );
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+
 		$res = $dbr->select(
 			'bibmanager', 'bm_bibtexCitation'
 		);
 		$aReturn = [];
-		foreach ( $row as $res ) {
+		foreach ( $res as $row ) {
 			$aReturn[] = (array)$row;
 		}
 
@@ -30,7 +37,8 @@ class BibManagerExportRepo extends Maintenance {
 			}
 			$entryType = $entry['bm_bibtexEntryType'];
 			$typeDefs = BibManagerFieldsList::getTypeDefinitions();
-			$entryFields = array_merge( // TODO RBV (17.12.11 15:01): encapsulte in BibManagerFieldsList
+			// TODO RBV (17.12.11 15:01): encapsulte in BibManagerFieldsList
+			$entryFields = array_merge(
 				$typeDefs[$entryType]['required'], $typeDefs[$entryType]['optional']
 			);
 			$lines = [];

@@ -8,11 +8,13 @@ class SpecialBibManagerExport extends UnlistedSpecialPage {
 
 	/**
 	 * Main method of SpecialPage. Called by framework.
+	 *
+	 * @param string|false $par string or false, provided by Framework
+	 * @throws Exception
 	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
 	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
-	 * @param mixed $par string or false, provided by Framework
 	 */
-	public function execute( $par ) {
+	public function execute( $par ): void {
 		global $wgOut, $wgRequest;
 		// TODO RBV (17.12.11 16:46): This is very similar to the BibManagerEdit SpecialPage --> encapsulate logic
 
@@ -28,7 +30,8 @@ class SpecialBibManagerExport extends UnlistedSpecialPage {
 			$lines['entryType'] = $entry['bm_bibtexEntryType'];
 			$lines['cite'] = $entry['bm_bibtexCitation'];
 			$typeDefs = BibManagerFieldsList::getTypeDefinitions();
-			$entryFields = array_merge( // TODO RBV (17.12.11 15:01): encapsulte in BibManagerFieldsList
+			// TODO RBV (17.12.11 15:01): encapsulte in BibManagerFieldsList
+			$entryFields = array_merge(
 				$typeDefs[$lines['entryType']]['required'], $typeDefs[$lines['entryType']]['optional']
 			);
 
