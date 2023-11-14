@@ -86,7 +86,6 @@
 		},
 		"BibManagerCitationFormats": {
 			"value": {
-				"-": "%author%: %title%, %year%",
 				"article": "%author% (%year%): %title%. <em>%journal%</em>, %volume%, %pages%",
 				"book": "%author% (%year%): %title%. (%edition%). <em>%publisher%</em>, %address%, %pages%",
 				"booklet": "%title%",
