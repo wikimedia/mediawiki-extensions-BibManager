@@ -389,7 +389,7 @@ class BibManagerHooks {
 		global $wgBibManagerCitationFormats;
 
 		// Use default
-		$format = $wgBibManagerCitationFormats['-'];
+		$format = $wgBibManagerCitationFormats['article'];
 		if ( isset( $entry['bm_bibtexEntryType'] )
 			&& !empty( $wgBibManagerCitationFormats[$entry['bm_bibtexEntryType']] ) ) {
 			$format = !empty( $formatOverride ) ? $formatOverride

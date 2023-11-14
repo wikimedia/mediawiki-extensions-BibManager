@@ -169,7 +169,7 @@ class Structures_BibTex
             'article',
             'book',
             'booklet',
-            'confernce',
+            'conference',
             'inbook',
             'incollection',
             'inproceedings',

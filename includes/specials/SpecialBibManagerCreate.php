@@ -32,7 +32,6 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 				'id' => 'bm_select_type',
 				'name' => 'bm_select_type',
 				'options' => [
-					'' => '-',
 					wfMessage( 'bm_entry_type_article' )->plain() => 'article',
 					wfMessage( 'bm_entry_type_book' )->plain() => 'book',
 					wfMessage( 'bm_entry_type_booklet' )->plain() => 'booklet',
