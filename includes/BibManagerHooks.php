@@ -156,7 +156,7 @@ class BibManagerHooks {
 				$value = implode( '; ', explode( ' and ', $value ) );
 			}
 			// . Xml::element( 'br', null, null );
-			$tooltip[] = Xml::element( 'strong', null, wfMessage( $key )->escaped() . ': ' ) . ' '
+			$tooltip[] = Xml::element( 'strong', null, wfMessage( $key )->text() . ': ' ) . ' '
 				. Xml::element( 'em', null, $value )
 				. "<br/>";
 		}
@@ -425,7 +425,7 @@ class BibManagerHooks {
 						'class'  => 'external',
 						'rel'    => 'nofollow'
 					],
-					wfMessage( 'bm_url' )->escaped()
+					wfMessage( 'bm_url' )->text()
 				);
 			}
 
