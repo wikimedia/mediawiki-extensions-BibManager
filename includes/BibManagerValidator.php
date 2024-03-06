@@ -262,7 +262,7 @@ class BibManagerValidator {
 	}
 
 	/**
-	 * checks if the input-string is a valid page-type (just Int plus : or =)
+	 * checks if the input-string is a valid page-type (just alphabetical, Int, plus, : or =)
 	 * @param string $value
 	 * @param array $allData
 	 * @return string|bool true if valid, else error-message
@@ -270,7 +270,7 @@ class BibManagerValidator {
 	 */
 	public static function validatePages( string $value, array $allData ) {
 		$result = self::validateRequired( 'pages', $value, $allData );
-		if ( $result === true && !empty( $value ) && !preg_match( "/^[0-9\:\=-]*$/", $value ) ) {
+		if ( $result === true && !empty( $value ) && !preg_match( "/^[0-9a-zA-Z\:\=-]*$/", $value ) ) {
 			$result = wfMessage( 'bm_wrong-character' )->text();
 		}
 
