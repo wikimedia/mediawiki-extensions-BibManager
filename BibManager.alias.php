@@ -9,12 +9,12 @@ $specialPageAliases = [];
 
 $specialPageAliases['en'] = [
 	'BibManagerCreate'      => [ 'BibManagerCreate', 'BibManager Create entry', 'Create BibEntry' ],
-	'BibManagerDelete'      => [ 'BibManagerDelete', 'BibManager Delete entry','Delete BibEntry' ],
-	'BibManagerEdit'        => [ 'BibManagerEdit', 'BibManager Edit entry','Edit BibEntry' ],
-	'BibManagerList'        => [ 'BibManagerList', 'BibManager Overview','List BibEntry' ],
-	'BibManagerListAuthors' => [ 'BibManagerListAuthors', 'BibManager Author list','List BibEntries by Author' ],
-	'BibManagerImport'      => [ 'BibManagerImport', 'BibManager Import','Import BibEntry' ],
-	'BibManagerExport'      => [ 'BibManagerExport', 'BibManager Export','Export BibEntry' ]
+	'BibManagerDelete'      => [ 'BibManagerDelete', 'BibManager Delete entry', 'Delete BibEntry' ],
+	'BibManagerEdit'        => [ 'BibManagerEdit', 'BibManager Edit entry', 'Edit BibEntry' ],
+	'BibManagerList'        => [ 'BibManagerList', 'BibManager Overview', 'List BibEntry' ],
+	'BibManagerListAuthors' => [ 'BibManagerListAuthors', 'BibManager Author list', 'List BibEntries by Author' ],
+	'BibManagerImport'      => [ 'BibManagerImport', 'BibManager Import', 'Import BibEntry' ],
+	'BibManagerExport'      => [ 'BibManagerExport', 'BibManager Export', 'Export BibEntry' ]
 ];
 
 $specialPageAliases['de'] = [
