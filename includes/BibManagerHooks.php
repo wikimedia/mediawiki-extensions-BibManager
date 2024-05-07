@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 
 class BibManagerHooks {
@@ -155,9 +156,9 @@ class BibManagerHooks {
 				// TODO RBV (22.12.11 15:34): Duplicate code!
 				$value = implode( '; ', explode( ' and ', $value ) );
 			}
-			// . Xml::element( 'br', null, null );
-			$tooltip[] = Xml::element( 'strong', null, wfMessage( $key )->text() . ': ' ) . ' '
-				. Xml::element( 'em', null, $value )
+			// . Html::element( 'br' );
+			$tooltip[] = Html::element( 'strong', [], wfMessage( $key )->text() . ': ' ) . ' '
+				. Html::element( 'em', [], $value )
 				. "<br/>";
 		}
 
@@ -208,21 +209,21 @@ class BibManagerHooks {
 		$out = [];
 		foreach ( $icons as $iconDesc ) {
 			$text = wfMessage( $iconDesc['title'] )->escaped();
-			$iconEl = Xml::element(
+			$iconEl = Html::element(
 				'img', [
 					'src' => $iconDesc['src'],
 					'alt' => $text,
 					'title' => $text
 				]
 			);
-			$anchorEl = Xml::tags(
+			$anchorEl = Html::rawElement(
 				'a', [
 					'href' => $iconDesc['href'],
 					'title' => $text,
 					'target' => '_blank',
 				], $iconEl
 			);
-			$out[] = Xml::wrapClass( $anchorEl, 'bm_icon_link' );
+			$out[] = Html::rawElement( 'span', [ 'class' => 'bm_icon_link' ], $anchorEl );
 		}
 
 		return implode( '', $out );
@@ -248,7 +249,7 @@ class BibManagerHooks {
 		$parser->getOutput()->addModuleStyles( [ 'ext.bibManager.styles' ] );
 
 		$out = [];
-		$out[] = Xml::element( 'hr', null, null );
+		$out[] = Html::element( 'hr' );
 		$out[] = wfMessage( 'bm_tag_tag-used' )->escaped();
 
 		$bibTags = [];
@@ -270,7 +271,7 @@ class BibManagerHooks {
 			$entries[$citation] = $repo->getBibEntryByCitation( $citation );
 		}
 
-		// $out[] = Xml::openElement( 'table', array ( 'class' => 'bm_list_table' ) );
+		// $out[] = Html::openElement( 'table', [ 'class' => 'bm_list_table' ] );
 
 		// TODO RBV (23.12.11 13:28): Remove filtering
 		if ( isset( $args['filter'] ) ) {
@@ -417,7 +418,7 @@ class BibManagerHooks {
 
 			if ( $key == 'url' ) {
 				$urlKey = $prefixedKeys ? 'bm_url' : 'url';
-				$value = ' ' . Xml::element(
+				$value = ' ' . Html::element(
 					'a',
 					[
 						'href'   => $entry[$urlKey],
