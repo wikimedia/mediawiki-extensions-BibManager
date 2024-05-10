@@ -19,7 +19,7 @@
 	"heading_edit": "BibManager: Eintrag bearbeiten (Typ: $1)",
 	"heading_list": "BibManager: Übersicht",
 	"heading_list_authors": "BibManager: Übersicht Autoren",
-	"bm_list_welcome": "Willkommen auf der Übersichtsseite der BibManager-Erweiterung!<br />Hier kannst du je nach Berechtigung Einträge suchen, bearbeiten, löschen oder als BibTeX-Zeichenkette ausgeben. Wenn du einen neuen Eintrag anlegen möchtest, oder eine BibTeX-Zeichenkette importieren willst, vewende hierzu bitte die Spezialseiten $1 und $2. ",
+	"bm_list_welcome": "Willkommen auf der Übersichtsseite der BibManager-Erweiterung!<br />Hier kannst du je nach Berechtigung Einträge suchen, bearbeiten, löschen oder als BibTeX-Zeichenkette ausgeben. Wenn du einen neuen Eintrag anlegen möchtest, oder eine BibTeX-Zeichenkette importieren willst, vewende hierzu bitte die Spezialseiten $1 und $2.",
 	"bm_list_search_submit": "Suchen",
 	"bm_list_search_term": "Suchbegriff",
 	"bm_list_search-title": "Suche",
