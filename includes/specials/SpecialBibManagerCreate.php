@@ -65,7 +65,7 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 			$importParams['bm_bibtexCitation'] = $citation;
 		}
 
-		$entryTypeSelectionForm->addPostText(
+		$entryTypeSelectionForm->addPostHtml(
 			'<div class="bm-create-posttext">' . wfMessage(
 				'bm_bibtex_string_import_link',
 				SpecialPage::getTitleFor( 'BibManagerImport' )->getLocalURL( $importParams )
