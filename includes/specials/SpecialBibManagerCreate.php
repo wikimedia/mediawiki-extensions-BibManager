@@ -27,7 +27,7 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 		$wgOut->addModuleStyles( 'ext.bibManager.styles' );
 		$formDescriptor = [
 			'bm_select_type' => [
-				'class' => 'HTMLSelectField',
+				'class' => HTMLSelectField::class,
 				'label' => wfMessage( 'bm_label_entry_type_select' )->plain(),
 				'id' => 'bm_select_type',
 				'name' => 'bm_select_type',

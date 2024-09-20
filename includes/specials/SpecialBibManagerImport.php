@@ -36,7 +36,7 @@ class SpecialBibManagerImport extends SpecialPage {
 		}
 
 		$formDescriptor['bm_bibtex'] = [
-			'class' => 'HTMLTextAreaField',
+			'class' => HTMLTextAreaField::class,
 			'rows' => 25,
 			'name' => 'bm_bibtex'
 		];

@@ -73,12 +73,12 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		}
 		$formDescriptor = [
 			'bm_delete' => [
-				'class' => 'HTMLHiddenField',
+				'class' => HTMLHiddenField::class,
 				'default' => true,
 				'name' => 'bm_delete',
 			],
 			'bm_bibtexCitation' => [
-				'class' => 'HTMLHiddenField',
+				'class' => HTMLHiddenField::class,
 				'default' => $citation,
 				'name' => 'bm_bibtexCitation',
 			]

@@ -11,80 +11,80 @@ class BibManagerFieldsList {
 		// HINT: https://semantic-mediawiki.org/wiki/Help:BibTeX_format
 		$fieldDefinitions = [
 			'address' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_address' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateAddress',
 			],
 			// Publisher's address (usually just the city, but can be the full address for lesser-known publishers)
 			'annote' => [
-				'class' => 'HTMLTextAreaField',
+				'class' => HTMLTextAreaField::class,
 				'label' => wfMessage( 'bm_annote' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateAnnote',
 				'rows' => 5
 			],
 			// An annotation for annotated bibliography styles (not typical)
 			'author' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_author' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateAuthor',
 			],
 			// The name(s) of the author(s) (in the case of more than one author, separated by and)
 			'booktitle' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_booktitle' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateBooktitle',
 			],
 			// The title of the book, if only part of it is being cited
 			'chapter' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_chapter' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateChapter',
 			],
 			// The chapter number
 			'crossref' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_crossref' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateCrossref',
 			],
 			// The key of the cross-referenced entry
 			'edition' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_edition' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateEdition',
 			],
 			// The edition of a book, long form (such as "first" or "second")
 			'editor' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_editor' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateEditor',
 			],
 			// The name(s) of the editor(s)
 			'eprint' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_eprint' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateEprint',
 			],
 			// A specification of an electronic publication, often a preprint or a technical report
 			'howpublished' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_howpublished' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateHowpublished',
 			],
 			// How it was published, if the publishing method is nonstandard
 			'institution' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_institution' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateInstitution',
 			],
 			// The institution that was involved in the publishing, but not necessarily the publisher
 			'journal' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_journal' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateJournal',
 			],
 			// The journal or magazine the work was published in
 			'key' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_key' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateKey',
 			],
@@ -93,7 +93,7 @@ class BibManagerFieldsList {
 			// Note that this is very different from the key (mentioned just after this list)
 			// that is used to cite or cross-reference the entry.
 			'month' => [
-				'class' => 'HTMLSelectField',
+				'class' => HTMLSelectField::class,
 				'label' => wfMessage( 'bm_month' )->escaped(),
 				'options' => [
 					'' => '',
@@ -114,58 +114,58 @@ class BibManagerFieldsList {
 			],
 			// The month of publication (or, if unpublished, the month of creation)
 			'note' => [
-				'class' => 'HTMLTextAreaField',
+				'class' => HTMLTextAreaField::class,
 				'label' => wfMessage( 'bm_note' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateNote',
 				'rows' => 5
 			],
 			// Miscellaneous extra information
 			'number' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_number' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateNumber',
 			],
 			// The "(issue) number" of a journal, magazine, or tech-report,
 			// if applicable. (Most publications have a "volume", but no "number" field.)
 			'organization' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_organization' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateOrganization',
 			],
 			// The conference sponsor
 			'pages' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_pages' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validatePages',
 			],
 			// Page numbers, separated either by commas or double-hyphens.
 			'publisher' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_publisher' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validatePublisher',
 			],
 			// The publisher's name
 			'school' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_school' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateSchool',
 			],
 			// The school where the thesis was written
 			'series' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_series' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateSeries',
 			],
 			// The series of books the book was published
 			// in (e.g. "The Hardy Boys" or "Lecture Notes in Computer Science")
 			'title' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_title' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateTitle',
 			],
 			// The title of the work
 			'type' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_type' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateType',
 				// validate ?
@@ -173,20 +173,20 @@ class BibManagerFieldsList {
 			// The field overriding the default type of publication (e.g. "Research Note" for techreport,
 			// "{PhD} dissertation" for phdthesis, "Section" for inbook/incollection)
 			'url' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_url' )->escaped(),
 				'default' => 'http://',
 				'validation-callback' => 'BibManagerValidator::validateUrl',
 			],
 			// The WWW address
 			'volume' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_volume' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateVolume',
 			],
 			// The volume of a journal or multi-volume book
 			'year' => [
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'label' => wfMessage( 'bm_year' )->escaped(),
 				'validation-callback' => 'BibManagerValidator::validateYear',
 			]

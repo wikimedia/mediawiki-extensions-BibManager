@@ -47,14 +47,14 @@ class SpecialBibManagerList extends SpecialPage {
 			'bm_list_search_text' => [
 				'label-message' => 'bm_list_search_term',
 				'section' => 'title',
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'name' => 'bm_list_search_text',
 				'default' => $wgRequest->getVal( 'bm_list_search_text', '' ),
 			],
 			'bm_list_search_select' => [
 				'label-message' => 'bm_list_search_fieldname',
 				'section' => 'title',
-				'class' => 'HTMLSelectField',
+				'class' => HTMLSelectField::class,
 				'name' => 'bm_list_search_select',
 				'options' => $selectValues,
 				'default' => $wgRequest->getVal( 'bm_list_search_select', '' )

@@ -64,7 +64,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 		$formDescriptor = [];
 		$formDescriptor['bm_bibtexCitation'] = [
-			'class' => 'HTMLTextField',
+			'class' => HTMLTextField::class,
 			'label-message' => 'bm_citation',
 			'section' => 'citation',
 			'required' => true,
@@ -83,7 +83,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		}
 
 		$formDescriptor['bm_edit_mode'] = [
-			'class' => 'HTMLHiddenField',
+			'class' => HTMLHiddenField::class,
 			'default' => $editMode ? 1 : 0,
 			'name' => 'bm_edit_mode',
 		];
@@ -106,7 +106,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		}
 
 		$formDescriptor['bm_bibtexEntryType'] = [
-			'class' => 'HTMLHiddenField',
+			'class' => HTMLHiddenField::class,
 			'default' => $entryType,
 			'name' => 'bm_bibtexEntryType',
 		];
