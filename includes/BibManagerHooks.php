@@ -11,7 +11,7 @@ class BibManagerHooks {
 	 * @param DatabaseUpdater|null $updater
 	 * @return bool true if alright
 	 */
-	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater = null ): bool {
+	public static function onLoadExtensionSchemaUpdates( ?DatabaseUpdater $updater = null ): bool {
 		$updater->addExtensionUpdate( [
 			'addTable',
 			'bibmanager',
