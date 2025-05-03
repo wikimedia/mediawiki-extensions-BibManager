@@ -1,5 +1,5 @@
-$( function () {
-	var d = document, i, j,
+$( () => {
+	let d = document, i, j,
 		table = d.getElementById( 'bm_table' ),
 		inputs = table.getElementsByTagName( 'input' ),
 		bmExportCheckboxes,
