@@ -311,7 +311,6 @@ class BibManagerHooks {
 	 * @return string
 	 * @throws MWException
 	 * @global object $wgScript
-	 *
 	 */
 	public static function onBibprintTag( ?string $input, array $args, Parser $parser, PPFrame $frame ): string {
 		$parser->getOutput()->updateCacheExpiry( 0 );

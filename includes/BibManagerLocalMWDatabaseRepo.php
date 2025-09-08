@@ -37,7 +37,6 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	/**
-	 *
 	 * @param mixed $mOptions
 	 *
 	 * @return mixed
