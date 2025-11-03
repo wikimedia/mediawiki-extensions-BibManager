@@ -22,7 +22,7 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 		}
 
 		global $wgRequest;
-		$wgOut->setPageTitle( wfMessage( 'heading_create' )->plain() );
+		$wgOut->setPageTitle( wfMessage( 'heading_create' )->escaped() );
 		$wgOut->addWikiMsg( 'bm_create_welcome' );
 		$wgOut->addModuleStyles( 'ext.bibManager.styles' );
 		$formDescriptor = [

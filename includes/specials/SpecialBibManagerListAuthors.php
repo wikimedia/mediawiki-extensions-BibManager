@@ -18,7 +18,7 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 		global $wgOut;
 
 		$this->setHeaders();
-		$wgOut->setPageTitle( $this->msg( 'heading_list_authors' ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_list_authors' )->escaped() );
 		$pager = new BibManagerPagerListAuthors();
 		$sDataBody = $pager->getBody();
 		if ( !empty( $sDataBody ) ) {

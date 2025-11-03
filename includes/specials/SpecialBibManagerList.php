@@ -21,7 +21,7 @@ class SpecialBibManagerList extends SpecialPage {
 		global $wgOut, $wgRequest;
 
 		$this->setHeaders();
-		$wgOut->setPageTitle( $this->msg( 'heading_list' ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_list' )->escaped() );
 		$wgOut->enableOOUI();
 		$wgOut->addHTML( '<div id="bm_form">' );
 
