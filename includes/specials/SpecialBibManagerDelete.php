@@ -26,7 +26,7 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 
 		global $wgRequest;
 		$this->setHeaders();
-		$wgOut->setPageTitle( $this->msg( 'heading_delete' ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_delete' )->escaped() );
 		$deleteSubmit = $wgRequest->getBool( 'bm_delete' );
 
 		$citation = $wgRequest->getVal( 'bm_bibtexCitation', '' );

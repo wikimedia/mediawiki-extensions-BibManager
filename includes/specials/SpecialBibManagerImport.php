@@ -29,7 +29,7 @@ class SpecialBibManagerImport extends SpecialPage {
 
 		global $wgRequest;
 		$this->setHeaders();
-		$wgOut->setPageTitle( $this->msg( 'heading_import' ) );
+		$wgOut->setPageTitle( $this->msg( 'heading_import' )->escaped() );
 
 		if ( $wgRequest->getVal( 'bm_bibtex', '' ) == '' ) {
 			$wgOut->addHtml( $this->msg( 'bm_import_welcome' )->escaped() );

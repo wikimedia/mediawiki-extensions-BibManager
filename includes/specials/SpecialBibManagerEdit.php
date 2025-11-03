@@ -57,7 +57,9 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		// bm_entry_type_incollection, bm_entry_type_inproceedings, bm_entry_type_manual,
 		// bm_entry_type_mastersthesis, bm_entry_type_misc, bm_entry_type_phdthesis,
 		// bm_entry_type_proceedings, bm_entry_type_techreport, bm_entry_type_unpublished
-		$wgOut->setPageTitle( $this->msg( 'heading_edit', $this->msg( 'bm_entry_type_' . $entryType )->text() ) );
+		$wgOut->setPageTitle(
+			$this->msg( 'heading_edit', $this->msg( 'bm_entry_type_' . $entryType )->text() )->escaped()
+		);
 
 		$typeDefs = BibManagerFieldsList::getTypeDefinitions();
 		$bibTeXFields = BibManagerFieldsList::getFieldDefinitions();
