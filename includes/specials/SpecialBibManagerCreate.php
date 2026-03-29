@@ -10,21 +10,18 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 	 * Main method of SpecialPage. Called by Framework.
 	 * @param string|false $par string or false, provided by Framework
 	 * @throws MWException
-	 * @global OutputPage $wgOut Current MediaWiki WebRequest object
-	 * @global WebRequest $wgRequest Current MediaWiki OutputPage object
 	 */
 	public function execute( $par ) {
-		global $wgOut;
+		$output = $this->getOutput();
 		if ( !$this->getUser()->isAllowed( 'bibmanagercreate' ) ) {
-			$wgOut->showErrorPage( 'badaccess', 'badaccess-group0' );
+			$output->showErrorPage( 'badaccess', 'badaccess-group0' );
 
 			return;
 		}
 
-		global $wgRequest;
-		$wgOut->setPageTitle( wfMessage( 'heading_create' )->escaped() );
-		$wgOut->addWikiMsg( 'bm_create_welcome' );
-		$wgOut->addModuleStyles( 'ext.bibManager.styles' );
+		$output->setPageTitle( wfMessage( 'heading_create' )->escaped() );
+		$output->addWikiMsg( 'bm_create_welcome' );
+		$output->addModuleStyles( 'ext.bibManager.styles' );
 		$formDescriptor = [
 			'bm_select_type' => [
 				'class' => HTMLSelectField::class,
@@ -58,7 +55,7 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 			->setSubmitId( 'bm_select_entry_type_submit' )
 			->setSubmitCallback( [ $this, 'onSubmit' ] );
 
-		$citation = $wgRequest->getVal( 'bm_bibtexCitation', '' );
+		$citation = $this->getRequest()->getVal( 'bm_bibtexCitation', '' );
 		$importParams = [];
 		if ( !empty( $citation ) ) {
 			$entryTypeSelectionForm->addHiddenField( 'bm_bibtexCitation', $citation );
@@ -72,9 +69,9 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 			)->plain() . "</div>\n"
 		);
 
-		$wgOut->addHTML( '<div id="bm_form">' );
+		$output->addHTML( '<div id="bm_form">' );
 		$entryTypeSelectionForm->show();
-		$wgOut->addHTML( '</div>' );
+		$output->addHTML( '</div>' );
 	}
 
 	/**
@@ -82,19 +79,16 @@ class SpecialBibManagerCreate extends IncludableSpecialPage {
 	 * @param array $formData
 	 * @return bool Always true
 	 * @throws MWException
-	 * @global OutputPage $wgOut
 	 */
 	public function onSubmit( array $formData ): bool {
-		global $wgOut, $wgRequest;
-
-		$citation = $wgRequest->getVal( 'bm_bibtexCitation' );
+		$citation = $this->getRequest()->getVal( 'bm_bibtexCitation' );
 		if ( !isset( $formData['bm_bibtexCitation'] ) && !empty( $citation ) ) {
 			// This should not be necessary, but it seems the hidden field from
 			//the type selection form is not properly included in $formData
 			$formData['bm_bibtexCitation'] = $citation;
 		}
 
-		$wgOut->redirect(
+		$this->getOutput()->redirect(
 			SpecialPage::getTitleFor( 'BibManagerEdit' )->getFullURL( $formData )
 		);
 

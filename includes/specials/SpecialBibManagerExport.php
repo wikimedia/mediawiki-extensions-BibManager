@@ -11,14 +11,12 @@ class SpecialBibManagerExport extends UnlistedSpecialPage {
 	 *
 	 * @param string|false $par string or false, provided by Framework
 	 * @throws Exception
-	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
-	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
 	 */
 	public function execute( $par ): void {
-		global $wgOut, $wgRequest;
+		$request = $this->getRequest();
 		// TODO RBV (17.12.11 16:46): This is very similar to the BibManagerEdit SpecialPage --> encapsulate logic
 
-		$givenValues = $wgRequest->getArray( 'cit', [] );
+		$givenValues = $request->getArray( 'cit', [] );
 		$out = '';
 		foreach ( $givenValues as $citation ) {
 			$citation = str_replace( '__dot__', '.', $citation );
@@ -49,12 +47,12 @@ class SpecialBibManagerExport extends UnlistedSpecialPage {
 			$out .= $bibtex->bibTex();
 		}
 
-		$wgOut->disable();
+		$this->getOutput()->disable();
 		wfResetOutputBuffers();
 
 		$filename = 'export-' . date( 'Y-m-d_H-i-s' ) . '.bib';
-		$wgRequest->response()->header( "Content-type: application/x-bibtex; charset=utf-8" );
-		$wgRequest->response()->header( "Content-disposition: attachment;filename={$filename}" );
+		$request->response()->header( "Content-type: application/x-bibtex; charset=utf-8" );
+		$request->response()->header( "Content-disposition: attachment;filename={$filename}" );
 
 		echo $out;
 	}

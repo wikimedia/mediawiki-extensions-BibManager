@@ -14,16 +14,14 @@ class SpecialBibManagerList extends SpecialPage {
 	 * @param string|false $par string or false, provided by Framework
 	 *
 	 * @throws MWException
-	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
-	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
 	 */
 	public function execute( $par ): void {
-		global $wgOut, $wgRequest;
+		$output = $this->getOutput();
 
 		$this->setHeaders();
-		$wgOut->setPageTitle( $this->msg( 'heading_list' )->escaped() );
-		$wgOut->enableOOUI();
-		$wgOut->addHTML( '<div id="bm_form">' );
+		$output->setPageTitle( $this->msg( 'heading_list' )->escaped() );
+		$output->enableOOUI();
+		$output->addHTML( '<div id="bm_form">' );
 
 		$specialPageFactory = MediaWikiServices::getInstance()->getSpecialPageFactory();
 		$createPage = $specialPageFactory->getPage( 'BibManagerCreate' );
@@ -37,7 +35,7 @@ class SpecialBibManagerList extends SpecialPage {
 			$importPage->getDescription()
 		);
 
-		$wgOut->addHtml( $this->msg( 'bm_list_welcome', $createLink, $importLink )->text() );
+		$output->addHtml( $this->msg( 'bm_list_welcome', $createLink, $importLink )->text() );
 		$fieldDefs = BibManagerFieldsList::getFieldDefinitions();
 		foreach ( $fieldDefs as $fieldName => $fieldDef ) {
 			$selectValues[$fieldDef['label']] = $fieldName;
@@ -49,7 +47,7 @@ class SpecialBibManagerList extends SpecialPage {
 				'section' => 'title',
 				'class' => HTMLTextField::class,
 				'name' => 'bm_list_search_text',
-				'default' => $wgRequest->getVal( 'bm_list_search_text', '' ),
+				'default' => $this->getRequest()->getVal( 'bm_list_search_text', '' ),
 			],
 			'bm_list_search_select' => [
 				'label-message' => 'bm_list_search_fieldname',
@@ -57,7 +55,7 @@ class SpecialBibManagerList extends SpecialPage {
 				'class' => HTMLSelectField::class,
 				'name' => 'bm_list_search_select',
 				'options' => $selectValues,
-				'default' => $wgRequest->getVal( 'bm_list_search_select', '' )
+				'default' => $this->getRequest()->getVal( 'bm_list_search_select', '' )
 			]
 		];
 
@@ -71,11 +69,11 @@ class SpecialBibManagerList extends SpecialPage {
 
 		// TODO RBV (17.12.11 15:08): We will need to change this when we support other repos than local DB
 		$pager = new BibManagerPagerList();
-		$wgOut->addHtml( '<div id="bm_table">' );
+		$output->addHtml( '<div id="bm_table">' );
 		$sDataBody = $pager->getBody();
 		$user = $this->getUser();
 		if ( !empty( $sDataBody ) ) {
-			$wgOut->addHTML( $pager->getNavigationBar() );
+			$output->addHTML( $pager->getNavigationBar() );
 			$table = [];
 			$table[] = '<form method="post" action="' .
 				SpecialPage::getTitleFor( 'BibManagerExport' )->getLocalURL() .
@@ -107,13 +105,13 @@ class SpecialBibManagerList extends SpecialPage {
 			] );
 			$table[] = '</form>';
 
-			$wgOut->addHTML( implode( "\n", $table ) );
-			$wgOut->addHTML( $pager->getNavigationBar() );
+			$output->addHTML( implode( "\n", $table ) );
+			$output->addHTML( $pager->getNavigationBar() );
 		} else {
-			$wgOut->addHtml( $this->msg( 'bm_error_no-data-found' )->escaped() );
+			$output->addHtml( $this->msg( 'bm_error_no-data-found' )->escaped() );
 		}
-		$wgOut->addHtml( '</div>' );
-		$wgOut->addHTML( '</div>' );
+		$output->addHtml( '</div>' );
+		$output->addHTML( '</div>' );
 	}
 
 	public function submitForm( array $formData ): bool {

@@ -14,25 +14,22 @@ class SpecialBibManagerImport extends SpecialPage {
 	/**
 	 * Main method of SpecialPage. Called by Framework.
 	 *
-	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
-	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
 	 * @param string|false $par string or false, provided by Framework
 	 */
 	public function execute( $par ): void {
-		global $wgOut;
+		$output = $this->getOutput();
 
 		if ( !$this->getUser()->isAllowed( 'bibmanageredit' ) ) {
-			$wgOut->showErrorPage( 'badaccess', 'badaccess-group0' );
+			$output->showErrorPage( 'badaccess', 'badaccess-group0' );
 
 			return;
 		}
 
-		global $wgRequest;
 		$this->setHeaders();
-		$wgOut->setPageTitle( $this->msg( 'heading_import' )->escaped() );
+		$output->setPageTitle( $this->msg( 'heading_import' )->escaped() );
 
-		if ( $wgRequest->getVal( 'bm_bibtex', '' ) == '' ) {
-			$wgOut->addHtml( $this->msg( 'bm_import_welcome' )->escaped() );
+		if ( $this->getRequest()->getVal( 'bm_bibtex', '' ) == '' ) {
+			$output->addHtml( $this->msg( 'bm_import_welcome' )->escaped() );
 		}
 
 		$formDescriptor['bm_bibtex'] = [
@@ -46,9 +43,9 @@ class SpecialBibManagerImport extends SpecialPage {
 			->setSubmitTextMsg( 'bm_edit_submit' )
 			->setSubmitCallback( [ $this, 'submitForm' ] );
 
-		$wgOut->addHTML( '<div id="bm_form">' );
+		$output->addHTML( '<div id="bm_form">' );
 		$htmlForm->show();
-		$wgOut->addHTML( '</div>' );
+		$output->addHTML( '</div>' );
 	}
 
 	/**
@@ -57,11 +54,8 @@ class SpecialBibManagerImport extends SpecialPage {
 	 * @return mixed true on success, array of error messages on failure
 	 * @throws MWException
 	 * @throws Structures_BibTex_Exception
-	 * @global OutputPage $wgOut
 	 */
 	public function submitForm( array $formData ) {
-		global $wgOut;
-
 		$bibtex = new Structures_BibTex();
 		$bibtex->setOption( "extractAuthors", false );
 		$bibtex->content = $formData['bm_bibtex'];
@@ -110,12 +104,12 @@ class SpecialBibManagerImport extends SpecialPage {
 			$repo->saveBibEntry( $cleanedEntry[0], $cleanedEntry[1], $cleanedEntry[2] );
 		}
 
-		$wgOut->addHtml( sprintf(
+		$this->getOutput()->addHtml( sprintf(
 			'<div class="successbox"><strong>%s</strong></div><div class="visualClear" id="mw-pref-clear"></div>',
 			$this->msg( 'bm_success_save-complete' )->escaped() )
 		);
 
-		$wgOut->addHtml( sprintf(
+		$this->getOutput()->addHtml( sprintf(
 			'<a href="%s">%s</a>',
 			SpecialPage::getTitleFor( "BibManagerList" )->getLocalURL(),
 			$this->msg( 'bm_success_link-to-list' )->escaped() )

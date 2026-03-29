@@ -14,10 +14,8 @@ class BibManagerPagerList extends AlphabeticPager {
 	 * @return array
 	 */
 	public function getQueryInfo(): array {
-		global $wgRequest;
-
-		$this->searchType = $wgRequest->getVal( 'bm_list_search_select', '' );
-		$this->searchTerm = $wgRequest->getVal( 'bm_list_search_text', '' );
+		$this->searchType = $this->getRequest()->getVal( 'bm_list_search_select', '' );
+		$this->searchTerm = $this->getRequest()->getVal( 'bm_list_search_text', '' );
 		$conds = [];
 		if ( !empty( $this->searchType ) && !empty( $this->searchTerm ) ) {
 			$conds[] = "bm_" . $this->searchType . " LIKE '%" . $this->searchTerm . "%'";
@@ -63,12 +61,9 @@ class BibManagerPagerList extends AlphabeticPager {
 	/**
 	 * Override from base class to add query string parameters
 	 *
-	 * @global Language $wgLang
 	 * @return array
 	 */
 	public function getLimitLinks(): array {
-		global $wgLang;
-
 		$links = [];
 		if ( $this->mIsBackwards ) {
 			$offset = $this->mPastTheEndIndex;
@@ -85,7 +80,7 @@ class BibManagerPagerList extends AlphabeticPager {
 
 		foreach ( $this->mLimitsShown as $limit ) {
 			$links[] = $this->makeLink(
-				$wgLang->formatNum( $limit ),
+				$this->getLanguage()->formatNum( $limit ),
 				$query + [ 'limit' => $limit ],
 				'num'
 			);

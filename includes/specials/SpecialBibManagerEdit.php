@@ -10,22 +10,21 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 	 * Main method of SpecialPage. Called by Framework.
 	 * @param string|false $par string or false, provided by Framework
 	 * @throws Exception
-	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
-	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
+	 * @global WebRequest $request Current MediaWiki WebRequest object
 	 */
 	public function execute( $par ) {
-		global $wgOut;
+		$output = $this->getOutput();
 
 		if ( !$this->getUser()->isAllowed( 'bibmanageredit' ) ) {
-			$wgOut->showErrorPage( 'badaccess', 'badaccess-group0' );
+			$output->showErrorPage( 'badaccess', 'badaccess-group0' );
 
 			return;
 		}
 
-		global $wgRequest;
+		$request = $this->getRequest();
 		$this->setHeaders();
 
-		$citation = !empty( $par ) ? $par : $wgRequest->getVal( 'bm_bibtexCitation', '' );
+		$citation = !empty( $par ) ? $par : $request->getVal( 'bm_bibtexCitation', '' );
 
 		$entry = [];
 		$entry['bm_bibtexCitation'] = $citation;
@@ -37,9 +36,9 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 			}
 		}
 
-		$entryType = $wgRequest->getVal( 'bm_select_type', '' );
+		$entryType = $request->getVal( 'bm_select_type', '' );
 		if ( empty( $entryType ) ) {
-			$entryType = $wgRequest->getVal( 'bm_bibtexEntryType', '' );
+			$entryType = $request->getVal( 'bm_bibtexEntryType', '' );
 		}
 		if ( isset( $entry['bm_bibtexEntryType'] ) ) {
 			$entryType = $entry['bm_bibtexEntryType'];
@@ -47,7 +46,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 		if ( empty( $entryType ) ) {
 			// TODO RBV (17.12.11 16:53): I18N
-			$wgOut->addHTML( 'No Citation or EntryType provided.' );
+			$output->addHTML( 'No Citation or EntryType provided.' );
 
 			return;
 		}
@@ -57,7 +56,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		// bm_entry_type_incollection, bm_entry_type_inproceedings, bm_entry_type_manual,
 		// bm_entry_type_mastersthesis, bm_entry_type_misc, bm_entry_type_phdthesis,
 		// bm_entry_type_proceedings, bm_entry_type_techreport, bm_entry_type_unpublished
-		$wgOut->setPageTitle(
+		$output->setPageTitle(
 			$this->msg( 'heading_edit', $this->msg( 'bm_entry_type_' . $entryType )->text() )->escaped()
 		);
 
@@ -74,7 +73,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 			'validation-callback' => 'BibManagerValidator::validateCitation'
 		];
 
-		$editMode = $wgRequest->getBool( 'bm_edit_mode' );
+		$editMode = $request->getBool( 'bm_edit_mode' );
 
 		if ( $editMode ) {
 			// If it is a edit we dont need to revalidate
@@ -120,9 +119,9 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 		$htmlForm
 			->setSubmitText( $this->msg( 'bm_edit_submit' )->text() )
 			->setSubmitCallback( [ $this, 'submitForm' ] );
-		$wgOut->addHTML( '<div id="bm_form">' );
+		$output->addHTML( '<div id="bm_form">' );
 		$htmlForm->show();
-		$wgOut->addHTML( '</div>' );
+		$output->addHTML( '</div>' );
 	}
 
 	/**

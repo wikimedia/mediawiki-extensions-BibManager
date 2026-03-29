@@ -9,20 +9,17 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 	/**
 	 * Main method of SpecialPage. Called by Framwork.
 	 *
-	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
-	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
-	 * @global User $wgUser Current MediaWiki User object
 	 * @param string|false $par string or false, provided by Framework
 	 */
 	public function execute( $par ): void {
-		global $wgOut;
+		$output = $this->getOutput();
 
 		$this->setHeaders();
-		$wgOut->setPageTitle( $this->msg( 'heading_list_authors' )->escaped() );
+		$output->setPageTitle( $this->msg( 'heading_list_authors' )->escaped() );
 		$pager = new BibManagerPagerListAuthors();
 		$sDataBody = $pager->getBody();
 		if ( !empty( $sDataBody ) ) {
-			$wgOut->addHTML( $pager->getNavigationBar() );
+			$output->addHTML( $pager->getNavigationBar() );
 			$table = [];
 			$table[] = '	<table class="wikitable" style="width:100%;">';
 			$table[] = '		<tr>';
@@ -33,10 +30,10 @@ class SpecialBibManagerListAuthors extends SpecialPage {
 			$table[] = $sDataBody;
 			$table[] = '	</table>';
 
-			$wgOut->addHTML( implode( "\n", $table ) );
-			$wgOut->addHTML( $pager->getNavigationBar() );
+			$output->addHTML( implode( "\n", $table ) );
+			$output->addHTML( $pager->getNavigationBar() );
 		} else {
-			$wgOut->addHtml( $this->msg( 'bm_error_no-data-found' )->escaped() );
+			$output->addHtml( $this->msg( 'bm_error_no-data-found' )->escaped() );
 		}
 	}
 

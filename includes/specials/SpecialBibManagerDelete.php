@@ -12,26 +12,23 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 	 * @param string|false $par string or false, provided by Framework
 	 *
 	 * @throws Exception
-	 * @global WebRequest $wgRequest Current MediaWiki WebRequest object
-	 * @global OutputPage $wgOut Current MediaWiki OutputPage object
 	 */
 	public function execute( $par ) {
-		global $wgOut;
+		$output = $this->getOutput();
 
 		if ( !$this->getUser()->isAllowed( 'bibmanagerdelete' ) ) {
-			$wgOut->showErrorPage( 'badaccess', 'badaccess-group0' );
+			$output->showErrorPage( 'badaccess', 'badaccess-group0' );
 
 			return;
 		}
 
-		global $wgRequest;
 		$this->setHeaders();
-		$wgOut->setPageTitle( $this->msg( 'heading_delete' )->escaped() );
-		$deleteSubmit = $wgRequest->getBool( 'bm_delete' );
+		$output->setPageTitle( $this->msg( 'heading_delete' )->escaped() );
+		$deleteSubmit = $this->getRequest()->getBool( 'bm_delete' );
 
-		$citation = $wgRequest->getVal( 'bm_bibtexCitation', '' );
+		$citation = $this->getRequest()->getVal( 'bm_bibtexCitation', '' );
 		if ( empty( $citation ) ) {
-			$wgOut->addHtml( $this->msg( 'bm_error_not-found', $citation )->escaped() );
+			$output->addHtml( $this->msg( 'bm_error_not-found', $citation )->escaped() );
 
 			return;
 		}
@@ -39,7 +36,7 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		$entry = BibManagerRepository::singleton()->getBibEntryByCitation( $citation );
 		$entryType = $entry['bm_bibtexEntryType'];
 		if ( empty( $entry ) || empty( $entryType ) ) {
-			$wgOut->addHtml( $this->msg( 'bm_error_not-found', $citation )->escaped() );
+			$output->addHtml( $this->msg( 'bm_error_not-found', $citation )->escaped() );
 
 			return;
 		}
@@ -51,8 +48,8 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 			$typeDefs[$entryType]['optional']
 		);
 		if ( !$deleteSubmit ) {
-			$wgOut->addHTML( $this->msg( 'bm_delete_confirm-delete', $citation )->escaped() );
-			$wgOut->addHTML( '<hr />' );
+			$output->addHTML( $this->msg( 'bm_delete_confirm-delete', $citation )->escaped() );
+			$output->addHTML( '<hr />' );
 
 			$table = [];
 			$table[] = '<table id="bm_delete" class="wikitable" style="width:100%">';
@@ -69,7 +66,7 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 					'</td></tr>';
 			}
 			$table[] = '</table>';
-			$wgOut->addHTML( implode( "\n", $table ) );
+			$output->addHTML( implode( "\n", $table ) );
 		}
 		$formDescriptor = [
 			'bm_delete' => [
@@ -94,9 +91,9 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 
 		// TODO: Add cancel button that returns user to the place he came from. I.e. filtered overview
 
-		$wgOut->addHTML( '<div id="bm_form">' );
+		$output->addHTML( '<div id="bm_form">' );
 		$htmlForm->show();
-		$wgOut->addHTML( '</div>' );
+		$output->addHTML( '</div>' );
 	}
 
 	/**
@@ -106,11 +103,8 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 	 *
 	 * @return bool
 	 * @throws MWException
-	 * @global OutputPage $wgOut
 	 */
 	public function formSubmit( array $formData ): bool {
-		global $wgOut;
-
 		if ( empty( $formData['bm_delete'] ) || $formData['bm_delete'] !== '1' ) {
 			return false;
 		}
@@ -118,14 +112,14 @@ class SpecialBibManagerDelete extends UnlistedSpecialPage {
 		$result = BibManagerRepository::singleton()->deleteBibEntry( $formData['bm_bibtexCitation'] );
 
 		if ( $result === true ) {
-			$wgOut->addHtml(
+			$this->getOutput()->addHtml(
 				sprintf(
 					// phpcs:ignore Generic.Files.LineLength.TooLong
 					'<div class="successbox"><strong>%s</strong></div><div class="visualClear" id="mw-pref-clear"></div>',
 					$this->msg( 'bm_success_save-complete' )->escaped()
 				)
 			);
-			$wgOut->addHtml(
+			$this->getOutput()->addHtml(
 				sprintf(
 					'<a href="%s">%s</a>',
 					SpecialPage::getTitleFor( "BibManagerList" )->getLocalURL(),
