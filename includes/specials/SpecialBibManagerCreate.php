@@ -3,7 +3,12 @@
 class SpecialBibManagerCreate extends IncludableSpecialPage {
 
 	public function __construct() {
-		parent::__construct( 'BibManagerCreate', 'bibmanagercreate' );
+		parent::__construct( 'BibManagerCreate' );
+	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'bibmanagercreate';
 	}
 
 	/**

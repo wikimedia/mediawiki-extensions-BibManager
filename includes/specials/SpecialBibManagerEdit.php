@@ -3,7 +3,12 @@
 class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 	public function __construct() {
-		parent::__construct( 'BibManagerEdit', 'bibmanageredit' );
+		parent::__construct( 'BibManagerEdit' );
+	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'bibmanageredit';
 	}
 
 	/**
