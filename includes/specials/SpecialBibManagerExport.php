@@ -35,10 +35,9 @@ class SpecialBibManagerExport extends UnlistedSpecialPage {
 
 			foreach ( $entryFields as $fieldName ) {
 				$value = $entry['bm_' . $fieldName];
-				if ( empty( $value ) ) {
-					continue;
+				if ( !empty( $value ) ) {
+					$lines[$fieldName] = $value;
 				}
-				$lines[$fieldName] = $value;
 			}
 
 			$bibtex = new Structures_BibTex();

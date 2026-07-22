@@ -2,9 +2,6 @@
 
 class BibManagerPagerListAuthors extends AlphabeticPager {
 
-	/**
-	 * @return array
-	 */
 	public function getQueryInfo(): array {
 		return [
 			'tables' => 'bibmanager',
@@ -13,9 +10,6 @@ class BibManagerPagerListAuthors extends AlphabeticPager {
 		];
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getIndexField(): string {
 		return 'bm_author';
 	}

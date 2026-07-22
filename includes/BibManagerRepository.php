@@ -2,22 +2,15 @@
 
 abstract class BibManagerRepository {
 
-	/** @var null */
+	/** @var self|null */
 	public static $instance = null;
 
 	/**
 	 * Singleton factory method.
-	 *
-	 * @return BibManagerRepository
 	 */
-	public static function singleton(): BibManagerRepository {
-		if ( self::$instance instanceof BibManagerRepository ) {
-			return self::$instance;
-		}
-
+	public static function singleton(): self {
 		global $wgBibManagerRepoClass;
-		self::$instance = new $wgBibManagerRepoClass();
-
+		self::$instance ??= new $wgBibManagerRepoClass();
 		return self::$instance;
 	}
 

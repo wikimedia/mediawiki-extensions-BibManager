@@ -51,12 +51,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 		foreach ( $res as $row ) {
 			$aReturn[] = (array)$row;
 		}
-		if ( !empty( $aReturn ) ) {
-			return $aReturn;
-
-		} else {
-			return false;
-		}
+		return $aReturn ?: false;
 	}
 
 	public function getBibEntryByCitation( $sCitation ): array {
@@ -69,11 +64,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 				'bm_bibtexCitation' => $sCitation
 			]
 		);
-		if ( $res === false ) {
-			return [];
-		}
-
-		return (array)$res;
+		return $res ? (array)$res : [];
 	}
 
 	public function saveBibEntry( $sCitation, $sEntryType, $aFields ) {

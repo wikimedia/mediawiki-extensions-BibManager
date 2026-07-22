@@ -31,8 +31,7 @@ class SpecialBibManagerEdit extends UnlistedSpecialPage {
 
 		$citation = !empty( $par ) ? $par : $request->getVal( 'bm_bibtexCitation', '' );
 
-		$entry = [];
-		$entry['bm_bibtexCitation'] = $citation;
+		$entry = [ 'bm_bibtexCitation' => $citation ];
 		if ( !empty( $citation ) ) {
 			$e = BibManagerRepository::singleton()
 					->getBibEntryByCitation( $citation );

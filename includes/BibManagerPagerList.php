@@ -10,9 +10,6 @@ class BibManagerPagerList extends AlphabeticPager {
 	/** @var string */
 	private $searchTerm = '';
 
-	/**
-	 * @return array
-	 */
 	public function getQueryInfo(): array {
 		$this->searchType = $this->getRequest()->getVal( 'bm_list_search_select', '' );
 		$this->searchTerm = $this->getRequest()->getVal( 'bm_list_search_text', '' );
@@ -39,8 +36,6 @@ class BibManagerPagerList extends AlphabeticPager {
 
 	/**
 	 * Override from base class to add query string parameters
-	 *
-	 * @return array
 	 */
 	public function getPagingQueries(): array {
 		$queries = parent::getPagingQueries();
