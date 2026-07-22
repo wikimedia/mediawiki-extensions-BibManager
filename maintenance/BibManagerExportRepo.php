@@ -19,7 +19,7 @@ class BibManagerExportRepo extends Maintenance {
 	 */
 	public function execute() {
 		$sFilename     = $this->getOption( 'filename', 'new_export' );
-		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
 
 		$res = $dbr->select(
 			'bibmanager', 'bm_bibtexCitation'

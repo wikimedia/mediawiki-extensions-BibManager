@@ -10,7 +10,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	 * @return string
 	 */
 	public function getCitationsLike( $sCitation ): string {
-		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
 
 		$res = $dbr->select(
 			'bibmanager',
@@ -42,7 +42,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	 * @return mixed
 	 */
 	public function getBibEntries( $mOptions ) {
-		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
 
 		$res = $dbr->select(
 			'bibmanager', '*', $mOptions
@@ -60,7 +60,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function getBibEntryByCitation( $sCitation ): array {
-		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
 
 		$res = $dbr->selectRow(
 			'bibmanager',
@@ -77,7 +77,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function saveBibEntry( $sCitation, $sEntryType, $aFields ) {
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()->getPrimaryDatabase();
 
 		return $dbw->insert(
 			'bibmanager',
@@ -89,7 +89,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function updateBibEntry( $sCitation, $sEntryType, $aFields ) {
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()->getPrimaryDatabase();
 
 		return $dbw->update(
 			'bibmanager',
@@ -103,7 +103,7 @@ class BibManagerLocalMWDatabaseRepo extends BibManagerRepository {
 	}
 
 	public function deleteBibEntry( $sCitation ): bool {
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()->getPrimaryDatabase();
 
 		return $dbw->delete(
 			'bibmanager',
